@@ -33,3 +33,13 @@ Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&ut
 Chakra has supported Gradients and RTL in `v1.1`. To utilize RTL, [add RTL direction and swap](https://chakra-ui.com/docs/features/rtl-support).
 
 If you don't have multi-direction app, you should make `<Html lang="ar" dir="rtl">` inside `_document.js`.
+
+
+## Troubleshooting
+- If sessions aren't working correctly, ie user is logged out on refresh/navigating pages, make sure that sessions are being stored in redis.
+```redis-cli```
+```keys *```
+should display a list of session ids
+
+try flushing the table.
+```FLUSHALL```

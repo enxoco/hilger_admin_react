@@ -18,6 +18,10 @@ import path from "path";
 import { Upvote } from "./entities/Upvote";
 import { createUserLoader } from "./utils/createUserLoader";
 import { createUpvoteLoader } from "./utils/createUpvoteLoader";
+import { Student } from "./entities/Student";
+import { StudentResolver } from "./resolvers/student";
+import { Course } from "./entities/Course";
+import { CourseResolver } from "./resolvers/course";
 const session = require("express-session");
 
 const main = async () => {
@@ -26,7 +30,7 @@ const main = async () => {
     url: process.env.DATABASE_URL,
     logging: true,
     synchronize: true,
-    entities: [Post, User, Upvote],
+    entities: [Post, User, Upvote, Student, Course],
     migrations: [path.join(__dirname, "./migrations/*")]
   });
   // await Post.delete({})
@@ -67,7 +71,7 @@ const main = async () => {
   );
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver, PostResolver, UserResolver],
+      resolvers: [HelloResolver, PostResolver, UserResolver, StudentResolver, CourseResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({

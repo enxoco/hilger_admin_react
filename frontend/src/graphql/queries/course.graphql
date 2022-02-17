@@ -1,0 +1,10 @@
+query Course($id: Int!) {
+    course(id: $id) {
+    id
+    createdAt
+    updatedAt
+    courseName
+    grade
+    feedback
+    }
+}

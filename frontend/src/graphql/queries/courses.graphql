@@ -1,0 +1,15 @@
+query Courses($limit: Int!, $student: Int!) {
+  courses(limit: $limit, student: $student) {
+    hasMore
+    student {
+      ...StudentSnippet
+    }
+    courses{
+      id
+      courseName
+      grade
+      feedback
+      creatorId
+    }
+  }
+}

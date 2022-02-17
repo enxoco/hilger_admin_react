@@ -1,0 +1,7 @@
+fragment StudentSnippet on Student {
+    id
+    createdAt
+    updatedAt
+    firstName
+    lastName
+}

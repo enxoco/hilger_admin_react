@@ -1,0 +1,8 @@
+query Students($limit: Int!, $cursor: String) {
+  students(cursor: $cursor, limit: $limit) {
+    hasMore
+    students {
+      ...StudentSnippet
+    }
+  }
+}

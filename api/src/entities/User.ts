@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 import { ObjectType, Field, Int } from "type-graphql";
 import { Post } from "./Post";
 import { Upvote } from './Upvote'
+import { Course } from "./Course";
 @ObjectType()
 @Entity()
 export class User extends BaseEntity {
@@ -12,6 +13,9 @@ export class User extends BaseEntity {
   @OneToMany(() => Post, (post) => post.creator)
   posts: Post[];
 
+  @OneToMany(() =>  Course, (course) => course.courseCreator)
+  courses: Course[];
+  
   @OneToMany(() => Upvote, (upvote) => upvote.user)
   upvotes: Upvote[];
 
@@ -33,4 +37,8 @@ export class User extends BaseEntity {
   @Field()
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Field()
+  @Column({nullable: true})
+  avatar: string
 }
