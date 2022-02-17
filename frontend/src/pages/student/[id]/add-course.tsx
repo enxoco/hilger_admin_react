@@ -45,4 +45,4 @@ const CreateCourse: React.FC<{}> = ({}) => {
         );
 }
 
-export default withUrqlClient(createUrqlClient)(CreateCourse)
+export default withUrqlClient(createUrqlClient, {ssr: false})(CreateCourse)

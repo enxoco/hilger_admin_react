@@ -31,6 +31,18 @@ export class User extends BaseEntity {
   password!: string;
 
   @Field()
+  @Column()
+  firstName!: string;
+
+  @Field()
+  @Column()
+  lastName!: string;
+
+  @Field()
+  @Column({ default: 0})
+  isAdmin!: boolean;
+
+  @Field()
   @CreateDateColumn()
   createdAt: Date;
 

@@ -31,12 +31,13 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
     body = (
       <Flex>
         <Box>
-          <NextLink href="/create-post">
+        <Badge mx={5}> {data.me.username}</Badge>
+
+          <NextLink href="/create-student">
             <Button bg="#D3E4CD" color="#333" as={Link} mr={2}>
-              create post
+              add student
             </Button>
           </NextLink>
-          <Badge mx={5}> {data.me.username}</Badge>
 
           <Button
             as={Link}

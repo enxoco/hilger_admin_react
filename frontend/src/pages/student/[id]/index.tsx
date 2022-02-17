@@ -8,10 +8,14 @@ import { EditDeletePostButtons } from '../../../components/editDeletePostButtons
 import { Layout } from '../../../components/Layout';
 import { usePostQuery } from '../../../generated/graphql';
 import { createUrqlClient } from '../../../utils/createUrqlClient';
-import {useCoursesQuery} from '../../../generated/graphql'
+import {useCoursesQuery, useDeleteCourseMutation} from '../../../generated/graphql'
+
 import NextLink from "next/link"
 
+
 export const Post = ({}) => {
+    const [,deletePost] = useDeleteCourseMutation()
+
     const router = useRouter()
     const intId = typeof router.query.id === 'string' ? +router.query.id : -1
     const [{data, error, fetching}] = useCoursesQuery({
@@ -23,6 +27,7 @@ export const Post = ({}) => {
         
     })
     
+
 
     if (error) {
         return (
@@ -53,17 +58,19 @@ export const Post = ({}) => {
                     <IconButton as={Link} icon={<AddIcon />} aria-label="add course" mr={4} ml={5} />
                 </NextLink>
                 </Flex>
-                {courseList.map((course, index) => {
-                    return (
+                {courseList.map((course) => (
                     <li key={course.id}>{course.courseName} - {course.id} 
-                              <NextLink href="/course/edit/[id]" as={`/course/edit/${course.id}`}>
-                                <IconButton as={Link} icon={<EditIcon />} aria-label="edit course" mr={4} />
-                            </NextLink>
-                    </li>
-                    )
-                })}
+                    <NextLink href="/course/edit/[id]" as={`/course/edit/${course.id}`}>
+                      <IconButton as={Link} icon={<EditIcon />} aria-label="edit course" mr={4} />
+                  </NextLink>
+                  <IconButton icon={<DeleteIcon />} aria-label="delete course" mr={4} ml={5} onClick={() => deletePost({'id': course.id})} />
+
+          </li>
+                ))
+
+                    }
             </Layout>
         );
 }
 
-export default withUrqlClient(createUrqlClient, {ssr: true})(Post)
+export default withUrqlClient(createUrqlClient, {ssr: false})(Post)

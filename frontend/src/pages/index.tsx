@@ -11,13 +11,12 @@ import { useDeletePostMutation, DeletePostDocument, useMeQuery, useStudentsQuery
 import { createUrqlClient } from "../utils/createUrqlClient"
 
 const Index = () => {
-  const [variables, setVariables] = useState({ limit: 15, cursor: null as null | string })
+  const [variables, setVariables] = useState()
   const [{ data, fetching }] = useStudentsQuery({
     variables,
   })
   const [{data: meData}] = useMeQuery()
 
-  console.log('data', data)
 
   if (!fetching && !data) {
     return <div>you got no students for some reason</div>
@@ -43,24 +42,7 @@ const Index = () => {
           ))}
         </Stack>
       )}
-      {data && data.students.hasMore ? (
-        <Flex>
-          <Button
-            onClick={() => {
-              setVariables({
-                limit: variables.limit,
-                cursor: data.students.students[data.students.students.length - 1].createdAt,
-              })
-            }}
-            isLoading={fetching}
-            m="auto"
-            my={5}>
-            load more
-          </Button>
-        </Flex>
-      ) : (
-        "that's all folks..."
-      )}
+
     </Layout>
   )
 }
