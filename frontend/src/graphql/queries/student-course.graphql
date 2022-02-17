@@ -1,8 +1,0 @@
-query StudentCourses($limit: Int!, $cursor: String) {
-  students(cursor: $cursor, limit: $limit) {
-    hasMore
-    students {
-      ...StudentSnippet
-    }
-  }
-}

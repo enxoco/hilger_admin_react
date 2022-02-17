@@ -31,11 +31,11 @@ export class User extends BaseEntity {
   password!: string;
 
   @Field()
-  @Column()
+  @Column({ nullable: true})
   firstName!: string;
 
   @Field()
-  @Column()
+  @Column({ nullable: true})
   lastName!: string;
 
   @Field()

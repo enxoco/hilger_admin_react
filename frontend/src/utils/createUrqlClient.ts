@@ -3,7 +3,7 @@ import { gql } from 'graphql-tag'
 import Router from "next/router"
 import { dedupExchange, Exchange, fetchExchange, stringifyVariables } from "urql"
 import { pipe, tap } from "wonka"
-import { DeletePostMutationVariables, LoginMutation, LogoutMutation, MeDocument, MeQuery, RegisterMutation, VoteMutationVariables } from "../generated/graphql"
+import { DeletePostMutationVariables, DeleteCourseMutationVariables, LoginMutation, LogoutMutation, MeDocument, MeQuery, RegisterMutation, VoteMutationVariables } from "../generated/graphql"
 import betterUpdateQuery from "./betterUpdateQuery"
 import { isServer } from "./isServer"
 
@@ -38,17 +38,18 @@ export const errorExchange: Exchange =
       const fieldKey = `${fieldName}(${stringifyVariables(fieldArgs)})`;
       const isItInTheCache = cache.resolve(
         cache.resolve(entityKey, fieldKey) as string,
-        "posts"
+        "courses"
       );
       info.partial = !isItInTheCache;
       let hasMore = true
       const results: string[] = [];
       fieldInfos.forEach((fi) => {// Combine results from subsequent queries into the results returned to client
         // const key = cache.resolve(entityKey, fi.fieldKey) as string;
-        // const data = cache.resolve(key, "posts") as string[];
+        // const data = cache.resolve(key, "courses") as string[];
         const key = cache.resolveFieldByKey(entityKey, fi.fieldKey) as string
-        const data = cache.resolve(key, "posts") as string[]
+        const data = cache.resolve(key, "courses") as string[]
         const _hasMore = cache.resolve(key, "hasMore")
+
         if (!_hasMore) {
           hasMore = _hasMore as boolean;
         }
@@ -56,19 +57,19 @@ export const errorExchange: Exchange =
       });
 
       return {
-        posts: results,
+        courses: results,
         hasMore,
-        __typename: "PaginatedPosts"
+        __typename: "PaginatedCourses"
       }
 
     };
   };
 
-function invalidateAllPosts(cache: Cache) {
+function invalidateAllCourses(cache: Cache) {
   const allFields = cache.inspectFields("Query");// Get all queries in the cache
-  const fieldInfos = allFields.filter((info) => info.fieldName === 'posts');
+  const fieldInfos = allFields.filter((info) => info.fieldName === 'courses');
   fieldInfos.forEach((fi) => {
-    cache.invalidate('Query', 'posts', fi.arguments)
+    cache.invalidate('Query', 'courses', fi.arguments)
   })
 }
 export const createUrqlClient = (ssrExchange: any, ctx: any) => {
@@ -89,52 +90,23 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
     dedupExchange,
     cacheExchange({
       keys: {
-        PaginatedPosts: () => null,
+        PaginatedCourses: () => null,
       },
       resolvers: {// Client side resolvers
         Query: {
-          posts: cursorPagination()
+          courses: cursorPagination()
         }
       },
       updates: {
         Mutation: {
-          deletePost: (_result, args, cache, info) => {
+          deleteCourse: (_result, args, cache, info) => {
             console.log('run me')
             console.log('args.', args)
-            cache.invalidate({__typename: "Post", id: (args as DeletePostMutationVariables).id})
+            cache.invalidate({__typename: "Course", id: (args as DeleteCourseMutationVariables).id})
           },
-          vote: (_result, args, cache, info) => {
-            const {postId, value} = args as VoteMutationVariables
-            const data = cache.readFragment(
-              gql`
-                fragment _ on Post {
-                  id
-                  points
-                  voteStatus
-                }
-              `,
-              {id: postId} as any
-            );
-            if (data) {
-              if (data.voteStatus === value) {
-                return
-              }
-              const newPoints = (+data.points) + (!data.voteStatus ? 1 : 2) * value
-              cache.writeFragment(
-                gql`
-                fragment _ on Post {
-                  points
-                  voteStatus
-                }
-                `, 
-                {
-                  id: postId, points: newPoints, voteStatus: value
-                }
-              )
-            }
-          },
-          createPost: (_result, args, cache, info) => {// Refetch posts when post is created so that it shows up at top of list.
-            invalidateAllPosts(cache)
+
+          createCourse: (_result, args, cache, info) => {// Refetch posts when post is created so that it shows up at top of list.
+            invalidateAllCourses(cache)
           },
           login: (_result, args, cache, info) => {
             betterUpdateQuery<LoginMutation, MeQuery>(cache, { query: MeDocument }, _result, (result, query) => {
@@ -146,7 +118,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 }
               }
             })
-            invalidateAllPosts(cache)
+            invalidateAllCourses(cache)
           },
           logout: (_result, args, cache, info) => {
             betterUpdateQuery<LogoutMutation, MeQuery>(cache, { query: MeDocument }, _result, () => ({ me: null }))

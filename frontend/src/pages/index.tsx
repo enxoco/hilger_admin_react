@@ -1,13 +1,12 @@
-import { Button, IconButton } from "@chakra-ui/button"
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons"
-import { Box, Flex, Heading, Link, Stack, Text } from "@chakra-ui/layout"
+import { Flex, Heading } from "@chakra-ui/layout"
+import {
+  Input,
+  Table, TableCaption, Tbody, Td, Tr
+} from '@chakra-ui/react'
 import { withUrqlClient } from "next-urql"
-import NextLink from "next/link"
 import React, { useState } from "react"
-import { EditDeletePostButtons } from "../components/EditDeletePostButtons"
 import { Layout } from "../components/Layout"
-import { UpvoteSection } from "../components/UpvoteSection"
-import { useDeletePostMutation, DeletePostDocument, useMeQuery, useStudentsQuery, useCoursesQuery } from "../generated/graphql"
+import { useMeQuery, useStudentsQuery } from "../generated/graphql"
 import { createUrqlClient } from "../utils/createUrqlClient"
 
 const Index = () => {
@@ -15,34 +14,42 @@ const Index = () => {
   const [{ data, fetching }] = useStudentsQuery({
     variables,
   })
-  const [{data: meData}] = useMeQuery()
-
-
+  
   if (!fetching && !data) {
     return <div>you got no students for some reason</div>
+  } 
+
+  const [searchTerm, setSearchTerm] = useState('')
+  const [students, setStudents] = useState(data?.students || [])
+
+  const handleChange = (e) => {
+    setSearchTerm(e.target.value)
+
+    setStudents(data?.students.filter(a => a.fullName.toLowerCase().includes(searchTerm.toLowerCase())))
   }
   return (
     <Layout>
-      {fetching && !data ? (
-        <div>loading...</div>
-      ) : (
-        <Stack>
-          {data!.students.students.map((p) => !p ? null :(
-            <Flex key={p.id} p={5} shadow="md" borderWidth="1px" >
-              
-              <Box flex={1} >
-                <NextLink href="/student/[id]" as={`/student/${p.id}`}>
-                  <Link>
-                    <Heading fontSize="xl">{p.firstName} {p.lastName}</Heading>
-                  </Link>
-                </NextLink>
+      <Flex mb={4}>
+      <Heading>Search</Heading>
+      <Input type="text" name="search" placeholder="Search for student by name" value={searchTerm} onChange={handleChange} ml={4} mt={1} />
 
-              </Box>
-            </Flex>
+      </Flex>
+      <Table>
+          <TableCaption>Students</TableCaption>
+        <Tbody>
+        {students && students.length != 0 ? students.map((student) => (
+            <Tr key={student.id}>
+              <Td>{student.firstName} {student.lastName}</Td>
+            </Tr>
+          )) : 
+          data?.students.map((student) => (
+            <Tr key={student.id}>
+              <Td>{student.firstName} {student.lastName}</Td>
+            </Tr>
           ))}
-        </Stack>
-      )}
 
+        </Tbody>
+        </Table>
     </Layout>
   )
 }

@@ -154,12 +154,6 @@ export type PaginatedPosts = {
   posts: Array<Post>;
 };
 
-export type PaginatedStudents = {
-  __typename?: 'PaginatedStudents';
-  hasMore: Scalars['Boolean'];
-  students: Array<Student>;
-};
-
 export type Post = {
   __typename?: 'Post';
   createdAt: Scalars['String'];
@@ -188,7 +182,7 @@ export type Query = {
   post?: Maybe<Post>;
   posts: PaginatedPosts;
   student?: Maybe<Student>;
-  students: PaginatedStudents;
+  students: Array<Student>;
 };
 
 
@@ -219,19 +213,13 @@ export type QueryStudentArgs = {
   id: Scalars['Int'];
 };
 
-
-export type QueryStudentsArgs = {
-  cursor?: Maybe<Scalars['String']>;
-  limit: Scalars['Int'];
-};
-
 export type Student = {
   __typename?: 'Student';
   createdAt: Scalars['String'];
   firstName: Scalars['String'];
+  fullName: Scalars['String'];
   id: Scalars['Int'];
   lastName: Scalars['String'];
-  textSnippet: Scalars['String'];
   updatedAt: Scalars['String'];
 };
 
@@ -245,7 +233,10 @@ export type User = {
   avatar: Scalars['String'];
   createdAt: Scalars['DateTime'];
   email: Scalars['String'];
+  firstName: Scalars['String'];
   id: Scalars['Int'];
+  isAdmin: Scalars['Boolean'];
+  lastName: Scalars['String'];
   updatedAt: Scalars['DateTime'];
   username: Scalars['String'];
 };
@@ -270,7 +261,7 @@ export type RegularUserFragment = { __typename?: 'User', id: number, username: s
 
 export type RegularUserResponseFragment = { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', id: number, username: string }> };
 
-export type StudentSnippetFragment = { __typename?: 'Student', id: number, createdAt: string, updatedAt: string, firstName: string, lastName: string };
+export type StudentSnippetFragment = { __typename?: 'Student', id: number, createdAt: string, updatedAt: string, firstName: string, lastName: string, fullName: string };
 
 export type ChangePasswordMutationVariables = Exact<{
   token: Scalars['String'];
@@ -300,6 +291,13 @@ export type CreateStudentMutationVariables = Exact<{
 
 
 export type CreateStudentMutation = { __typename?: 'Mutation', createStudent: { __typename?: 'Student', id: number, createdAt: string, updatedAt: string, firstName: string, lastName: string } };
+
+export type DeleteCourseMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteCourseMutation = { __typename?: 'Mutation', deleteCourse: boolean };
 
 export type DeletePostMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -375,7 +373,7 @@ export type CoursesQueryVariables = Exact<{
 }>;
 
 
-export type CoursesQuery = { __typename?: 'Query', courses: { __typename?: 'PaginatedCourses', hasMore: boolean, student: Array<{ __typename?: 'Student', id: number, createdAt: string, updatedAt: string, firstName: string, lastName: string }>, courses: Array<{ __typename?: 'Course', id: number, courseName: string, grade: string, feedback: string, creatorId: number }> } };
+export type CoursesQuery = { __typename?: 'Query', courses: { __typename?: 'PaginatedCourses', hasMore: boolean, student: Array<{ __typename?: 'Student', id: number, createdAt: string, updatedAt: string, firstName: string, lastName: string, fullName: string }>, courses: Array<{ __typename?: 'Course', id: number, courseName: string, grade: string, feedback: string, creatorId: number }> } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -402,14 +400,6 @@ export type ViewProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ViewProfileQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, email: string, username: string, avatar: string }> };
 
-export type StudentCoursesQueryVariables = Exact<{
-  limit: Scalars['Int'];
-  cursor?: Maybe<Scalars['String']>;
-}>;
-
-
-export type StudentCoursesQuery = { __typename?: 'Query', students: { __typename?: 'PaginatedStudents', hasMore: boolean, students: Array<{ __typename?: 'Student', id: number, createdAt: string, updatedAt: string, firstName: string, lastName: string }> } };
-
 export type StudentQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
@@ -417,13 +407,10 @@ export type StudentQueryVariables = Exact<{
 
 export type StudentQuery = { __typename?: 'Query', student?: Maybe<{ __typename?: 'Student', id: number, createdAt: string, updatedAt: string, firstName: string, lastName: string }> };
 
-export type StudentsQueryVariables = Exact<{
-  limit: Scalars['Int'];
-  cursor?: Maybe<Scalars['String']>;
-}>;
+export type StudentsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type StudentsQuery = { __typename?: 'Query', students: { __typename?: 'PaginatedStudents', hasMore: boolean, students: Array<{ __typename?: 'Student', id: number, createdAt: string, updatedAt: string, firstName: string, lastName: string }> } };
+export type StudentsQuery = { __typename?: 'Query', students: Array<{ __typename?: 'Student', id: number, createdAt: string, updatedAt: string, firstName: string, lastName: string, fullName: string }> };
 
 export const PostSnippetFragmentDoc = gql`
     fragment PostSnippet on Post {
@@ -470,6 +457,7 @@ export const StudentSnippetFragmentDoc = gql`
   updatedAt
   firstName
   lastName
+  fullName
 }
     `;
 export const ChangePasswordDocument = gql`
@@ -530,6 +518,15 @@ export const CreateStudentDocument = gql`
 
 export function useCreateStudentMutation() {
   return Urql.useMutation<CreateStudentMutation, CreateStudentMutationVariables>(CreateStudentDocument);
+};
+export const DeleteCourseDocument = gql`
+    mutation DeleteCourse($id: Int!) {
+  deleteCourse(id: $id)
+}
+    `;
+
+export function useDeleteCourseMutation() {
+  return Urql.useMutation<DeleteCourseMutation, DeleteCourseMutationVariables>(DeleteCourseDocument);
 };
 export const DeletePostDocument = gql`
     mutation DeletePost($id: Int!) {
@@ -719,20 +716,6 @@ export const ViewProfileDocument = gql`
 export function useViewProfileQuery(options: Omit<Urql.UseQueryArgs<ViewProfileQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<ViewProfileQuery>({ query: ViewProfileDocument, ...options });
 };
-export const StudentCoursesDocument = gql`
-    query StudentCourses($limit: Int!, $cursor: String) {
-  students(cursor: $cursor, limit: $limit) {
-    hasMore
-    students {
-      ...StudentSnippet
-    }
-  }
-}
-    ${StudentSnippetFragmentDoc}`;
-
-export function useStudentCoursesQuery(options: Omit<Urql.UseQueryArgs<StudentCoursesQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<StudentCoursesQuery>({ query: StudentCoursesDocument, ...options });
-};
 export const StudentDocument = gql`
     query Student($id: Int!) {
   student(id: $id) {
@@ -749,12 +732,9 @@ export function useStudentQuery(options: Omit<Urql.UseQueryArgs<StudentQueryVari
   return Urql.useQuery<StudentQuery>({ query: StudentDocument, ...options });
 };
 export const StudentsDocument = gql`
-    query Students($limit: Int!, $cursor: String) {
-  students(cursor: $cursor, limit: $limit) {
-    hasMore
-    students {
-      ...StudentSnippet
-    }
+    query Students {
+  students {
+    ...StudentSnippet
   }
 }
     ${StudentSnippetFragmentDoc}`;

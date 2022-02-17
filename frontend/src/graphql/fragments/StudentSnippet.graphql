@@ -4,4 +4,5 @@ fragment StudentSnippet on Student {
     updatedAt
     firstName
     lastName
+    fullName
 }
