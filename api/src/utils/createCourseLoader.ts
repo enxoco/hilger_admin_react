@@ -1,9 +1,8 @@
 import Dataloader from 'dataloader'
-import { Course } from 'src/entities/Course'
-import { User } from '../entities/User'
+import { Course } from '../entities/Course'
 
 // Essentially grabs all users in one sql query
-export const createCourseLoader = () => new Dataloader<number, User>(async userIds => {
+export const createCourseLoader = () => new Dataloader<number, Course>(async userIds => {
     const users = await Course.findByIds(userIds as number[])
     const userIdToUser: Record<number, Course> = {}
     users.forEach(u => {

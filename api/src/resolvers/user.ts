@@ -27,6 +27,12 @@ class UserResponse {
 @Resolver(User)
 export class UserResolver {
   @FieldResolver(() => String)
+  fullName(
+    @Root() root: User
+  ){
+    return `${root.firstName} ${root.lastName}`
+  }
+  @FieldResolver(() => String)
   email(@Root() user: User, @Ctx() {req}: MyContext) {
     // This is the current user and ok to show them their own email
     if(req.session.userId === user.id) {
@@ -104,6 +110,8 @@ export class UserResolver {
     await sendEmail(email, `<a href="http://localhost:3000/change-password/${token}">reset password</a>`);
     return true;
   }
+
+  
 
   @Query(() => User, { nullable: true })
   me(@Ctx() { req }: MyContext) {

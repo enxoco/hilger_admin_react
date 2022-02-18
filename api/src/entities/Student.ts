@@ -25,7 +25,7 @@ export class Student extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => Course, (course) => course.creator)
+  @OneToMany(() =>  Course, (course) => course.student)
   courses: Course[];
 
 }

@@ -1,11 +1,10 @@
 import { MyContext } from "src/types";
 import { Arg, Ctx, Field, FieldResolver, InputType, Int, Mutation, ObjectType, Query, Resolver, Root, UseMiddleware } from "type-graphql";
-import { getConnection } from "typeorm";
+import { getConnection, getRepository } from "typeorm";
 import { isAuth } from "../middleware/isAuth";
 import { Course } from "../entities/Course";
 import { User } from "../entities/User";
 import {Student} from '../entities/Student'
-
 
 @InputType()
 class CourseInput {
@@ -32,13 +31,13 @@ class PaginatedCourses {
 @Resolver(Course)
 export class CourseResolver {
 
-  @FieldResolver(() => User)
-  courseCreator(
-    @Root() course: Course,
-    @Ctx() {userLoader}: MyContext
-  ){
-    return userLoader.load(course.creatorId)
-  }
+  // @FieldResolver(() => User)
+  // courseCreator(
+  //   @Root() course: Course,
+  //   @Ctx() {userLoader}: MyContext
+  // ){
+  //   return userLoader.load(course)
+  // }
 
   @Query(() => PaginatedCourses)
   async courses(
@@ -51,7 +50,6 @@ export class CourseResolver {
     const realLimitPlusOne = realLimit + 1// User asks for 20 we fetch 21.  If we get less than 21 then we know there are no more posts
 
     const replacements: any[] = [realLimitPlusOne];
-
     if (cursor) {
       replacements.push(new Date(+cursor))
 
@@ -81,10 +79,62 @@ export class CourseResolver {
       student: studentObj,
       hasMore: courses.length === realLimitPlusOne}// getMany is what executes sql.
   }
+  @Query(() => [Course], {nullable: true})
+  async myCourses(
+    @Arg("id", () => Int) id: number,
+    @Arg("type", () => String) type: string
+    ) {
+
+      const courses = await getConnection()
+      .getRepository(Course)
+      .createQueryBuilder("course")
+      .leftJoinAndSelect('course.teacher', 'user')
+      .leftJoinAndSelect('course.student', 'student')
+      .where(`course.${type}Id = :id`, {id})
+      .orderBy('student.firstName', 'ASC')
+      .getMany()
+    // return Course.find(
+    //   {
+    //     where: {
+    //       creatorId: id
+    //     }
+    //   }
+    // )
+    return courses
+  }
+
+  @Query(() => [Course], {nullable: true})
+  async allMyCourses(){
+    const courses = await getConnection()
+    .getRepository(Course)
+    .createQueryBuilder("course")
+    .leftJoinAndSelect('course.teacher', 'user')
+    .leftJoinAndSelect('course.student', 'student')
+    .getMany()
+    return courses
+  }
+
+  // @Query(() => [Course], {nullable: true})
+  // async fetchMyCourses(id: , whoami){
+  //   const courses = await getConnection()
+  //   .getRepository(Course)
+  //   .createQueryBuilder("course")
+  //   .leftJoinAndSelect('course.teacher', 'user')
+  //   .leftJoinAndSelect('course.student', 'student')
+  //   .getMany()
+  //   return courses
+  // }
 
   @Query(() => Course, { nullable: true })
-  course(@Arg("id", () => Int) id: number): Promise<Course | undefined> {
-    return Course.findOne(id);
+  async course(@Arg("id", () => Int) id: number): Promise<Course | undefined> {
+    const courses = await getConnection()
+    .getRepository(Course)
+    .createQueryBuilder("course")
+    .leftJoinAndSelect('course.teacher', 'user')
+    .leftJoinAndSelect('course.student', 'student')
+    .where("course.id = :id", {id})
+    .getOne()
+    return courses
   }
 
   @Mutation(() => Course)
@@ -93,7 +143,17 @@ export class CourseResolver {
     if(input.studentId){
       input.studentId = +input.studentId
     }
-    return Course.create({ ...input, creatorId: req.session.userId}).save();
+    // slow...
+    // const course = new Course()
+    // const {courseName, grade, feedback, studentId } = input
+    // course.courseName = courseName
+    // course.grade = grade
+    // course.feedback = feedback
+    // course.student = studentId
+    // course.teacher = req.session.userId
+    // return await getRepository(Course).save(course)
+
+    return Course.create({ ...input, teacher: req.session.userId, student: input.studentId}).save();
   }
 
   @Mutation(() => Course, { nullable: true })

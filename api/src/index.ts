@@ -22,6 +22,7 @@ import { Student } from "./entities/Student";
 import { StudentResolver } from "./resolvers/student";
 import { Course } from "./entities/Course";
 import { CourseResolver } from "./resolvers/course";
+import { createCourseLoader } from "./utils/createCourseLoader";
 const session = require("express-session");
 
 const main = async () => {
@@ -79,6 +80,7 @@ const main = async () => {
       res,
       redis,
       userLoader: createUserLoader(),// Batch and cache sql requests
+      courseLoader: createCourseLoader,
       upvoteLoader: createUpvoteLoader()
     }),
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
