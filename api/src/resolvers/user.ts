@@ -123,7 +123,6 @@ export class UserResolver {
   }
   @Mutation(() => UserResponse)
   async register(@Arg("options") options: UsernamePasswordInput, @Ctx() { req }: MyContext): Promise<UserResponse> {
-    console.log("starting");
     const errors = validateRegister(options);
     if (errors) {
       return { errors };
@@ -141,6 +140,8 @@ export class UserResolver {
           email: options.email,
           username: options.username,
           password: hashedPassword,
+          firstName: options.firstName,
+          lastName: options.lastName
         })
         .returning("*")
         .execute();
