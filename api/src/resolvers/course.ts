@@ -1,10 +1,9 @@
 import { MyContext } from "src/types";
-import { Arg, Ctx, Field, FieldResolver, InputType, Int, Mutation, ObjectType, Query, Resolver, Root, UseMiddleware } from "type-graphql";
-import { getConnection, getRepository } from "typeorm";
-import { isAuth } from "../middleware/isAuth";
+import { Arg, Ctx, Field, InputType, Int, Mutation, ObjectType, Query, Resolver, UseMiddleware } from "type-graphql";
+import { getConnection } from "typeorm";
 import { Course } from "../entities/Course";
-import { User } from "../entities/User";
-import {Student} from '../entities/Student'
+import { Student } from '../entities/Student';
+import { isAuth } from "../middleware/isAuth";
 
 @InputType()
 class CourseInput {
@@ -42,9 +41,9 @@ export class CourseResolver {
   @Query(() => PaginatedCourses)
   async courses(
     @Arg('limit', () => Int) limit: number,
-    @Arg('student', () => Int, {nullable: true}) student: number | null,
+    @Arg('student', () => Int, {nullable: true}) studentId: number | null,
     @Arg('cursor', () => String, { nullable: true }) cursor: string | null,
-    @Ctx() { req }: MyContext // Get all posts newer than timestamp passed in.
+     // Get all posts newer than timestamp passed in.
   ): Promise<PaginatedCourses> {
     const realLimit = Math.min(50, limit)// Cap the limit at 50 if the user tries to pull more
     const realLimitPlusOne = realLimit + 1// User asks for 20 we fetch 21.  If we get less than 21 then we know there are no more posts
@@ -60,23 +59,23 @@ export class CourseResolver {
     let courses = await getConnection().query(`
     SELECT p.*
     FROM course p
-    ${cursor ? `WHERE p."createdAt" < $2` : `${student ? `WHERE p."studentId" = ${student}` : ''}`}
+    ${cursor ? `WHERE p."createdAt" < $2` : `${studentId ? `WHERE p."studentId" = ${studentId}` : ''}`}
     ORDER BY p."createdAt" DESC
     LIMIT $1
     
     `, replacements)
 
-    let studentObj = {}
-    if (student){
-      studentObj = await getConnection().query(`
-      SELECT p.*
-      FROM student p
-      WHERE id = ${student}`)
-    }
-    courses = courses.filter(course => course.creatorId == req.session.userId)
+    const student = await Student.find({
+      where: {id: studentId}
+    })
+      // student = await getConnection().query(`
+      // SELECT p.*
+      // FROM student p
+      // WHERE id = ${studentId}`)
+    
     return { 
       courses: courses.slice(0, realLimit), 
-      student: studentObj,
+      student,
       hasMore: courses.length === realLimitPlusOne}// getMany is what executes sql.
   }
   @Query(() => [Course], {nullable: true})
@@ -140,19 +139,12 @@ export class CourseResolver {
   @Mutation(() => Course)
   @UseMiddleware(isAuth)
   async createCourse(@Arg("input") input: CourseInput , @Ctx() { req }: MyContext): Promise<Course> {
-    if(input.studentId){
-      input.studentId = +input.studentId
+    if(input.student){
+      input.student = +input.student
     }
-    // slow...
-    // const course = new Course()
-    // const {courseName, grade, feedback, studentId } = input
-    // course.courseName = courseName
-    // course.grade = grade
-    // course.feedback = feedback
-    // course.student = studentId
-    // course.teacher = req.session.userId
-    // return await getRepository(Course).save(course)
 
+    input.teacher = req.session.userId
+    input.student = input.student
     return Course.create({ ...input, teacher: req.session.userId, student: input.studentId}).save();
   }
 
@@ -162,8 +154,7 @@ export class CourseResolver {
   @Arg("id", () => Int) id: number, 
   @Arg("courseName") courseName: string,
   @Arg("grade") grade: string,
-  @Arg("feedback") feedback: string,
-  @Ctx() { req } : MyContext) :   
+  @Arg("feedback") feedback: string) :   
    Promise<Course | null> {
     const result = await getConnection()
     .createQueryBuilder()
@@ -179,8 +170,7 @@ export class CourseResolver {
 
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
-  async deleteCourse(@Arg("id", () => Int) id: number,
-  @Ctx() { req }: MyContext): Promise<boolean> {
+  async deleteCourse(@Arg("id", () => Int) id: number): Promise<boolean> {
     // without cascade way
     // const post = await Post.findOne(id)
     // if (!post) {

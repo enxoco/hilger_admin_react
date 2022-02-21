@@ -53,4 +53,8 @@ export class User extends BaseEntity {
   @Field()
   @Column({nullable: true})
   avatar: string
+
+  @Field()
+  @Column({default: 'teacher'})
+  role: string
 }

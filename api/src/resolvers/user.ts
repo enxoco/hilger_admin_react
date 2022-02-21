@@ -1,13 +1,14 @@
 import { User } from "../entities/User";
 import { MyContext } from "src/types";
-import { Resolver, Mutation, Arg, ObjectType, Field, Ctx, Query, FieldResolver, Root } from "type-graphql";
+import { Resolver, Mutation, Arg, ObjectType, Field, Ctx, Query, FieldResolver, Root, UseMiddleware } from "type-graphql";
 import argon2 from "argon2";
 import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from "../constants";
 import { UsernamePasswordInput } from "../utils/UsernamePasswordInput";
 import { validateRegister } from "../utils/validateRegister";
 import { sendEmail } from "../utils/sendEmail";
 import { v4 } from "uuid";
-import { getConnection } from "typeorm";
+import { getConnection, UpdateResult } from "typeorm";
+import { isAuth } from "../middleware/isAuth";
 @ObjectType()
 class FieldError {
   @Field()
@@ -32,15 +33,17 @@ export class UserResolver {
   ){
     return `${root.firstName} ${root.lastName}`
   }
-  @FieldResolver(() => String)
-  email(@Root() user: User, @Ctx() {req}: MyContext) {
-    // This is the current user and ok to show them their own email
-    if(req.session.userId === user.id) {
-      return user.email
-    }
-    // Hide other peoples email address from user.
-    return ""
-  }
+  // @FieldResolver(() => String)
+  // async email(@Root() user: User, @Ctx() {req}: MyContext) {
+  //   // This is the current user and ok to show them their own email
+  //   const whoAmI = await User.find({where: {id: req.session.userId}})
+  //   console.log('who', whoAmI)
+  //   if(req.session.userId === user.id || whoAmI.isAdmin) {
+  //     return user.email
+  //   }
+  //   // Hide other peoples email address from user.
+  //   return ""
+  // }
   @Mutation(() => UserResponse)
   async changePassword(@Arg("token") token: string, @Arg("newPassword") newPassword: string, @Ctx() { redis, req }: MyContext): Promise<UserResponse> {
     if (newPassword.length <= 2) {
@@ -111,7 +114,13 @@ export class UserResolver {
     return true;
   }
 
-  
+  @UseMiddleware(isAuth)
+  @Query(() => [User], {nullable: true})
+  async teachers(){
+    return await User.find({
+      order: {firstName: 'ASC'}
+    })
+  }
 
   @Query(() => User, { nullable: true })
   me(@Ctx() { req }: MyContext) {
@@ -163,6 +172,26 @@ export class UserResolver {
     return { user };
   }
 
+  @Mutation(() => Boolean)
+  async toggleAdmin(
+    @Arg("adminStatus") adminStatus: boolean,
+    @Arg("teacherId") teacherId: number,
+    @Ctx() {req}: MyContext
+  ): Promise<Boolean> {
+    const admin = req.session.isAdmin
+    if (admin){
+      await User.update(
+        { id: teacherId },
+        {
+          isAdmin: adminStatus,
+        }
+      );
+      return adminStatus
+    } else {
+      return !adminStatus
+    }
+  }
+
   @Mutation(() => UserResponse)
   async login(@Arg("usernameOrEmail") usernameOrEmail: string, @Arg("password") password: string, @Ctx() { req }: MyContext): Promise<UserResponse> {
     const user = await User.findOne(usernameOrEmail.includes("@") ? { where: { email: usernameOrEmail } } : { where: { username: usernameOrEmail } });
@@ -189,6 +218,7 @@ export class UserResolver {
     }
 
     req.session!.userId = user.id;
+    req.session!.isAdmin = user.isAdmin
     return {
       user,
     };

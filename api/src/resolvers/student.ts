@@ -1,8 +1,7 @@
-import { MyContext } from "src/types";
-import { Arg, Ctx, Field, FieldResolver, InputType, Int, Mutation, ObjectType, Query, Resolver, Root, UseMiddleware } from "type-graphql";
+import { Arg, Field, FieldResolver, InputType, Int, Mutation, Query, Resolver, Root, UseMiddleware } from "type-graphql";
 import { getConnection } from "typeorm";
-import { isAuth } from "../middleware/isAuth";
 import { Student } from "../entities/Student";
+import { isAuth } from "../middleware/isAuth";
 
 
 @InputType()
@@ -13,12 +12,7 @@ class StudentInput {
   lastName: string;
 }
 
-@ObjectType()
-class Students {
-  @Field(() => [Student])
-  students: Student[]
 
-}
 @Resolver(Student)
 export class StudentResolver {
 
@@ -50,8 +44,7 @@ export class StudentResolver {
   async updateStudent(
   @Arg("id", () => Int) id: number, 
   @Arg("firstName") firstName: string,
-  @Arg("lastName") lastName: string,
-  @Ctx() { req } : MyContext) :   
+  @Arg("lastName") lastName: string) :   
    Promise<Student | null> {
     const result = await getConnection()
     .createQueryBuilder()
@@ -67,8 +60,7 @@ export class StudentResolver {
 
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
-  async deleteStudent(@Arg("id", () => Int) id: number,
-  @Ctx() { req }: MyContext): Promise<boolean> {
+  async deleteStudent(@Arg("id", () => Int) id: number): Promise<boolean> {
 
     await Student.delete({id})
     return true;

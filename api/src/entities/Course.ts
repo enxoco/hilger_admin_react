@@ -1,7 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BaseEntity, ManyToOne, OneToMany } from "typeorm";
-import { ObjectType, Field, Int } from "type-graphql";
-import { User } from "./User";
+import { Field, Int, ObjectType } from "type-graphql";
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Student } from "./Student";
+import { User } from "./User";
 @ObjectType()
 @Entity()
 export class Course extends BaseEntity {
@@ -21,13 +21,8 @@ export class Course extends BaseEntity {
   @Column()
   feedback!: string;
 
-  // @Field(() => Int)
-  // @Column()
-  // studentId!: Student;
-
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.courses)
-  // Foreign field key.  creatorId
   teacher: User;
 
   @Field(() => Student)
@@ -41,8 +36,6 @@ export class Course extends BaseEntity {
   @Field(() => String)
   @UpdateDateColumn()
   updatedAt: Date;
-
-  
 
 
 }
