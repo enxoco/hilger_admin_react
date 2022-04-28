@@ -1,28 +1,25 @@
-import "reflect-metadata";
-import { COOKIE_NAME, __prod__ } from "./constants";
-import express from "express";
-import { ApolloServer } from "apollo-server-express";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
+import { ApolloServer } from "apollo-server-express";
+import connectRedis from "connect-redis";
+import cors from "cors";
+import 'dotenv-safe/config';
+import express from "express";
+import Redis from "ioredis";
+import path from "path";
+import "reflect-metadata";
 import { buildSchema } from "type-graphql";
+import { createConnection } from "typeorm";
+import { COOKIE_NAME } from "./constants";
+import { Course } from "./entities/Course";
+import { Student } from "./entities/Student";
+import { User } from "./entities/User";
+import { CourseResolver } from "./resolvers/course";
 import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/post";
-import 'dotenv-safe/config'
-import { UserResolver } from "./resolvers/user";
-import cors from "cors";
-import Redis from "ioredis";
-import connectRedis from "connect-redis";
-import { createConnection } from "typeorm";
-import { Post } from "./entities/Post";
-import { User } from "./entities/User";
-import path from "path";
-import { Upvote } from "./entities/Upvote";
-import { createUserLoader } from "./utils/createUserLoader";
-import { createUpvoteLoader } from "./utils/createUpvoteLoader";
-import { Student } from "./entities/Student";
 import { StudentResolver } from "./resolvers/student";
-import { Course } from "./entities/Course";
-import { CourseResolver } from "./resolvers/course";
+import { UserResolver } from "./resolvers/user";
 import { createCourseLoader } from "./utils/createCourseLoader";
+
 const session = require("express-session");
 
 const main = async () => {
@@ -31,7 +28,7 @@ const main = async () => {
     url: process.env.DATABASE_URL,
     logging: true,
     synchronize: true,
-    entities: [Post, User, Upvote, Student, Course],
+    entities: [User, Student, Course],
     migrations: [path.join(__dirname, "./migrations/*")]
   });
   // await Post.delete({})
@@ -63,7 +60,8 @@ const main = async () => {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
         httpOnly: true,
         sameSite: "lax", // csrf
-        secure: __prod__, // cookie only works in https
+        secure: false, // cookie only works in https
+        domain: 'localhost',
       },
       saveUninitialized: false,
       secret: process.env.SESSION_SECRET,
@@ -79,9 +77,7 @@ const main = async () => {
       req,
       res,
       redis,
-      userLoader: createUserLoader(),// Batch and cache sql requests
       courseLoader: createCourseLoader,
-      upvoteLoader: createUpvoteLoader()
     }),
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
   });

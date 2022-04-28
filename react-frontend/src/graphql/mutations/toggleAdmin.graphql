@@ -1,0 +1,5 @@
+mutation ToggleAdmin($id: ID, $isAdmin: Boolean!){
+  updateUser(where: {id: $id}, data: {isAdmin: $isAdmin}){
+    id
+  }
+}

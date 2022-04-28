@@ -1,0 +1,9 @@
+
+query GetCoursesByStudentAndTeacher($studentId: ID!, $teacherId: ID!){
+  courses(where: {student: {id: {equals: $studentId}}, teacher: {id: {equals: $teacherId}}}) {
+      name
+      grade
+      feedback
+      id
+  }
+}

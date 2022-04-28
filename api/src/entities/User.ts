@@ -1,7 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BaseEntity, OneToMany } from "typeorm";
 import { ObjectType, Field, Int } from "type-graphql";
 import { Post } from "./Post";
-import { Upvote } from './Upvote'
 import { Course } from "./Course";
 @ObjectType()
 @Entity()
@@ -15,9 +14,6 @@ export class User extends BaseEntity {
 
   @OneToMany(() =>  Course, (course) => course.teacher)
   courses: Course[];
-
-  @OneToMany(() => Upvote, (upvote) => upvote.user)
-  upvotes: Upvote[];
 
   @Field()
   @Column({ unique: true })

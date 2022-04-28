@@ -1,0 +1,22 @@
+# mutation Login($usernameOrEmail: String!, $password: String!) {
+#   login(usernameOrEmail: $usernameOrEmail, password: $password) {
+#     ...RegularUserResponse
+#   }
+# }
+
+
+mutation Login($email: String!, $password: String!) {
+  authenticateUserWithPassword(email: $email, password: $password) {
+    ... on UserAuthenticationWithPasswordSuccess {
+      __typename
+      item {
+        email
+        isAdmin
+      }
+    }
+    ... on UserAuthenticationWithPasswordFailure {
+      __typename
+      message
+    }
+  }
+}

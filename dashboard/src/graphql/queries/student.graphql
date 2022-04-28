@@ -1,0 +1,9 @@
+query Student($id: Int!) {
+  student(id: $id) {
+    id
+    createdAt
+    updatedAt
+    firstName
+    lastName
+  }
+}

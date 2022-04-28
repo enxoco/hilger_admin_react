@@ -1,0 +1,7 @@
+query GetStudent($id: ID!) {
+    student(where: {id: $id}) {
+        id
+        firstName
+        lastName
+    }
+}

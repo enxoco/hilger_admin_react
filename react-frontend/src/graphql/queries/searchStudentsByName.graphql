@@ -1,0 +1,18 @@
+query SearchStudentsByNamePaginated($search: String!, $limit: Int!, $offset: Int!){
+  students(where: { OR: [
+    {firstName: {contains: $search, mode: insensitive}},
+    {lastName: {contains: $search, mode: insensitive}},
+  ]},
+  take: $limit, skip:$offset) {
+    id
+    firstName
+    lastName
+    name
+  }
+}
+query SearchStudentsByNameCount($search: String!){
+  studentsCount(where: { OR: [
+    {firstName: {contains: $search, mode: insensitive}},
+    {lastName: {contains: $search, mode: insensitive}},
+  ]})
+}

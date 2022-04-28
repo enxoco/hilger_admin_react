@@ -1,0 +1,11 @@
+query CheckLogin {
+  authenticatedItem {
+    __typename
+    ... on User {
+      id
+      email
+      name
+      isAdmin
+    }
+  }
+}

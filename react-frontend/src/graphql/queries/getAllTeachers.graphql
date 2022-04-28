@@ -1,0 +1,8 @@
+query GetAllTeachers($limit: Int!, $offset: Int!) {
+    users(take: $limit, skip: $offset, orderBy: {name: asc}) {
+        id
+        name
+        email
+        isAdmin
+    }
+}

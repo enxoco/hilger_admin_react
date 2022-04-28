@@ -1,0 +1,5 @@
+mutation DeleteStudent($id: ID!,){
+  deleteStudent(where: {id: $id}){
+    __typename
+  }
+}

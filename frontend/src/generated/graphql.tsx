@@ -18,14 +18,13 @@ export type Scalars = {
 
 export type Course = {
   __typename?: 'Course';
-  courseCreator: Course;
   courseName: Scalars['String'];
   createdAt: Scalars['String'];
-  creatorId: Scalars['Float'];
   feedback: Scalars['String'];
   grade: Scalars['String'];
   id: Scalars['Int'];
-  studentId: Scalars['Int'];
+  student: Student;
+  teacher: User;
   updatedAt: Scalars['String'];
 };
 
@@ -55,6 +54,7 @@ export type Mutation = {
   login: UserResponse;
   logout: Scalars['Boolean'];
   register: UserResponse;
+  toggleAdmin: Scalars['Boolean'];
   updateCourse?: Maybe<Course>;
   updatePost?: Maybe<Post>;
   updateStudent?: Maybe<Student>;
@@ -111,6 +111,12 @@ export type MutationLoginArgs = {
 
 export type MutationRegisterArgs = {
   options: UsernamePasswordInput;
+};
+
+
+export type MutationToggleAdminArgs = {
+  adminStatus: Scalars['Boolean'];
+  teacherId: Scalars['Float'];
 };
 
 
@@ -175,14 +181,17 @@ export type PostInput = {
 
 export type Query = {
   __typename?: 'Query';
+  allMyCourses?: Maybe<Array<Course>>;
   course?: Maybe<Course>;
   courses: PaginatedCourses;
   hello: Scalars['String'];
   me?: Maybe<User>;
+  myCourses?: Maybe<Array<Course>>;
   post?: Maybe<Post>;
   posts: PaginatedPosts;
   student?: Maybe<Student>;
   students: Array<Student>;
+  teachers?: Maybe<Array<User>>;
 };
 
 
@@ -195,6 +204,12 @@ export type QueryCoursesArgs = {
   cursor?: Maybe<Scalars['String']>;
   limit: Scalars['Int'];
   student?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryMyCoursesArgs = {
+  id: Scalars['Int'];
+  type: Scalars['String'];
 };
 
 
@@ -234,9 +249,11 @@ export type User = {
   createdAt: Scalars['DateTime'];
   email: Scalars['String'];
   firstName: Scalars['String'];
+  fullName: Scalars['String'];
   id: Scalars['Int'];
   isAdmin: Scalars['Boolean'];
   lastName: Scalars['String'];
+  role: Scalars['String'];
   updatedAt: Scalars['DateTime'];
   username: Scalars['String'];
 };
@@ -249,6 +266,8 @@ export type UserResponse = {
 
 export type UsernamePasswordInput = {
   email: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
   password: Scalars['String'];
   username: Scalars['String'];
 };
@@ -257,9 +276,9 @@ export type PostSnippetFragment = { __typename?: 'Post', id: number, createdAt: 
 
 export type RegularErrorFragment = { __typename?: 'FieldError', field: string, message: string };
 
-export type RegularUserFragment = { __typename?: 'User', id: number, username: string };
+export type RegularUserFragment = { __typename?: 'User', id: number, username: string, isAdmin: boolean };
 
-export type RegularUserResponseFragment = { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', id: number, username: string }> };
+export type RegularUserResponseFragment = { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', id: number, username: string, isAdmin: boolean }> };
 
 export type StudentSnippetFragment = { __typename?: 'Student', id: number, createdAt: string, updatedAt: string, firstName: string, lastName: string, fullName: string };
 
@@ -269,7 +288,7 @@ export type ChangePasswordMutationVariables = Exact<{
 }>;
 
 
-export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', id: number, username: string }> } };
+export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', id: number, username: string, isAdmin: boolean }> } };
 
 export type CreateCourseMutationVariables = Exact<{
   input: CourseInput;
@@ -319,7 +338,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', id: number, username: string }> } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', id: number, username: string, isAdmin: boolean }> } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -331,7 +350,15 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', id: number, username: string }> } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', id: number, username: string, isAdmin: boolean }> } };
+
+export type ToggleAdminMutationVariables = Exact<{
+  adminStatus: Scalars['Boolean'];
+  teacherId: Scalars['Float'];
+}>;
+
+
+export type ToggleAdminMutation = { __typename?: 'Mutation', toggleAdmin: boolean };
 
 export type UpdateCourseMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -365,20 +392,20 @@ export type CourseQueryVariables = Exact<{
 }>;
 
 
-export type CourseQuery = { __typename?: 'Query', course?: Maybe<{ __typename?: 'Course', id: number, createdAt: string, updatedAt: string, courseName: string, grade: string, feedback: string }> };
-
-export type CoursesQueryVariables = Exact<{
-  limit: Scalars['Int'];
-  student: Scalars['Int'];
-}>;
-
-
-export type CoursesQuery = { __typename?: 'Query', courses: { __typename?: 'PaginatedCourses', hasMore: boolean, student: Array<{ __typename?: 'Student', id: number, createdAt: string, updatedAt: string, firstName: string, lastName: string, fullName: string }>, courses: Array<{ __typename?: 'Course', id: number, courseName: string, grade: string, feedback: string, creatorId: number }> } };
+export type CourseQuery = { __typename?: 'Query', course?: Maybe<{ __typename?: 'Course', id: number, createdAt: string, updatedAt: string, courseName: string, grade: string, feedback: string, student: { __typename?: 'Student', fullName: string } }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, username: string }> };
+export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', fullName: string, isAdmin: boolean, id: number, username: string }> };
+
+export type MyCoursesQueryVariables = Exact<{
+  type: Scalars['String'];
+  id: Scalars['Int'];
+}>;
+
+
+export type MyCoursesQuery = { __typename?: 'Query', myCourses?: Maybe<Array<{ __typename?: 'Course', id: number, courseName: string, grade: string, feedback: string, student: { __typename?: 'Student', id: number, createdAt: string, updatedAt: string, firstName: string, lastName: string, fullName: string }, teacher: { __typename?: 'User', firstName: string, lastName: string, id: number, isAdmin: boolean } }>> };
 
 export type PostQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -412,6 +439,11 @@ export type StudentsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type StudentsQuery = { __typename?: 'Query', students: Array<{ __typename?: 'Student', id: number, createdAt: string, updatedAt: string, firstName: string, lastName: string, fullName: string }> };
 
+export type TeachersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TeachersQuery = { __typename?: 'Query', teachers?: Maybe<Array<{ __typename?: 'User', firstName: string, lastName: string, email: string, isAdmin: boolean, id: number }>> };
+
 export const PostSnippetFragmentDoc = gql`
     fragment PostSnippet on Post {
   id
@@ -437,6 +469,7 @@ export const RegularUserFragmentDoc = gql`
     fragment RegularUser on User {
   id
   username
+  isAdmin
 }
     `;
 export const RegularUserResponseFragmentDoc = gql`
@@ -577,6 +610,15 @@ export const RegisterDocument = gql`
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
 };
+export const ToggleAdminDocument = gql`
+    mutation ToggleAdmin($adminStatus: Boolean!, $teacherId: Float!) {
+  toggleAdmin(adminStatus: $adminStatus, teacherId: $teacherId)
+}
+    `;
+
+export function useToggleAdminMutation() {
+  return Urql.useMutation<ToggleAdminMutation, ToggleAdminMutationVariables>(ToggleAdminDocument);
+};
 export const UpdateCourseDocument = gql`
     mutation UpdateCourse($id: Int!, $courseName: String!, $feedback: String!, $grade: String!) {
   updateCourse(
@@ -628,6 +670,9 @@ export const CourseDocument = gql`
     courseName
     grade
     feedback
+    student {
+      fullName
+    }
   }
 }
     `;
@@ -635,30 +680,11 @@ export const CourseDocument = gql`
 export function useCourseQuery(options: Omit<Urql.UseQueryArgs<CourseQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<CourseQuery>({ query: CourseDocument, ...options });
 };
-export const CoursesDocument = gql`
-    query Courses($limit: Int!, $student: Int!) {
-  courses(limit: $limit, student: $student) {
-    hasMore
-    student {
-      ...StudentSnippet
-    }
-    courses {
-      id
-      courseName
-      grade
-      feedback
-      creatorId
-    }
-  }
-}
-    ${StudentSnippetFragmentDoc}`;
-
-export function useCoursesQuery(options: Omit<Urql.UseQueryArgs<CoursesQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<CoursesQuery>({ query: CoursesDocument, ...options });
-};
 export const MeDocument = gql`
     query Me {
   me {
+    fullName
+    isAdmin
     ...RegularUser
   }
 }
@@ -666,6 +692,29 @@ export const MeDocument = gql`
 
 export function useMeQuery(options: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
+};
+export const MyCoursesDocument = gql`
+    query MyCourses($type: String!, $id: Int!) {
+  myCourses(type: $type, id: $id) {
+    student {
+      ...StudentSnippet
+    }
+    teacher {
+      firstName
+      lastName
+      id
+      isAdmin
+    }
+    id
+    courseName
+    grade
+    feedback
+  }
+}
+    ${StudentSnippetFragmentDoc}`;
+
+export function useMyCoursesQuery(options: Omit<Urql.UseQueryArgs<MyCoursesQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<MyCoursesQuery>({ query: MyCoursesDocument, ...options });
 };
 export const PostDocument = gql`
     query Post($id: Int!) {
@@ -741,4 +790,19 @@ export const StudentsDocument = gql`
 
 export function useStudentsQuery(options: Omit<Urql.UseQueryArgs<StudentsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<StudentsQuery>({ query: StudentsDocument, ...options });
+};
+export const TeachersDocument = gql`
+    query Teachers {
+  teachers {
+    firstName
+    lastName
+    email
+    isAdmin
+    id
+  }
+}
+    `;
+
+export function useTeachersQuery(options: Omit<Urql.UseQueryArgs<TeachersQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<TeachersQuery>({ query: TeachersDocument, ...options });
 };

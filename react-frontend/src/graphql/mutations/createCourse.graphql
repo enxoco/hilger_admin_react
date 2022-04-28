@@ -1,0 +1,5 @@
+mutation CreateCourse($grade: String!, $name: String!, $feedback: String!, $student: ID, $teacher: ID) {
+  createCourse(data: {grade: $grade, name: $name, feedback: $feedback, student: {connect: {id: $student}}, teacher: {connect: {id: $teacher}}}){
+    id
+  }
+}

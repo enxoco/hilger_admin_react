@@ -1,0 +1,9 @@
+query Teachers {
+  teachers {
+    firstName
+    lastName
+    email
+    isAdmin
+    id
+  }
+}

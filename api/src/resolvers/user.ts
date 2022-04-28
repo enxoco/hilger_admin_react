@@ -125,6 +125,7 @@ export class UserResolver {
   @Query(() => User, { nullable: true })
   me(@Ctx() { req }: MyContext) {
     // you are not logged in
+    console.log('req.sess', req.session)
     if (!req.session.userId) {
       return null;
     }
@@ -216,6 +217,8 @@ export class UserResolver {
         ],
       };
     }
+
+    console.log('user', user)
 
     req.session!.userId = user.id;
     req.session!.isAdmin = user.isAdmin

@@ -1,0 +1,5 @@
+mutation UpdateCourse($name: String!, $grade: String!, $id: ID, $feedback: String!){
+  updateCourse(where: {id: $id}, data: {name: $name, grade: $grade, feedback: $feedback}){
+    id
+  }
+}

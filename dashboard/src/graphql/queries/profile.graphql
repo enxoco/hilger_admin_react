@@ -1,0 +1,8 @@
+query ViewProfile {
+  me {
+    id
+    email
+    username
+    avatar
+  }
+}

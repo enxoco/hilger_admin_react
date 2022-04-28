@@ -30,13 +30,6 @@ class PaginatedCourses {
 @Resolver(Course)
 export class CourseResolver {
 
-  // @FieldResolver(() => User)
-  // courseCreator(
-  //   @Root() course: Course,
-  //   @Ctx() {userLoader}: MyContext
-  // ){
-  //   return userLoader.load(course)
-  // }
 
   @Query(() => PaginatedCourses)
   async courses(
@@ -89,16 +82,27 @@ export class CourseResolver {
       .createQueryBuilder("course")
       .leftJoinAndSelect('course.teacher', 'user')
       .leftJoinAndSelect('course.student', 'student')
-      .where(`course.${type}Id = :id`, {id})
-      .orderBy('student.firstName', 'ASC')
+      .where(`course."${type.toLowerCase()}Id" = :id`, {id})
+      .orderBy('student."firstName"', 'ASC')
       .getMany()
-    // return Course.find(
-    //   {
-    //     where: {
-    //       creatorId: id
-    //     }
-    //   }
-    // )
+
+    return courses
+  }
+
+  @Query(() => [Course], {nullable: true})
+  async getCoursesByTeacher(
+    @Arg("id", () => Int) id: number,
+    ) {
+
+      const courses = await getConnection()
+      .getRepository(Course)
+      .createQueryBuilder("course")
+      .leftJoinAndSelect('course.teacher', 'user')
+      .leftJoinAndSelect('course.student', 'student')
+      .where(`course."teacherId" = :id`, {id})
+      .orderBy('student."firstName"', 'ASC')
+      .getMany()
+
     return courses
   }
 
@@ -113,16 +117,6 @@ export class CourseResolver {
     return courses
   }
 
-  // @Query(() => [Course], {nullable: true})
-  // async fetchMyCourses(id: , whoami){
-  //   const courses = await getConnection()
-  //   .getRepository(Course)
-  //   .createQueryBuilder("course")
-  //   .leftJoinAndSelect('course.teacher', 'user')
-  //   .leftJoinAndSelect('course.student', 'student')
-  //   .getMany()
-  //   return courses
-  // }
 
   @Query(() => Course, { nullable: true })
   async course(@Arg("id", () => Int) id: number): Promise<Course | undefined> {
@@ -139,12 +133,12 @@ export class CourseResolver {
   @Mutation(() => Course)
   @UseMiddleware(isAuth)
   async createCourse(@Arg("input") input: CourseInput , @Ctx() { req }: MyContext): Promise<Course> {
-    if(input.student){
-      input.student = +input.student
+    if(input.studentId){
+      input.studentId = +input.studentId
     }
 
-    input.teacher = req.session.userId
-    input.student = input.student
+    // input.teacher = req.session.userId
+    input.studentId = input.studentId
     return Course.create({ ...input, teacher: req.session.userId, student: input.studentId}).save();
   }
 
@@ -171,18 +165,7 @@ export class CourseResolver {
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   async deleteCourse(@Arg("id", () => Int) id: number): Promise<boolean> {
-    // without cascade way
-    // const post = await Post.findOne(id)
-    // if (!post) {
-    //   return false
-    // }
 
-    // if (post.creatorId !== req.session.userId) {
-    //   throw new Error('not authorized')
-    // }
-
-    // await Upvote.delete({ postId: id})
-    // await Post.delete({ id });
     
     // using cascade
     await Course.delete({id})
