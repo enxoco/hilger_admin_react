@@ -1,16 +1,12 @@
-import { Box, Button, ButtonGroup, Container, Divider, Flex, FormControl, FormLabel, Heading, HStack, Icon, Input, InputGroup, InputLeftElement, SimpleGrid, Stack, Switch, Text, useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
+import { Box, Button, Container, Divider, Flex, FormControl, FormLabel, Input, Stack, Switch, Text, useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
 import * as React from "react"
-import { useContext, useState } from "react"
-import { FiDownloadCloud, FiSearch } from "react-icons/fi"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Card } from "../components/Card"
 import { Navbar } from "../components/Navbar"
 import { PasswordField } from "../components/PasswordField"
 import { Sidebar } from "../components/Sidebar"
 import { useCreateTeacherMutation } from "../generated/graphql"
-import { useIsAuth } from "../utils/useIsAuth"
 function AddTeacher() {
-  useIsAuth()
   const navigate = useNavigate()
   const isDesktop = useBreakpointValue({ base: false, lg: true })
   const isMobile = useBreakpointValue({ base: true, md: false })

@@ -18,7 +18,6 @@ import { FiDownloadCloud } from 'react-icons/fi'
 import { Card } from '../components/Card'
 import { Navbar } from '../components/Navbar'
 import { Sidebar } from '../components/Sidebar'
-import { useIsAuth } from '../utils/useIsAuth'
 import {Stat} from '../components/Stat'
 import { useStudentsCountQuery } from '../generated/graphql'
 import {useRecoilState, useRecoilValue} from 'recoil'
@@ -26,7 +25,6 @@ import {useRecoilState, useRecoilValue} from 'recoil'
 import { studentCount, loggedInUser } from '../atom'
 const Dashboard = () => {
 
-  useIsAuth()
   const isDesktop = useBreakpointValue({ base: false, lg: true })
   const [{data, error, fetching}, getStudentCount] = useStudentsCountQuery()
   const [students, setStudents] = useRecoilState(studentCount)

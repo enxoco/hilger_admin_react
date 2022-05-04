@@ -49,19 +49,16 @@ import {
   SimpleGrid,
   Stack,
   Text,
-  useBreakpointValue,
+  useBreakpointValue
 } from '@chakra-ui/react'
 import * as React from 'react'
-import { useContext } from 'react'
 import { FiDownloadCloud } from 'react-icons/fi'
 import { Card } from './components/Card'
 import { Navbar } from './components/Navbar'
 import { Sidebar } from './components/Sidebar'
-import { useIsAuth } from './utils/useIsAuth'
 
 const App = () => {
 
-  useIsAuth()
   const isDesktop = useBreakpointValue({ base: false, lg: true })
   return (
     <Flex

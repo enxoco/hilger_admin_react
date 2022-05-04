@@ -1,64 +1,81 @@
-import { Box, Button, ButtonGroup, Container, Flex, HStack, Icon, Input, InputGroup, InputLeftElement, Stack, Text, useBreakpointValue } from "@chakra-ui/react"
+import { Box, Button, Container, Flex, HStack, IconButton, Stack, Text, Tooltip, useBreakpointValue } from "@chakra-ui/react"
 import * as React from "react"
-import { useContext, useEffect, useState } from "react"
-import { FiDownloadCloud, FiSearch } from "react-icons/fi"
+import { useEffect } from "react"
+import { FiDownloadCloud, FiEdit2 } from "react-icons/fi"
 import { Link, useParams } from "react-router-dom"
-import MemberTable from "../components/MemberTable"
+import { useRecoilState } from "recoil"
+import { students as studentAtom } from "../atom"
+import StudentTable from "../components/MemberTable"
 import { Navbar } from "../components/Navbar"
 import { Sidebar } from "../components/Sidebar"
-import { useDeleteStudentMutation, useGetAllStudentsQuery, useStudentsCountQuery, useSearchStudentsByNamePaginatedQuery, useSearchStudentsByNameCountQuery } from "../generated/graphql"
-import { useIsAuth } from "../utils/useIsAuth"
-import { useRecoilState } from "recoil"
-import { students as studentAtom, searchTerm as searchTermAtom, pageSize as pageSizeAtom, pageOffset as pageOffsetAtom } from "../atom"
+import { useDeleteStudentMutation, useGetAllStudentsQuery } from "../generated/graphql"
+
 const Students = () => {
-  useIsAuth()
   const { id } = useParams()
   const isDesktop = useBreakpointValue({ base: false, lg: true })
   const isMobile = useBreakpointValue({ base: true, md: false })
 
   const [_, deleteStudent] = useDeleteStudentMutation()
-  const [pageSize, setPageSize] = useRecoilState(pageSizeAtom)
-  const [pageOffset, setPageOffset] = useRecoilState(pageOffsetAtom)
+
   const [students, setStudents] = useRecoilState(studentAtom)
-  const [searchTerm, setSearchTerm] = useRecoilState(searchTermAtom)
 
-  const [studentData, getStudents] = useGetAllStudentsQuery({variables: {limit: 1000, offset: pageOffset}, requestPolicy: 'network-only'})
+  const [studentData, getStudents] = useGetAllStudentsQuery({ variables: { limit: 1000, offset: 0 }, requestPolicy: "network-only" })
 
-  const [studentsCount] = useStudentsCountQuery()
-
-  const [filteredStudents, setFilteredStudents] = useState(null)
-
-
-  function performPaginationForward() {
-    setPageOffset(pageSize + pageOffset)
-    getStudents()
-  }
-
-  function performPaginationPrevious() {
-
-
-    let offset = (pageOffset - pageSize)
-      setPageOffset(offset)
-
-    getStudents({limit: pageSize, offset: pageOffset})
-  }
   useEffect(() => {
     if (!students && studentData && studentData.data) {
       setStudents(studentData.data.students)
-      console.log('studentdata', studentData.data.students)
+      console.log("studentdata", studentData.data.students)
     }
-
   }, [studentData.fetching])
 
-  async function handleSearch(e) {
-    setSearchTerm(e.target.value)
-    setPageOffset("0")
-    if (e.target.value == "" || e.target.value.trim() == ""){
-      return setFilteredStudents(null)
-    }
-    setFilteredStudents(students.filter(a => a.name.toLowerCase().includes(e.target.value.toLowerCase())))
+  const columns = React.useMemo(
+    () => [
 
-  }
+          {
+            Header: () => null,
+            accessor: 'id',
+          },
+          {
+            Header: () => null,
+            accessor: "firstName",
+          },
+          {
+            Header: () => null,
+            accessor: "lastName",
+            filter: "fuzzyText",
+          },
+          {
+            Header: "Name",
+            accessor: "name",
+            filter: "fuzzyText",
+          },
+          {
+            Header: () => null,
+            id: 'actions',
+            filter: null,
+            isSorted: true,
+            Cell: ({ row }) => (
+              // Use Cell to render an expander for each row.
+              // We can use the getToggleRowExpandedProps prop-getter
+              // to build the expander.
+<>
+<HStack spacing="1">
+                    <Link to={"/student/" + row.values.id}>
+                      <Tooltip label="Manage courses">
+                      <IconButton icon={<FiEdit2 fontSize="1.25rem" />} variant="ghost" aria-label="Edit Course" />
+
+                      </Tooltip>
+                    </Link>
+
+                  </HStack>
+</>  
+              
+            ),
+          },
+
+    ],
+    []
+  )
   return (
     <Flex as="section" direction={{ base: "column", lg: "row" }} height="100vh" bg="bg-canvas" overflowY="auto">
       {isDesktop ? <Sidebar /> : <Navbar />}
@@ -83,38 +100,12 @@ const Students = () => {
                     <Text fontSize="lg" fontWeight="medium">
                       Students
                     </Text>
-                    <InputGroup maxW="xs">
-                      <InputLeftElement pointerEvents="none">
-                        <Icon as={FiSearch} color="muted" boxSize="5" />
-                      </InputLeftElement>
-                      <Input placeholder="Search" onChange={handleSearch} />
-                    </InputGroup>
                   </Stack>
                 </Box>
-                <Box overflowX="auto">
-                  {!students ? null : (
-                    <MemberTable studentProp={(filteredStudents) ? filteredStudents.slice(pageOffset, (pageSize + pageOffset)) : (students) ? students.slice(pageOffset, (pageSize + pageOffset)) : null}/>
-
-                  )}
-                </Box>
-                <Box px={{ base: "4", md: "6" }} pb="5">
-                  <HStack spacing="3" justify="space-between">
-                    {!isMobile && students && (
-                      <Text color="muted" fontSize="sm">
-                        Showing {pageOffset + 1} to { (filteredStudents && filteredStudents.length < (pageOffset + pageSize)) ? filteredStudents.length : (pageOffset + pageSize) } of {(filteredStudents) ? filteredStudents.length : (!studentsCount.fetching) ? studentsCount?.data?.studentsCount : null || null} results
-                      </Text>
-                    )}
-                    {students && students.length <= 10 ? null : (
-                      <ButtonGroup spacing="3" justifyContent="space-between" width={{ base: "full", md: "auto" }} variant="secondary">
-                        {(pageOffset > 1) ? (
-                        <Button value="previous" onClick={async () => await performPaginationPrevious()}>Previous</Button>
-
-                        ) : null}
-                        <Button value="next" onClick={() => performPaginationForward()}>Next</Button>
-                      </ButtonGroup>
-                    )}
-                  </HStack>
-                </Box>
+                  <Box overflowX="auto">
+                    <StudentTable columns={columns} data={students || [{id: 0, name: "", firstName: "", lastName: ""},{id: 0, name: "", firstName: "", lastName: ""},{id: 0, name: "", firstName: "", lastName: ""},{id: 0, name: "", firstName: "", lastName: ""},{id: 0, name: "", firstName: "", lastName: ""}]} />
+                  </Box>
+                
               </Stack>
             </Stack>
           </Container>

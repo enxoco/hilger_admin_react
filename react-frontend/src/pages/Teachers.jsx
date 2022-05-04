@@ -1,17 +1,15 @@
 import { Box, Button, ButtonGroup, Container, Flex, HStack, Icon, Input, InputGroup, InputLeftElement, Stack, Text, useBreakpointValue } from "@chakra-ui/react"
 import * as React from "react"
-import { useContext, useEffect, useState } from "react"
+import { useEffect } from "react"
 import { FiDownloadCloud, FiSearch } from "react-icons/fi"
 import { Link, useParams } from "react-router-dom"
+import { useRecoilState } from "recoil"
+import { pageOffset as pageOffsetAtom, pageSize as pageSizeAtom, searchTerm as searchTermAtom, students as studentAtom } from "../atom"
 import { Navbar } from "../components/Navbar"
 import { Sidebar } from "../components/Sidebar"
-import { useDeleteTeacherMutation, useGetAllTeachersQuery } from "../generated/graphql"
-import { useIsAuth } from "../utils/useIsAuth"
-import { useRecoilState } from "recoil"
-import { students as studentAtom, searchTerm as searchTermAtom, pageSize as pageSizeAtom, pageOffset as pageOffsetAtom } from "../atom"
 import TeacherTable from "../components/TeacherTable"
+import { useDeleteTeacherMutation, useGetAllTeachersQuery } from "../generated/graphql"
 const Teachers = () => {
-  useIsAuth()
   const { id } = useParams()
   const isDesktop = useBreakpointValue({ base: false, lg: true })
   const isMobile = useBreakpointValue({ base: true, md: false })

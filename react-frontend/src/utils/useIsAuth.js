@@ -11,9 +11,7 @@ export const useIsAuth = () => {
     useEffect(() => {
         if (user === null && !me.fetching && me.data.authenticatedItem){
             setUser(me.data.authenticatedItem)
-        } else if(user === null && !me.fetching && !me.data.authenticatedItem) {
-            navigate('/login')
-        }
+        } 
 
-    }, [me.data])
+    }, [me.fetching])
 }

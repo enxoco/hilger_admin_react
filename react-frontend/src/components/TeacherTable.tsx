@@ -1,11 +1,11 @@
 import { Box, Button, Checkbox, FormControl, FormLabel, HStack, Icon, IconButton, Switch, Table, Tbody, Td, Text, Th, Thead, Tooltip, Tr } from "@chakra-ui/react"
 import * as React from "react"
 import { useState } from "react"
-import { FiEdit2, FiSend } from "react-icons/fi"
+import { FiEdit2, FiLogIn, FiSend } from "react-icons/fi"
 import { IoArrowDown, IoArrowUp } from "react-icons/io5"
 import { Link } from "react-router-dom"
 import { useRecoilState } from "recoil"
-import { searchTerm as searchTermAtom, students as studentAtom } from '../atom'
+import { searchTerm as searchTermAtom, students as studentAtom, loggedInUser } from '../atom'
 import {
 
   useForgotPasswordMutation,
@@ -18,6 +18,7 @@ function TeacherTable({studentProp, columns}) {
   const [fetchStudents, setStudents] = useRecoilState(studentAtom)
   const [searchTerm, setSearchTerm] = useRecoilState(searchTermAtom)
   // No need to run our query if we already have students.
+  const [user, setUser] = useRecoilState(loggedInUser)
 
   const [, fetchPasswordReset] = useForgotPasswordMutation()
   const [, toggleAdmin] = useToggleAdminMutation()
@@ -94,6 +95,9 @@ function TeacherTable({studentProp, columns}) {
   }
 
 
+  function impersonate(member) {
+    setUser(member)
+  }
 
 
   return (
@@ -176,8 +180,10 @@ function TeacherTable({studentProp, columns}) {
                       </Tooltip>
                     </Link>
                     <Tooltip label='Send password reset email'>
-
                     <IconButton icon={<FiSend fontSize="1.25rem" />} variant="ghost" aria-label="Send Password reset" onClick={() => handleRequestPasswordReset(member.email)} />
+                    </Tooltip>
+                    <Tooltip label='Impersonate Teacher'>
+                    <IconButton icon={<FiLogIn fontSize="1.25rem" />} variant="ghost" aria-label="Impersonate Teacher" onClick={() => impersonate(member)} />
                     </Tooltip>
                   </HStack>
                 </Td>

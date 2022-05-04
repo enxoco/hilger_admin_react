@@ -1,0 +1,13 @@
+query CoursesByStudent($studentId: ID!){
+  courses(where: {student: {id: {equals: $studentId}}}) {
+    name
+    grade
+    feedback
+    id
+    feedbackLength
+    teacher {
+      name
+      id
+    }
+  }
+}

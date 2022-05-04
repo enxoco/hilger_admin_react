@@ -1,26 +1,27 @@
 import { Box, Button, Container, Flex, FormControl, FormLabel, HStack, Input, Stack, Text, useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { FiDownloadCloud } from "react-icons/fi"
 import { useParams } from "react-router-dom"
+import { useRecoilState } from 'recoil'
+import { courses as coursesAtom, loggedInUser } from '../atom'
 import EditStudentCard from "../components/EditCourseCard"
 import { Navbar } from "../components/Navbar"
 import { Sidebar } from "../components/Sidebar"
+import { useGetCoursesByStudentAndTeacherQuery, useGetStudentQuery, useCheckLoginQuery } from "../generated/graphql"
 
-import { useCheckLoginQuery, useGetCoursesByStudentAndTeacherQuery, useGetStudentQuery } from "../generated/graphql"
-import { UserContext } from "../UserContext"
-import { useIsAuth } from "../utils/useIsAuth"
-import {useRecoilState} from 'recoil'
 
-import {loggedInUser, courses as coursesAtom} from '../atom'
 const EditStudent = () => {
 
-  useIsAuth()
   const isDesktop = useBreakpointValue({ base: false, lg: true })
   const isMobile = useBreakpointValue({ base: true, md: false })
   let { id } = useParams()
   const [teacher, setTeacher] = useState(null)
   const [user, setUser] = useRecoilState(loggedInUser)
- 
+  const [me, executeMeQuery] = useCheckLoginQuery({pause: user})
+
+  // If we are reloading page then we have no state
+
+
   const [{ data: coursesData, error, fetching }, getCourses] = useGetCoursesByStudentAndTeacherQuery({
     pause: !teacher,
     variables: {
@@ -28,6 +29,7 @@ const EditStudent = () => {
       teacherId: teacher
     },
   })
+
 
   const [studentData, getStudent] = useGetStudentQuery({variables: {id}})
 
@@ -52,7 +54,12 @@ const EditStudent = () => {
     }
   }, [user])
 
- 
+  useEffect(() => {
+    if (!user && me.data) {
+      setUser(me.data.authenticatedItem)
+      setTeacher(me.data?.authenticatedItem.id)
+    }
+  },[me.fetching])
   return (
     <Flex as="section" direction={{ base: "column", lg: "row" }} height="100vh" bg="bg-canvas" overflowY="auto">
       {isDesktop ? <Sidebar /> : <Navbar />}
