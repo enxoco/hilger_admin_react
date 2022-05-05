@@ -1,3 +1,4 @@
 mutation Logout {
     endSession
+    __typename
 }

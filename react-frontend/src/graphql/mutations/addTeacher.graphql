@@ -1,5 +1,6 @@
 mutation CreateTeacher($name: String!, $password: String!, $email: String!, $admin: Boolean!){
   createUser(data: {name: $name, password: $password, email: $email, isAdmin: $admin}){
     id
+    __typename
   }
 }

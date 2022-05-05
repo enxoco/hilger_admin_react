@@ -24,6 +24,7 @@ const EditStudent = () => {
 
   const [{ data: coursesData, error, fetching }, getCourses] = useGetCoursesByStudentAndTeacherQuery({
     pause: !teacher,
+    requestPolicy: 'cache-and-network',
     variables: {
       studentId: id,
       teacherId: teacher

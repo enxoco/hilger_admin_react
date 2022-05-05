@@ -4,6 +4,7 @@ query SearchStudentsByNamePaginated($search: String!, $limit: Int!, $offset: Int
     {lastName: {contains: $search, mode: insensitive}},
   ]},
   take: $limit, skip:$offset) {
+    __typename
     id
     firstName
     lastName

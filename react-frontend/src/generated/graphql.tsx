@@ -980,7 +980,7 @@ export type CreateStudentMutationVariables = Exact<{
 }>;
 
 
-export type CreateStudentMutation = { __typename?: 'Mutation', createStudent?: { __typename?: 'Student', id: string } | null };
+export type CreateStudentMutation = { __typename?: 'Mutation', createStudent?: { __typename: 'Student', id: string } | null };
 
 export type CreateTeacherMutationVariables = Exact<{
   name: Scalars['String'];
@@ -990,14 +990,14 @@ export type CreateTeacherMutationVariables = Exact<{
 }>;
 
 
-export type CreateTeacherMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'User', id: string } | null };
+export type CreateTeacherMutation = { __typename?: 'Mutation', createUser?: { __typename: 'User', id: string } | null };
 
 export type BulkAddStudentsMutationVariables = Exact<{
   data: Array<StudentCreateInput> | StudentCreateInput;
 }>;
 
 
-export type BulkAddStudentsMutation = { __typename?: 'Mutation', createStudents?: Array<{ __typename?: 'Student', id: string } | null> | null };
+export type BulkAddStudentsMutation = { __typename?: 'Mutation', createStudents?: Array<{ __typename: 'Student', id: string } | null> | null };
 
 export type CreateCourseMutationVariables = Exact<{
   grade: Scalars['String'];
@@ -1008,7 +1008,7 @@ export type CreateCourseMutationVariables = Exact<{
 }>;
 
 
-export type CreateCourseMutation = { __typename?: 'Mutation', createCourse?: { __typename?: 'Course', id: string } | null };
+export type CreateCourseMutation = { __typename?: 'Mutation', createCourse?: { __typename: 'Course', id: string } | null };
 
 export type DeleteCourseMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -1042,7 +1042,7 @@ export type LoginMutation = { __typename?: 'Mutation', authenticateUserWithPassw
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type LogoutMutation = { __typename?: 'Mutation', endSession: boolean };
+export type LogoutMutation = { __typename: 'Mutation', endSession: boolean };
 
 export type RedeemPasswordResetTokenMutationVariables = Exact<{
   email: Scalars['String'];
@@ -1060,7 +1060,7 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'User', id: string, email?: string | null } | null };
+export type RegisterMutation = { __typename?: 'Mutation', createUser?: { __typename: 'User', id: string, email?: string | null } | null };
 
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
@@ -1075,7 +1075,7 @@ export type ToggleAdminMutationVariables = Exact<{
 }>;
 
 
-export type ToggleAdminMutation = { __typename?: 'Mutation', updateUser?: { __typename?: 'User', id: string } | null };
+export type ToggleAdminMutation = { __typename?: 'Mutation', updateUser?: { __typename: 'User', id: string } | null };
 
 export type UpdateCourseMutationVariables = Exact<{
   name: Scalars['String'];
@@ -1085,14 +1085,14 @@ export type UpdateCourseMutationVariables = Exact<{
 }>;
 
 
-export type UpdateCourseMutation = { __typename?: 'Mutation', updateCourse?: { __typename?: 'Course', id: string } | null };
+export type UpdateCourseMutation = { __typename?: 'Mutation', updateCourse?: { __typename: 'Course', id: string } | null };
 
 export type GetUserEmailByIdQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
 }>;
 
 
-export type GetUserEmailByIdQuery = { __typename?: 'Query', user?: { __typename?: 'User', email?: string | null } | null };
+export type GetUserEmailByIdQuery = { __typename?: 'Query', user?: { __typename: 'User', email?: string | null } | null };
 
 export type CheckLoginQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1104,7 +1104,7 @@ export type CoursesByStudentQueryVariables = Exact<{
 }>;
 
 
-export type CoursesByStudentQuery = { __typename?: 'Query', courses?: Array<{ __typename?: 'Course', name?: string | null, grade?: string | null, feedback?: string | null, id: string, feedbackLength?: string | null, teacher?: { __typename?: 'User', name?: string | null, id: string } | null }> | null };
+export type CoursesByStudentQuery = { __typename?: 'Query', courses?: Array<{ __typename: 'Course', name?: string | null, grade?: string | null, feedback?: string | null, id: string, feedbackLength?: string | null, teacher?: { __typename?: 'User', name?: string | null, id: string } | null }> | null };
 
 export type GetCoursesByStudentAndTeacherQueryVariables = Exact<{
   studentId: Scalars['ID'];
@@ -1112,7 +1112,7 @@ export type GetCoursesByStudentAndTeacherQueryVariables = Exact<{
 }>;
 
 
-export type GetCoursesByStudentAndTeacherQuery = { __typename?: 'Query', courses?: Array<{ __typename?: 'Course', name?: string | null, grade?: string | null, feedback?: string | null, id: string }> | null };
+export type GetCoursesByStudentAndTeacherQuery = { __typename?: 'Query', courses?: Array<{ __typename: 'Course', name?: string | null, grade?: string | null, feedback?: string | null, id: string }> | null };
 
 export type GetAllStudentsQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -1120,7 +1120,7 @@ export type GetAllStudentsQueryVariables = Exact<{
 }>;
 
 
-export type GetAllStudentsQuery = { __typename?: 'Query', students?: Array<{ __typename?: 'Student', id: string, name?: string | null, firstName?: string | null, lastName?: string | null }> | null };
+export type GetAllStudentsQuery = { __typename?: 'Query', students?: Array<{ __typename: 'Student', id: string, name?: string | null, firstName?: string | null, lastName?: string | null }> | null };
 
 export type GetAllTeachersQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -1128,21 +1128,21 @@ export type GetAllTeachersQueryVariables = Exact<{
 }>;
 
 
-export type GetAllTeachersQuery = { __typename?: 'Query', users?: Array<{ __typename?: 'User', id: string, name?: string | null, email?: string | null, isAdmin?: boolean | null }> | null };
+export type GetAllTeachersQuery = { __typename?: 'Query', users?: Array<{ __typename: 'User', id: string, name?: string | null, email?: string | null, isAdmin?: boolean | null }> | null };
 
 export type GetMyStudentsQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type GetMyStudentsQuery = { __typename?: 'Query', user?: { __typename?: 'User', name?: string | null, students?: string | null, id: string } | null };
+export type GetMyStudentsQuery = { __typename?: 'Query', user?: { __typename: 'User', name?: string | null, students?: string | null, id: string } | null };
 
 export type GetStudentQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type GetStudentQuery = { __typename?: 'Query', student?: { __typename?: 'Student', id: string, firstName?: string | null, lastName?: string | null } | null };
+export type GetStudentQuery = { __typename?: 'Query', student?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null } | null };
 
 export type SearchStudentsByNamePaginatedQueryVariables = Exact<{
   search: Scalars['String'];
@@ -1151,7 +1151,7 @@ export type SearchStudentsByNamePaginatedQueryVariables = Exact<{
 }>;
 
 
-export type SearchStudentsByNamePaginatedQuery = { __typename?: 'Query', students?: Array<{ __typename?: 'Student', id: string, firstName?: string | null, lastName?: string | null, name?: string | null }> | null };
+export type SearchStudentsByNamePaginatedQuery = { __typename?: 'Query', students?: Array<{ __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, name?: string | null }> | null };
 
 export type SearchStudentsByNameCountQueryVariables = Exact<{
   search: Scalars['String'];
@@ -1163,13 +1163,14 @@ export type SearchStudentsByNameCountQuery = { __typename?: 'Query', studentsCou
 export type StudentsCountQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type StudentsCountQuery = { __typename?: 'Query', studentsCount?: number | null };
+export type StudentsCountQuery = { __typename: 'Query', studentsCount?: number | null };
 
 
 export const CreateStudentDocument = gql`
     mutation CreateStudent($firstName: String!, $lastName: String!) {
   createStudent(data: {firstName: $firstName, lastName: $lastName}) {
     id
+    __typename
   }
 }
     `;
@@ -1183,6 +1184,7 @@ export const CreateTeacherDocument = gql`
     data: {name: $name, password: $password, email: $email, isAdmin: $admin}
   ) {
     id
+    __typename
   }
 }
     `;
@@ -1194,6 +1196,7 @@ export const BulkAddStudentsDocument = gql`
     mutation BulkAddStudents($data: [StudentCreateInput!]!) {
   createStudents(data: $data) {
     id
+    __typename
   }
 }
     `;
@@ -1207,6 +1210,7 @@ export const CreateCourseDocument = gql`
     data: {grade: $grade, name: $name, feedback: $feedback, student: {connect: {id: $student}}, teacher: {connect: {id: $teacher}}}
   ) {
     id
+    __typename
   }
 }
     `;
@@ -1271,6 +1275,7 @@ export function useLoginMutation() {
 export const LogoutDocument = gql`
     mutation Logout {
   endSession
+  __typename
 }
     `;
 
@@ -1294,6 +1299,7 @@ export const RegisterDocument = gql`
     mutation Register($email: String!, $password: String!, $name: String!) {
   createUser(data: {email: $email, password: $password, name: $name}) {
     ... on User {
+      __typename
       id
       email
     }
@@ -1317,6 +1323,7 @@ export const ToggleAdminDocument = gql`
     mutation ToggleAdmin($id: ID, $isAdmin: Boolean!) {
   updateUser(where: {id: $id}, data: {isAdmin: $isAdmin}) {
     id
+    __typename
   }
 }
     `;
@@ -1331,6 +1338,7 @@ export const UpdateCourseDocument = gql`
     data: {name: $name, grade: $grade, feedback: $feedback}
   ) {
     id
+    __typename
   }
 }
     `;
@@ -1341,6 +1349,7 @@ export function useUpdateCourseMutation() {
 export const GetUserEmailByIdDocument = gql`
     query GetUserEmailById($id: ID) {
   user(where: {id: $id}) {
+    __typename
     email
   }
 }
@@ -1369,6 +1378,7 @@ export function useCheckLoginQuery(options?: Omit<Urql.UseQueryArgs<CheckLoginQu
 export const CoursesByStudentDocument = gql`
     query CoursesByStudent($studentId: ID!) {
   courses(where: {student: {id: {equals: $studentId}}}) {
+    __typename
     name
     grade
     feedback
@@ -1390,6 +1400,7 @@ export const GetCoursesByStudentAndTeacherDocument = gql`
   courses(
     where: {student: {id: {equals: $studentId}}, teacher: {id: {equals: $teacherId}}}
   ) {
+    __typename
     name
     grade
     feedback
@@ -1404,6 +1415,7 @@ export function useGetCoursesByStudentAndTeacherQuery(options: Omit<Urql.UseQuer
 export const GetAllStudentsDocument = gql`
     query GetAllStudents($limit: Int!, $offset: Int!) {
   students(take: $limit, skip: $offset, orderBy: {firstName: asc}) {
+    __typename
     id
     name
     firstName
@@ -1418,6 +1430,7 @@ export function useGetAllStudentsQuery(options: Omit<Urql.UseQueryArgs<GetAllStu
 export const GetAllTeachersDocument = gql`
     query GetAllTeachers($limit: Int!, $offset: Int!) {
   users(take: $limit, skip: $offset, orderBy: {name: asc}) {
+    __typename
     id
     name
     email
@@ -1432,6 +1445,7 @@ export function useGetAllTeachersQuery(options: Omit<Urql.UseQueryArgs<GetAllTea
 export const GetMyStudentsDocument = gql`
     query GetMyStudents($id: ID!) {
   user(where: {id: $id}) {
+    __typename
     name
     students
     id
@@ -1445,6 +1459,7 @@ export function useGetMyStudentsQuery(options: Omit<Urql.UseQueryArgs<GetMyStude
 export const GetStudentDocument = gql`
     query GetStudent($id: ID!) {
   student(where: {id: $id}) {
+    __typename
     id
     firstName
     lastName
@@ -1462,6 +1477,7 @@ export const SearchStudentsByNamePaginatedDocument = gql`
     take: $limit
     skip: $offset
   ) {
+    __typename
     id
     firstName
     lastName
@@ -1487,6 +1503,7 @@ export function useSearchStudentsByNameCountQuery(options: Omit<Urql.UseQueryArg
 export const StudentsCountDocument = gql`
     query StudentsCount {
   studentsCount
+  __typename
 }
     `;
 

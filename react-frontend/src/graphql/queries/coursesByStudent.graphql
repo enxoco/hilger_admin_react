@@ -1,5 +1,6 @@
 query CoursesByStudent($studentId: ID!){
   courses(where: {student: {id: {equals: $studentId}}}) {
+    __typename
     name
     grade
     feedback

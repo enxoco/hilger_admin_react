@@ -28,8 +28,8 @@ import { toErrorMap } from "../utils/toErrorMap"
 import {useLoginMutation, useRegisterMutation} from '../generated/graphql'
 function Register() {
   const { state, setState } = useContext(UserContext)
-  const [{data, error, fetching}, registerUser] = useRegisterMutation()
-  const [loggedIn, doLogin] = useLoginMutation()
+  const [{data, error, fetching}, registerUser] = useRegisterMutation({requestPolicy: 'cache-and-network'})
+  const [loggedIn, doLogin] = useLoginMutation({requestPolicy: 'cache-and-network'})
   let navigate = useNavigate()
   const [email, setEmail] = useState(null)
   const [password, setPassword] = useState(null)

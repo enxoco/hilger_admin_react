@@ -14,6 +14,8 @@ function Login() {
   const [isPaused, setIsPaused] = useState(true)
   const [login, doLogin] = useLoginMutation({
     pause: isPaused,
+    requestPolicy: 'cache-and-network'
+    
   })
   let navigate = useNavigate()
   const [email, setEmail] = useState(null)
@@ -55,9 +57,11 @@ function Login() {
             <Heading size={useBreakpointValue({ base: "xs", md: "sm" })}>Log in to your account</Heading>
             <HStack spacing="1" justify="center">
               <Text color="muted">Don't have an account?</Text>
-              <Button variant="link" colorScheme="blue">
-                Sign up
-              </Button>
+              <Link to="/register">
+                <Button variant="link" colorScheme="blue">
+                  Sign up
+                </Button>
+              </Link>
             </HStack>
           </Stack>
         </Stack>

@@ -1,5 +1,6 @@
 mutation BulkAddStudents($data: [StudentCreateInput!]!){
   createStudents(data: $data){
     id
+    __typename
   }
 }

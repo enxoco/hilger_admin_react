@@ -1,3 +1,4 @@
 query StudentsCount{
     studentsCount
+    __typename
 }

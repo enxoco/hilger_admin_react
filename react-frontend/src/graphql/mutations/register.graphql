@@ -1,6 +1,7 @@
 mutation Register($email: String!, $password: String!, $name: String!){
   createUser(data: {email: $email, password: $password, name: $name}){
     ... on User {
+      __typename
       id
       email
     }

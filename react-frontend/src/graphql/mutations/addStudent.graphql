@@ -1,5 +1,6 @@
 mutation CreateStudent($firstName: String!, $lastName: String!){
   createStudent(data: {firstName: $firstName, lastName: $lastName}){
     id
+    __typename
   }
 }

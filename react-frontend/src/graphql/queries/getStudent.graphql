@@ -1,5 +1,6 @@
 query GetStudent($id: ID!) {
     student(where: {id: $id}) {
+        __typename
         id
         firstName
         lastName
