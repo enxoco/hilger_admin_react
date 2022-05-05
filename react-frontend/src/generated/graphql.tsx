@@ -1130,6 +1130,13 @@ export type GetAllTeachersQueryVariables = Exact<{
 
 export type GetAllTeachersQuery = { __typename?: 'Query', users?: Array<{ __typename: 'User', id: string, name?: string | null, email?: string | null, isAdmin?: boolean | null }> | null };
 
+export type GetMyCoursesCountByTeacherQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetMyCoursesCountByTeacherQuery = { __typename?: 'Query', coursesCount?: number | null };
+
 export type GetMyStudentsQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -1143,6 +1150,11 @@ export type GetStudentQueryVariables = Exact<{
 
 
 export type GetStudentQuery = { __typename?: 'Query', student?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null } | null };
+
+export type TotalCourseCountQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TotalCourseCountQuery = { __typename?: 'Query', coursesCount?: number | null };
 
 export type SearchStudentsByNamePaginatedQueryVariables = Exact<{
   search: Scalars['String'];
@@ -1442,6 +1454,15 @@ export const GetAllTeachersDocument = gql`
 export function useGetAllTeachersQuery(options: Omit<Urql.UseQueryArgs<GetAllTeachersQueryVariables>, 'query'>) {
   return Urql.useQuery<GetAllTeachersQuery>({ query: GetAllTeachersDocument, ...options });
 };
+export const GetMyCoursesCountByTeacherDocument = gql`
+    query GetMyCoursesCountByTeacher($id: ID!) {
+  coursesCount(where: {teacher: {id: {equals: $id}}})
+}
+    `;
+
+export function useGetMyCoursesCountByTeacherQuery(options: Omit<Urql.UseQueryArgs<GetMyCoursesCountByTeacherQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetMyCoursesCountByTeacherQuery>({ query: GetMyCoursesCountByTeacherDocument, ...options });
+};
 export const GetMyStudentsDocument = gql`
     query GetMyStudents($id: ID!) {
   user(where: {id: $id}) {
@@ -1469,6 +1490,15 @@ export const GetStudentDocument = gql`
 
 export function useGetStudentQuery(options: Omit<Urql.UseQueryArgs<GetStudentQueryVariables>, 'query'>) {
   return Urql.useQuery<GetStudentQuery>({ query: GetStudentDocument, ...options });
+};
+export const TotalCourseCountDocument = gql`
+    query TotalCourseCount {
+  coursesCount(where: {teacher: {id: {not: {lt: 0}}}})
+}
+    `;
+
+export function useTotalCourseCountQuery(options?: Omit<Urql.UseQueryArgs<TotalCourseCountQueryVariables>, 'query'>) {
+  return Urql.useQuery<TotalCourseCountQuery>({ query: TotalCourseCountDocument, ...options });
 };
 export const SearchStudentsByNamePaginatedDocument = gql`
     query SearchStudentsByNamePaginated($search: String!, $limit: Int!, $offset: Int!) {

@@ -3,15 +3,17 @@ import {
   Box,
   Button,
   Container,
+  Divider,
   Flex,
   Heading,
   HStack,
   SimpleGrid,
   Stack,
   Text,
+  Tooltip,
   useBreakpointValue
 } from '@chakra-ui/react'
-import * as React from 'react'
+import {useState, useEffect} from 'react'
 import { FiDownloadCloud } from 'react-icons/fi'
 import { useRecoilState } from 'recoil'
 import { loggedInUser, studentCount } from '../atom'
@@ -19,7 +21,7 @@ import { Card } from '../components/Card'
 import { Navbar } from '../components/Navbar'
 import { Sidebar } from '../components/Sidebar'
 import { Stat } from '../components/Stat'
-import { useStudentsCountQuery } from '../generated/graphql'
+import { useStudentsCountQuery, useGetMyCoursesCountByTeacherQuery, useTotalCourseCountQuery } from '../generated/graphql'
 import useDocumentTitle from '../utils/useDocumentTitle'
 
 const Dashboard = () => {
@@ -28,11 +30,25 @@ const Dashboard = () => {
   const [{data, error, fetching}, getStudentCount] = useStudentsCountQuery()
   const [students, setStudents] = useRecoilState(studentCount)
   const [user,setUser] = useRecoilState(loggedInUser)
-  React.useEffect(() => {
+  const [id, setId] = useState(null)
+  const [courseCount,getCourseCount] = useGetMyCoursesCountByTeacherQuery({pause: !id, variables: {id}})
+
+  const [totalCourses, getTotalCourses] = useTotalCourseCountQuery()
+  useEffect(() => {
     if (students == 0 && !fetching) {
       setStudents(+data.studentsCount)
+
     }
   }, [fetching])
+
+  useEffect(() => {
+    if (!id && user){
+      setId(user.id)
+    }
+  }, user)
+
+
+  console.log('logged in', user)
   return (
     <Flex
       as="section"
@@ -58,22 +74,34 @@ const Dashboard = () => {
                   </Heading>
                   <Text color="muted">All important metrics at a glance</Text>
                 </Stack>
-                <HStack spacing="3">
+                {/* <HStack spacing="3">
                   <Button variant="secondary" leftIcon={<FiDownloadCloud fontSize="1.25rem" />}>
                     Download
                   </Button>
                   <Button variant="primary">Create</Button>
-                </HStack>
+                </HStack> */}
               </Stack>
               <Stack spacing={{ base: '5', lg: '6' }}>
                 <SimpleGrid columns={{ base: 1, md: 3 }} gap="6">
                 <Stat key="students" label="Students enrolled" value={students.toString()} />
-                <Stat key="myGrades" label="My Grades entered" value="?" />
+                <Stat key="myGrades" label="My Grades entered" value={(courseCount.data) ? courseCount.data.coursesCount : "0"} />
 
-                <Stat key="grades" label="Total grades entered" value="0" />
+                <Stat key="grades" label="Total grades entered" value={(totalCourses.data) ? totalCourses.data.coursesCount : 0} />
                 </SimpleGrid>
               </Stack>
-              <Card minH="sm" />
+              <Card minH="sm" display="flex" justifyContent="center" alignItems="center" flexDir="column">
+              This section can be used for news and announcements
+                <Divider w="50%" my={10}/>
+                <HStack>
+
+                <Button mr={10}>View All Students</Button>
+
+                  <Tooltip label="Only show students you have entered grades for">
+                    <Button>View My Students</Button>
+
+                  </Tooltip>
+                </HStack>
+                </Card>
             </Stack>
           </Container>
         </Box>

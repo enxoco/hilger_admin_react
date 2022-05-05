@@ -1,0 +1,3 @@
+query GetMyCoursesCountByTeacher($id: ID!){
+  coursesCount(where: {teacher: {id: {equals: $id}}}) 
+}

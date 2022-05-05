@@ -31,18 +31,17 @@ const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard,
       setFeedback(e.target.value)
     }
 
-    const handleFormSubmission = () => {
-        setUpdateCourse({
+    const handleFormSubmission = async () => {
+        await setUpdateCourse({
             name: courseName,
             grade: courseGrade,
             feedback: courseFeedback,
             id: id
         })
-        navigate(0)
     }
 
-    const handleCreateNewCourse = () => {
-        createCourse({
+    const handleCreateNewCourse = async () => {
+        await createCourse({
             name: courseName,
             grade: courseGrade,
             feedback: courseFeedback,
@@ -50,8 +49,8 @@ const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard,
             teacher
         })
 
-        hideNewCourseCard()
         navigate(0)
+        hideNewCourseCard()
 
 
 

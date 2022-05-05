@@ -10,8 +10,8 @@ function AddStudent() {
   const isDesktop = useBreakpointValue({ base: false, lg: true })
   const isMobile = useBreakpointValue({ base: true, md: false })
 
-  const [firstName, setFirstName] = useState("Christoph")
-  const [lastName, setLastName] = useState("Winston")
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
 
   const [bulkNames, setBulkNames] = useState([])
   const [bulkStudents, addBulkStudents] = useBulkAddStudentsMutation()
@@ -80,9 +80,9 @@ function AddStudent() {
                     <Stack spacing="6" direction={{ base: "column", md: "row" }}>
                       <FormControl id="firstName">
                         <FormLabel>First Name</FormLabel>
-                        <Input defaultValue={firstName} onChange={handleFirstNameUpdate} />
+                        <Input defaultValue={firstName} placeholder="" onChange={handleFirstNameUpdate} />
                       </FormControl>
-                      <FormControl id="lastName" onChange={handleLastNameUpdate}>
+                      <FormControl id="lastName" placeholder="" onChange={handleLastNameUpdate}>
                         <FormLabel>Last Name</FormLabel>
                         <Input defaultValue={lastName} />
                       </FormControl>

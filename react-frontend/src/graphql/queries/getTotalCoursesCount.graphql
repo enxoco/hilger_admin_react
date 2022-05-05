@@ -1,0 +1,3 @@
+query TotalCourseCount{
+  coursesCount(where: {teacher: {id: {not: {lt: 0}}}})
+}

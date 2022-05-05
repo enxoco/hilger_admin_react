@@ -1,4 +1,4 @@
-import { Box, Button, Container, Flex, FormControl, FormLabel, HStack, Input, Stack, Text, useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
+import { Box, Button, Container, Flex, FormControl, FormLabel, HStack, Input, Stack, Text, Tooltip, useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 import { FiDownloadCloud } from "react-icons/fi"
 import { useParams } from "react-router-dom"
@@ -70,9 +70,11 @@ const EditStudent = () => {
             <Stack spacing={{ base: "8", lg: "6" }}>
               <Stack spacing="4" direction={{ base: "column", lg: "row" }} justify="space-between" align={{ base: "start", lg: "center" }}>
                 <HStack spacing="3">
+                  <Tooltip label="Download a CSV file">
                   <Button variant="secondary" leftIcon={<FiDownloadCloud fontSize="1.25rem" />}>
                     Export
                   </Button>
+                  </Tooltip>
                   <Button variant="primary" onClick={showNewCourseCard}>
                     Add Course
                   </Button>
