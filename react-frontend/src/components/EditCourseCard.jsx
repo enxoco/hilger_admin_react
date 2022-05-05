@@ -9,6 +9,7 @@ import {useRecoilState} from 'recoil'
 import {fetchCourses as fetchCoursesAtom} from '../atom'
 const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard, teacher}) => {
 
+    const navigate = useNavigate()
     const  [courseName, setCourseName] = useState(name)
     const [courseGrade, setCourseGrade] = useState(grade)
     const [courseFeedback, setFeedback] = useState(feedback)
@@ -37,7 +38,7 @@ const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard,
             feedback: courseFeedback,
             id: id
         })
-        fetchCourses
+        navigate(0)
     }
 
     const handleCreateNewCourse = () => {
@@ -48,9 +49,10 @@ const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard,
             student,
             teacher
         })
-        fetchCourses
 
         hideNewCourseCard()
+        navigate(0)
+
 
 
     }

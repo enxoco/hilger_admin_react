@@ -23,8 +23,9 @@ import { useStudentsCountQuery } from '../generated/graphql'
 import {useRecoilState, useRecoilValue} from 'recoil'
 
 import { studentCount, loggedInUser } from '../atom'
+import useDocumentTitle from '../utils/useDocumentTitle'
 const Dashboard = () => {
-
+  useDocumentTitle('Hilger Portal - Dashboard')
   const isDesktop = useBreakpointValue({ base: false, lg: true })
   const [{data, error, fetching}, getStudentCount] = useStudentsCountQuery()
   const [students, setStudents] = useRecoilState(studentCount)

@@ -1,8 +1,7 @@
 import { Box, Button, Container, Divider, Flex, FormControl, FormLabel, HStack, Input, Stack, Text, Textarea, useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
-import * as React from "react"
 import { useState } from "react"
 import { FiDownloadCloud } from "react-icons/fi"
-import { useNavigate, useHistory } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { Navbar } from "../components/Navbar"
 import { Sidebar } from "../components/Sidebar"
 import { useBulkAddStudentsMutation, useCreateStudentMutation } from "../generated/graphql"
@@ -20,7 +19,6 @@ function AddStudent() {
   const handleFirstNameUpdate = (e) => {
     setFirstName(e.target.value)
   }
-  const history = useHistory()
 
 
 
@@ -34,7 +32,7 @@ function AddStudent() {
       console.error("error", error)
       return
     }
-    history.go(0)
+    navigate(0)
   }
 
   const handleBulkNameUpdate = (e) => {
