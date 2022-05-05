@@ -1,13 +1,12 @@
-import { Box, Button, Flex, Checkbox, Container, Divider, FormControl, FormLabel, Heading, HStack, Input, Stack, Text, useBreakpointValue, useColorModeValue, Alert, AlertTitle, AlertIcon } from "@chakra-ui/react"
-import { Form, Formik } from "formik"
-import { useContext, useState, useEffect } from "react"
-import { Link, useNavigate, useParams } from "react-router-dom"
-import { InputField } from "../../components/InputField"
-import { UserContext } from "../../UserContext"
-import { PasswordField } from "../../components/PasswordField"
+import { Alert, AlertIcon, AlertTitle, Box, Button, Container, Heading, HStack, Stack, Text, useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
 import Hashids from "hashids"
+import { useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
+import { PasswordField } from "../../components/PasswordField"
 import { useForgotPasswordMutation, useGetUserEmailByIdQuery, useRedeemPasswordResetTokenMutation } from "../../generated/graphql"
+import useDocumentTitle from "../../utils/useDocumentTitle"
 function ResetPassword() {
+  useDocumentTitle('Hilger Portal - Reset password')
   const hashids = new Hashids("this is my salt", 8, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
 
   const { id, token } = useParams()

@@ -6,7 +6,9 @@ import { Navbar } from "../components/Navbar"
 import { PasswordField } from "../components/PasswordField"
 import { Sidebar } from "../components/Sidebar"
 import { useCreateTeacherMutation } from "../generated/graphql"
+import useDocumentTitle from "../utils/useDocumentTitle"
 function AddTeacher() {
+  useDocumentTitle('Hiler Portal - Add teacher')
   const navigate = useNavigate()
   const isDesktop = useBreakpointValue({ base: false, lg: true })
   const isMobile = useBreakpointValue({ base: true, md: false })
@@ -45,7 +47,7 @@ function AddTeacher() {
       console.error("error", error)
       return
     }
-    navigate("/teachers")
+    navigate(0)
   }
   return (
     <Flex as="section" direction={{ base: "column", lg: "row" }} height="100vh" bg="bg-canvas" overflowY="auto">

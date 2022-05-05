@@ -1,8 +1,10 @@
 import { Alert, AlertIcon, AlertTitle, Box, Button, Container, FormControl, FormLabel, Heading, HStack, Input, Stack, Text, useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useForgotPasswordMutation } from "../../generated/graphql"
+import useDocumentTitle from "../../utils/useDocumentTitle"
 
 function ForgotPassword() {
+  useDocumentTitle('Hilger Portal - Forgot password')
   const [{data, error, fetching}, doPasswordReset] = useForgotPasswordMutation()
   const [email, setEmail] = useState(null)
   const [status, setStatus] = useState(null)

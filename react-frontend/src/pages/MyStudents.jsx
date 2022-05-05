@@ -1,5 +1,4 @@
 import { Box, Button, ButtonGroup, Container, Flex, HStack, Icon, Input, InputGroup, InputLeftElement, Stack, Text, useBreakpointValue } from "@chakra-ui/react"
-import * as React from "react"
 import { useEffect } from "react"
 import { FiDownloadCloud, FiSearch } from "react-icons/fi"
 import { Link, useParams } from "react-router-dom"

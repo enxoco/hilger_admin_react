@@ -1,32 +1,19 @@
-import { 
-  Box,
-  Button,
-  Flex,
-  Checkbox,
-  Container,
-  Divider,
-  FormControl,
+import {
+  Alert, AlertIcon, AlertTitle, Box,
+  Button, Container, FormControl,
   FormLabel,
-  Heading,
-  HStack,
-  Input,
-  Stack,
-  Text,
-  Alert,
-  AlertTitle,
-  AlertIcon,
-  useBreakpointValue,
-  useColorModeValue,
-  AlertDescription, } from "@chakra-ui/react"
-import { Form, Formik } from "formik"
+  Heading, Input,
+  Stack, useBreakpointValue,
+  useColorModeValue
+} from "@chakra-ui/react"
 import { useContext, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { InputField } from "../components/InputField"
-import { UserContext } from "../UserContext"
+import { useNavigate } from "react-router-dom"
 import { PasswordField } from '../components/PasswordField'
-import { toErrorMap } from "../utils/toErrorMap"
-import {useLoginMutation, useRegisterMutation} from '../generated/graphql'
+import { useLoginMutation, useRegisterMutation } from '../generated/graphql'
+import { UserContext } from "../UserContext"
+import useDocumentTitle from "../utils/useDocumentTitle"
 function Register() {
+  useDocumentTitle('Hilger Portal - Registration')
   const { state, setState } = useContext(UserContext)
   const [{data, error, fetching}, registerUser] = useRegisterMutation({requestPolicy: 'cache-and-network'})
   const [loggedIn, doLogin] = useLoginMutation({requestPolicy: 'cache-and-network'})

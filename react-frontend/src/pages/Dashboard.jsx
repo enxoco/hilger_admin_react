@@ -9,21 +9,19 @@ import {
   SimpleGrid,
   Stack,
   Text,
-  useBreakpointValue,
-  useColorModeValue,
+  useBreakpointValue
 } from '@chakra-ui/react'
 import * as React from 'react'
-import { useContext } from 'react'
 import { FiDownloadCloud } from 'react-icons/fi'
+import { useRecoilState } from 'recoil'
+import { loggedInUser, studentCount } from '../atom'
 import { Card } from '../components/Card'
 import { Navbar } from '../components/Navbar'
 import { Sidebar } from '../components/Sidebar'
-import {Stat} from '../components/Stat'
+import { Stat } from '../components/Stat'
 import { useStudentsCountQuery } from '../generated/graphql'
-import {useRecoilState, useRecoilValue} from 'recoil'
-
-import { studentCount, loggedInUser } from '../atom'
 import useDocumentTitle from '../utils/useDocumentTitle'
+
 const Dashboard = () => {
   useDocumentTitle('Hilger Portal - Dashboard')
   const isDesktop = useBreakpointValue({ base: false, lg: true })

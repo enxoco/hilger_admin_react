@@ -7,7 +7,7 @@ import { courses as coursesAtom, loggedInUser } from '../atom'
 import EditStudentCard from "../components/EditCourseCard"
 import { Navbar } from "../components/Navbar"
 import { Sidebar } from "../components/Sidebar"
-import { useGetCoursesByStudentAndTeacherQuery, useGetStudentQuery, useCheckLoginQuery } from "../generated/graphql"
+import { useCheckLoginQuery, useGetCoursesByStudentAndTeacherQuery, useGetStudentQuery } from "../generated/graphql"
 
 
 const EditStudent = () => {

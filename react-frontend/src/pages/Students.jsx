@@ -9,8 +9,10 @@ import StudentTable from "../components/MemberTable"
 import { Navbar } from "../components/Navbar"
 import { Sidebar } from "../components/Sidebar"
 import { useDeleteStudentMutation, useGetAllStudentsQuery } from "../generated/graphql"
+import useDocumentTitle from "../utils/useDocumentTitle"
 
 const Students = () => {
+  useDocumentTitle('Hilger Portal - Students')
   const { id } = useParams()
   const isDesktop = useBreakpointValue({ base: false, lg: true })
   const isMobile = useBreakpointValue({ base: true, md: false })

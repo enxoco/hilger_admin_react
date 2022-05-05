@@ -9,7 +9,9 @@ import { Navbar } from "../components/Navbar"
 import { Sidebar } from "../components/Sidebar"
 import TeacherTable from "../components/TeacherTable"
 import { useDeleteTeacherMutation, useGetAllTeachersQuery } from "../generated/graphql"
+import useDocumentTitle from "../utils/useDocumentTitle"
 const Teachers = () => {
+  useDocumentTitle('Hilger Portal - Teachers')
   const { id } = useParams()
   const isDesktop = useBreakpointValue({ base: false, lg: true })
   const isMobile = useBreakpointValue({ base: true, md: false })

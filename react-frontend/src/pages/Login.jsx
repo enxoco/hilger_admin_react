@@ -1,16 +1,13 @@
 import { Alert, AlertIcon, AlertTitle, Box, Button, Checkbox, Container, FormControl, FormLabel, Heading, HStack, Input, Stack, Text, useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
-import { useContext, useState, useEffect } from "react"
-import { Link, useNavigate, Navigate } from "react-router-dom"
+import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import { PasswordField } from "../components/PasswordField"
 import { useLoginMutation } from "../generated/graphql"
-import { UserContext } from "../UserContext"
-import { useIsAuth } from "../utils/useIsAuth"
-import {useRecoilState} from 'recoil'
-import {loggedInUser} from '../atom'
+import useDocumentTitle from "../utils/useDocumentTitle"
 
 
 function Login() {
-  // useIsAuth()
+  useDocumentTitle('Hilger Portal - Login')
   const [isPaused, setIsPaused] = useState(true)
   const [login, doLogin] = useLoginMutation({
     pause: isPaused,

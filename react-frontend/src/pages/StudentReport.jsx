@@ -1,16 +1,17 @@
-import { Box, Button, Container, Flex, FormControl, FormLabel, HStack, Input, Stack, Text, useBreakpointValue, useColorModeValue, Heading, VStack, Image, Divider } from "@chakra-ui/react"
-import { useEffect, useState, useRef } from "react"
+import { Box, Button, Container, Flex, Heading, HStack, Image, Stack, Text, useBreakpointValue, useColorModeValue, VStack } from "@chakra-ui/react"
+import { useEffect, useRef, useState } from "react"
 import { FiDownloadCloud } from "react-icons/fi"
 import { useParams } from "react-router-dom"
+import ReactToPrint from "react-to-print"
 import { useRecoilState } from "recoil"
 import { courses as coursesAtom, loggedInUser } from "../atom"
-import EditStudentCard from "../components/EditCourseCard"
 import { Navbar } from "../components/Navbar"
 import { Sidebar } from "../components/Sidebar"
-import { useCoursesByStudentQuery, useGetStudentQuery, useCheckLoginQuery } from "../generated/graphql"
-import ReactToPrint from "react-to-print"
+import { useCheckLoginQuery, useCoursesByStudentQuery, useGetStudentQuery } from "../generated/graphql"
+import useDocumentTitle from "../utils/useDocumentTitle"
 
 const StudentReport = () => {
+  useDocumentTitle('Hilger Portal - Student Report')
   const componentRef = useRef()
   const isDesktop = useBreakpointValue({ base: false, lg: true })
   const isMobile = useBreakpointValue({ base: true, md: false })
