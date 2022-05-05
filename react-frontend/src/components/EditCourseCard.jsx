@@ -37,6 +37,7 @@ const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard,
             feedback: courseFeedback,
             id: id
         })
+        fetchCourses
     }
 
     const handleCreateNewCourse = () => {
@@ -47,6 +48,7 @@ const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard,
             student,
             teacher
         })
+        fetchCourses
 
         hideNewCourseCard()
 
