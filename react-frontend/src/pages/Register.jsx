@@ -6,7 +6,7 @@ import {
   Stack, useBreakpointValue,
   useColorModeValue
 } from "@chakra-ui/react"
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { PasswordField } from '../components/PasswordField'
 import { useLoginMutation, useRegisterMutation } from '../generated/graphql'
@@ -42,11 +42,16 @@ function Register() {
     if (error && error.message == "[GraphQL] Prisma error: Unique constraint failed on the fields: (`email`)") {
       setEmailTaken(true)
     }
-    if (data.createUser){
-      doLogin({email, password})
+    
+      await doLogin({email, password})
+
+  }
+
+  useEffect(() => {
+    if(loggedIn && loggedIn.data?.authenticateUserWithPassword) {
       navigate('/dashboard')
     }
-  }
+  }, [loggedIn.data])
   return (
     <Container maxW="lg" py={{ base: '12', md: '24' }} px={{ base: '0', sm: '8' }}>
     <Stack spacing="8">
@@ -88,7 +93,7 @@ function Register() {
             <AlertTitle>Email adress already in use</AlertTitle>
           </Alert>
           )}
-            <Button variant="primary" onClick={handleRegister}>Register</Button>
+            <Button variant="primary" onClick={handleRegister} isLoading={fetching}>Register</Button>
           </Stack>
         </Stack>
       </Box>
