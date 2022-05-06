@@ -25,7 +25,7 @@ import { Stat } from '../components/Stat'
 import { useStudentsCountQuery, useGetMyCoursesCountByTeacherQuery, useTotalCourseCountQuery } from '../generated/graphql'
 import useDocumentTitle from '../utils/useDocumentTitle'
 
-import {ImpersonateUserBanner} from '../components/ImpersonatedUserBanner'
+// import {ImpersonateUserBanner} from '../components/ImpersonatedUserBanner'
 const Dashboard = () => {
   useDocumentTitle('Hilger Portal - Dashboard')
   const isDesktop = useBreakpointValue({ base: false, lg: true })
@@ -62,7 +62,7 @@ const Dashboard = () => {
       <Box bg="bg-surface" pt={{ base: '0', lg: '3' }} flex="1">
         <Box bg="bg-canvas" borderTopLeftRadius={{ base: 'none', lg: '2rem' }} height="full">
           <Container py="8">
-          <ImpersonateUserBanner />
+          {/* <ImpersonateUserBanner /> */}
 
             <Stack spacing={{ base: '8', lg: '6' }}>
               <Stack
