@@ -10,6 +10,8 @@ import { Sidebar } from "../components/Sidebar"
 import { useDeleteStudentMutation, useGetMyStudentsQuery, useStudentsCountQuery } from "../generated/graphql"
 import dynamicSort from "../utils/dynamicSort"
 import {exportCSVFile} from '../utils/csvExport'
+import {ImpersonateUserBanner} from '../components/ImpersonatedUserBanner'
+
 const MyStudents = () => {
   const { id } = useParams()
   const isDesktop = useBreakpointValue({ base: false, lg: true })
@@ -110,6 +112,7 @@ const MyStudents = () => {
       <Box bg="bg-surface" pt={{ base: "0", lg: "3" }} flex="1">
         <Box bg="bg-canvas" borderTopLeftRadius={{ base: "none", lg: "2rem" }} height="full">
           <Container py="8">
+            <ImpersonateUserBanner />
             <Stack spacing={{ base: "8", lg: "6" }}>
               <Stack spacing="4" direction={{ base: "column", lg: "row" }} justify="space-between" align={{ base: "start", lg: "center" }}>
                 <HStack spacing="3">

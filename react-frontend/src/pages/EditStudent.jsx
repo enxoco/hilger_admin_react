@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom"
 import { useRecoilState } from 'recoil'
 import { courses as coursesAtom, loggedInUser } from '../atom'
 import EditStudentCard from "../components/EditCourseCard"
+import { ImpersonateUserBanner } from "../components/ImpersonatedUserBanner"
 import { Navbar } from "../components/Navbar"
 import { Sidebar } from "../components/Sidebar"
 import { useCheckLoginQuery, useGetCoursesByStudentAndTeacherQuery, useGetStudentQuery } from "../generated/graphql"
@@ -67,6 +68,7 @@ const EditStudent = () => {
       <Box bg="bg-surface" pt={{ base: "0", lg: "3" }} flex="1">
         <Box bg="bg-canvas" borderTopLeftRadius={{ base: "none", lg: "2rem" }} height="full">
           <Container py="8">
+            <ImpersonateUserBanner />
             <Stack spacing={{ base: "8", lg: "6" }}>
               <Stack spacing="4" direction={{ base: "column", lg: "row" }} justify="space-between" align={{ base: "start", lg: "center" }}>
                 <HStack spacing="3">
