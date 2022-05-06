@@ -45,7 +45,7 @@ function Login() {
       <Stack spacing="8">
         <Stack spacing="6">
           <Stack spacing={{ base: "2", md: "3" }} textAlign="center">
-            {login && login.data ? (
+            {login && login.data && login.data?.authenticateUserWithPassword?.message === "Authentication failed." ? (
               <Alert status="error">
                 <AlertIcon />
                 <AlertTitle>{login.data?.authenticateUserWithPassword?.message === "Authentication failed." ? "Login failed.  Please check your password" : "Error logging in"}</AlertTitle>

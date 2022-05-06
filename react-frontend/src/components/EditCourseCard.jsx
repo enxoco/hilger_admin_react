@@ -1,13 +1,13 @@
 import { DeleteIcon } from '@chakra-ui/icons'
-import { Box, Button, Divider, Flex, FormControl, FormLabel, IconButton, Input, Stack, useColorModeValue, Textarea } from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, FormControl, FormLabel, IconButton, Input, Stack, useColorModeValue, Textarea, Badge } from '@chakra-ui/react'
 import * as React from 'react'
 import { useState, useContext } from 'react'
 import { useUpdateCourseMutation, useCreateCourseMutation, useDeleteCourseMutation } from '../generated/graphql'
 import { UserContext } from '../UserContext'
 import {useNavigate} from 'react-router-dom'
 import {useRecoilState} from 'recoil'
-import {fetchCourses as fetchCoursesAtom} from '../atom'
-const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard, teacher}) => {
+import {fetchCourses as fetchCoursesAtom, impersonateUser} from '../atom'
+const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard, teacher, teacherName}) => {
 
     const navigate = useNavigate()
     const  [courseName, setCourseName] = useState(name)
@@ -19,6 +19,7 @@ const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard,
     const [createdCourse, createCourse] = useCreateCourseMutation()
     const [_, deleteCourse] = useDeleteCourseMutation()
     const [fetchCourses, setFetchCourses] = useRecoilState(fetchCoursesAtom)
+    const {impersonatedUser} = useRecoilState(impersonateUser)
     const handleCourseNameUpdate = (e) => {
         setCourseName(e.target.value)
     }
@@ -61,7 +62,9 @@ const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard,
     }
     return (
         <Box as="form" bg="bg-surface" boxShadow={useColorModeValue("sm", "sm-dark")} borderRadius="lg">
+          <Badge borderRadius={0} p={5}>Teacher: {teacherName}</Badge>
         <Stack spacing="5" px={{ base: "4", md: "6" }} py={{ base: "5", md: "6" }}>
+          
           <Stack spacing="6" direction={{ base: "column", md: "row" }}>
             <FormControl id="name">
               <FormLabel>Name</FormLabel>

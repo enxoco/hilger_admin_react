@@ -107,8 +107,7 @@ function TeacherTable({studentProp, columns}) {
 
   return (
     <>
-    
-    {(studentProp) ? (    
+        
     <Table>
       <Thead>
         <Tr>
@@ -154,18 +153,14 @@ function TeacherTable({studentProp, columns}) {
                   <HStack spacing="3">
                     <Checkbox />
                     <Box>
-                    <Link to={"/students/" + member.id}>
                       <Text fontWeight="medium">{member.firstName || member.name}</Text>
-                    </Link>
                     </Box>
                   </HStack>
                 </Td>
                 <Td>
                   <HStack spacing="3">
                     <Box>
-                    <Link to={"/students/" + member.id}>
                       <Text fontWeight="medium">{member.lastName || member.email}</Text>
-                    </Link>
                     </Box>
                   </HStack>
                 </Td>
@@ -178,12 +173,6 @@ function TeacherTable({studentProp, columns}) {
                 </Td>
                 <Td>
                   <HStack spacing="1">
-                    <Link to={"/teachers/" + member.id}>
-                      <Tooltip label="Edit teacher information">
-                      <IconButton icon={<FiEdit2 fontSize="1.25rem" />} variant="ghost" aria-label="Edit member" />
-
-                      </Tooltip>
-                    </Link>
                     <Tooltip label='Send password reset email'>
                     <IconButton icon={<FiSend fontSize="1.25rem" />} variant="ghost" aria-label="Send Password reset" onClick={() => handleRequestPasswordReset(member.email)} />
                     </Tooltip>
@@ -199,7 +188,7 @@ function TeacherTable({studentProp, columns}) {
               </Tr>
             )})}
       </Tbody>
-    </Table>) : (<>'Loading'</>)}
+    </Table>
     </>
   )
 }

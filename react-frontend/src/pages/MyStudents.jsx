@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, Container, Flex, HStack, Icon, Input, InputGroup, InputLeftElement, Stack, Text, useBreakpointValue, Tooltip, IconButton } from "@chakra-ui/react"
+import { Box, Button, ButtonGroup, Container, Flex, HStack, Icon, Input, InputGroup, InputLeftElement, Stack, Text, useBreakpointValue, Tooltip, IconButton, Divider } from "@chakra-ui/react"
 import { useEffect, useMemo } from "react"
 import { FiDownloadCloud, FiSearch, FiEdit2 } from "react-icons/fi"
 import { Link, useParams } from "react-router-dom"
@@ -11,6 +11,7 @@ import { useDeleteStudentMutation, useGetMyStudentsQuery, useStudentsCountQuery 
 import dynamicSort from "../utils/dynamicSort"
 import {exportCSVFile} from '../utils/csvExport'
 import {ImpersonateUserBanner} from '../components/ImpersonatedUserBanner'
+import { Card } from "../components/Card"
 
 const MyStudents = () => {
   const { id } = useParams()
@@ -138,18 +139,22 @@ const MyStudents = () => {
                   </Stack>
                 </Box>
                 <Box overflowX="auto">
-                  <StudentTable
+                  {(!students?.length) ? (
+                      <Card display={"flex"} justifyContent="center" alignItems={"center"} flexDir="column"><Text size="lg">
+                        You don't appear to have any grades entered yet.
+                        </Text>
+                        <Divider w="50%" my={10}/>
+                        <Text>To start entering grades, click<Button variant={"link"}><Link to="/students" variant="link"> here</Link> </Button></Text>
+                        </Card>
+                  ) : (
+                    <StudentTable
                     columns={columns}
                     data={
-                      students || [
-                        { id: 0, name: "", firstName: "", lastName: "" },
-                        { id: 0, name: "", firstName: "", lastName: "" },
-                        { id: 0, name: "", firstName: "", lastName: "" },
-                        { id: 0, name: "", firstName: "", lastName: "" },
-                        { id: 0, name: "", firstName: "", lastName: "" },
-                      ]
+                      students || []
                     }
                   />
+                  )}
+
                 </Box>
                 <Box px={{ base: "4", md: "6" }} pb="5"></Box>
               </Stack>

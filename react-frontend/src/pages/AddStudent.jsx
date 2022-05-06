@@ -1,7 +1,8 @@
-import { Box, Button, Container, Divider, Flex, FormControl, FormLabel, HStack, Input, Stack, Text, Textarea, useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
-import { useState } from "react"
+import { Box, Button, Container, Divider, Flex, FormControl, FormLabel, HStack, Input, Stack, Text, Textarea, useBreakpointValue, useColorModeValue, Alert, AlertIcon, AlertTitle } from "@chakra-ui/react"
+import { useEffect, useState, useRef } from "react"
 import { FiDownloadCloud } from "react-icons/fi"
 import { useNavigate } from "react-router-dom"
+import { ImpersonateUserBanner } from "../components/ImpersonatedUserBanner"
 import { Navbar } from "../components/Navbar"
 import { Sidebar } from "../components/Sidebar"
 import { useBulkAddStudentsMutation, useCreateStudentMutation } from "../generated/graphql"
@@ -21,42 +22,44 @@ function AddStudent() {
   }
 
 
-
   const handleLastNameUpdate = (e) => {
     setLastName(e.target.value)
   }
 
   const handleFormSubmit = async () => {
-    await addStudent({ firstName, lastName })
+    const addResult = await addStudent({ firstName, lastName })
     if (error) {
       console.error("error", error)
       return
     }
-    navigate(0)
+    setFirstName("")
+    setLastName("")
+    // navigate(0)
   }
 
   const handleBulkNameUpdate = (e) => {
     setBulkNames(e.target.value)
-    console.log('bulk banes', bulkNames)
+    console.log("bulk banes", bulkNames)
   }
   const handleBulkSubmission = (e) => {
-    console.log('e', e.target.value)
     let names = bulkNames
     let data = []
-    for (const name of names.split('\n')) {
-      let firstName = name.split(' ').slice(0, -1).join(' ')
-      let lastName = name.split(' ').slice(-1).join(' ')
-      data.push({firstName, lastName})
+    for (const name of names.split("\n")) {
+      let firstName = name.split(" ").slice(0, -1).join(" ")
+      let lastName = name.split(" ").slice(-1).join(" ")
+      data.push({ firstName, lastName })
     }
-    addBulkStudents({data})
-
+    addBulkStudents({ data })
+    setBulkNames([])
   }
+
   return (
     <Flex as="section" direction={{ base: "column", lg: "row" }} height="100vh" bg="bg-canvas" overflowY="auto">
       {isDesktop ? <Sidebar /> : <Navbar />}
       <Box bg="bg-surface" pt={{ base: "0", lg: "3" }} flex="1">
         <Box bg="bg-canvas" borderTopLeftRadius={{ base: "none", lg: "2rem" }} height="full">
           <Container py="8">
+            <ImpersonateUserBanner />
             <Stack spacing={{ base: "8", lg: "6" }}>
               <Stack spacing="4" direction={{ base: "column", lg: "row" }} justify="space-between" align={{ base: "start", lg: "center" }}>
                 <HStack spacing="3">
@@ -76,15 +79,21 @@ function AddStudent() {
                   </Stack>
                 </Box>
                 <Box as="form" bg="bg-surface" boxShadow={useColorModeValue("sm", "sm-dark")} borderRadius="lg">
+                {data?.createStudent ? (
+                      <Alert status="success">
+                        <AlertIcon />
+                        <AlertTitle>Student added successfully</AlertTitle>
+                      </Alert>
+                    ) : null}
                   <Stack spacing="5" px={{ base: "4", md: "6" }} py={{ base: "5", md: "6" }}>
                     <Stack spacing="6" direction={{ base: "column", md: "row" }}>
                       <FormControl id="firstName">
                         <FormLabel>First Name</FormLabel>
-                        <Input defaultValue={firstName} placeholder="" onChange={handleFirstNameUpdate} />
+                        <Input value={firstName} placeholder="" onChange={handleFirstNameUpdate} />
                       </FormControl>
                       <FormControl id="lastName" placeholder="" onChange={handleLastNameUpdate}>
                         <FormLabel>Last Name</FormLabel>
-                        <Input defaultValue={lastName} />
+                        <Input value={lastName} />
                       </FormControl>
                     </Stack>
                   </Stack>
@@ -110,16 +119,22 @@ function AddStudent() {
                 </Box>
                 <Box as="form" bg="bg-surface" boxShadow={useColorModeValue("sm", "sm-dark")} borderRadius="lg">
                   <Stack spacing="5" px={{ base: "4", md: "6" }} py={{ base: "5", md: "6" }}>
+                    {bulkStudents.data ? (
+                      <Alert status="success">
+                        <AlertIcon />
+                        <AlertTitle>Students added successfully</AlertTitle>
+                      </Alert>
+                    ) : null}
                     <Stack spacing="6" direction={{ base: "column", md: "row" }}>
                       <FormControl id="firstName">
                         <FormLabel>Students</FormLabel>
-                        <Textarea onChange={handleBulkNameUpdate} />
+                        <Textarea onChange={handleBulkNameUpdate} value={bulkNames} />
                       </FormControl>
                     </Stack>
                   </Stack>
                   <Divider />
                   <Flex direction="row-reverse" py="4" px={{ base: "4", md: "6" }}>
-                    <Button variant="primary" onClick={handleBulkSubmission}>
+                    <Button variant="primary" onClick={handleBulkSubmission} isLoading={bulkStudents.fetching}>
                       Save
                     </Button>
                   </Flex>

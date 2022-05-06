@@ -8,7 +8,7 @@ import { loggedInUser } from "../atom"
 import { useCheckLoginQuery, useLogoutMutation } from "../generated/graphql"
 import { NavButton } from "./NavButton"
 import { UserProfile } from "./UserProfile"
-
+import logo from '../logo.jpg'
 export const Sidebar = () => {
   const location = useLocation()
   const navigate = useNavigate()
@@ -30,11 +30,11 @@ export const Sidebar = () => {
 
 
   return (
-    <Flex as="section" minH="100vh" bg="bg-canvas">
+    <Flex as="section" minH="100vh" bg="bg-canvas" w={300}>
       <Flex flex="1" bg="bg-surface" overflowY="auto" boxShadow={useColorModeValue("md", "sm-dark")} maxW={{ base: "full", sm: "xs" }} py={{ base: "6", sm: "8" }} px={{ base: "4", sm: "6" }}>
         <Stack justify="space-between" spacing="1">
           <Stack spacing={{ base: "5", sm: "6" }} shouldWrapChildren>
-            <Image mx="auto" src="https://hhlearning.com/wp-content/uploads/2017/04/cropped-HH-Logo.png" height="200" maxH="200px" />
+            <Image mx="auto" src={logo} h={217} w={225} />
 
             <Stack spacing="1">
               <Link to="/dashboard">
@@ -57,8 +57,8 @@ export const Sidebar = () => {
           </Stack>
           <Stack spacing={{ base: "5", sm: "6" }}>
             <Stack spacing="1">
-              <NavButton label="Help" icon={FiHelpCircle} />
-              <NavButton label="Settings" icon={FiSettings} />
+              {/* <NavButton label="Help" icon={FiHelpCircle} />
+              <NavButton label="Settings" icon={FiSettings} /> */}
               <NavButton label="Logout" icon={FiLogOut} onClick={handleLogout} />
             </Stack>
 

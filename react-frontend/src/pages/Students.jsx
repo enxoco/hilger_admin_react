@@ -129,13 +129,7 @@ const Students = () => {
                   <StudentTable
                     columns={columns}
                     data={
-                      students || [
-                        { id: 0, name: "", firstName: "", lastName: "" },
-                        { id: 0, name: "", firstName: "", lastName: "" },
-                        { id: 0, name: "", firstName: "", lastName: "" },
-                        { id: 0, name: "", firstName: "", lastName: "" },
-                        { id: 0, name: "", firstName: "", lastName: "" },
-                      ]
+                      students || []
                     }
                   />
                 </Box>

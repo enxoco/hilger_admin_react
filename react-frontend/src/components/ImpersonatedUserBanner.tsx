@@ -15,7 +15,7 @@ export const ImpersonateUserBanner = (props: any) => {
           <Container py={{ base: "4", md: "3.5" }}>
             <Stack direction={{ base: "column", md: "row" }} justify="center" spacing={{ base: "0.5", md: "1.5" }} pe={{ base: "4", sm: "0" }}>
               <Text fontWeight="medium">You are currently viewing the portal as {impersonatedUser.name}</Text>
-              <Text color="on-accent-muted">To go back to your account <Link variant="ghost" onClick={() => window.location.reload()}>Click Here</Link></Text>
+              <Text color="on-accent-muted">To go back to your account <Link variant="ghost" onClick={() => window.location.href ="/teachers"}>Click Here</Link></Text>
             </Stack>
             <CloseButton position="absolute" right="2" top="2.5" />
           </Container>

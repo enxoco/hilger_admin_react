@@ -86,10 +86,10 @@ const Dashboard = () => {
               </Stack>
               <Stack spacing={{ base: '5', lg: '6' }}>
                 <SimpleGrid columns={{ base: 1, md: 3 }} gap="6">
-                <Stat key="students" label="Students enrolled" value={students.toString()} />
-                <Stat key="myGrades" label="My Grades entered" value={(courseCount.data) ? courseCount.data.coursesCount : "0"} />
+                <Stat key="students" label="Students enrolled" value={students?.toString()} />
+                <Stat key="myGrades" label="My Grades entered" value={(courseCount?.data) ? courseCount.data.coursesCount : "0"} />
 
-                <Stat key="grades" label="Total grades entered" value={(totalCourses.data) ? totalCourses.data.coursesCount : 0} />
+                <Stat key="grades" label="Total grades entered" value={(totalCourses?.data) ? totalCourses.data.coursesCount : 0} />
                 </SimpleGrid>
               </Stack>
               <Card minH="sm" display="flex" justifyContent="center" alignItems="center" flexDir="column">

@@ -46,7 +46,7 @@ function RequireAuth({ children }: { children: JSX.Element }) {
 
   if (!user && !me.fetching) {
     if (!user && !me.data.authenticatedItem) {
-      console.log('not logged in')
+      
       return <Navigate to="/login" state={{ from: location }} replace />
 
     }
