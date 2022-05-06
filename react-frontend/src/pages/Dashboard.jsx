@@ -97,7 +97,7 @@ const Dashboard = () => {
                 <Button mr={10}><Link href='/students'>View All Students</Link></Button>
 
                   <Tooltip label="Only show students you have entered grades for">
-                  <Button mr={10}><Link href={`/students/${user.id}`}>View My Students</Link></Button>
+                  <Button mr={10}><Link href={`/students/${(user) ? user.id : null}`}>View My Students</Link></Button>
 
                   </Tooltip>
                 </HStack>
