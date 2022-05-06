@@ -11,7 +11,8 @@ import {
   Stack,
   Text,
   Tooltip,
-  useBreakpointValue
+  useBreakpointValue,
+  Link
 } from '@chakra-ui/react'
 import {useState, useEffect} from 'react'
 import { FiDownloadCloud } from 'react-icons/fi'
@@ -48,7 +49,6 @@ const Dashboard = () => {
   }, user)
 
 
-  console.log('logged in', user)
   return (
     <Flex
       as="section"
@@ -94,10 +94,10 @@ const Dashboard = () => {
                 <Divider w="50%" my={10}/>
                 <HStack>
 
-                <Button mr={10}>View All Students</Button>
+                <Button mr={10}><Link href='/students'>View All Students</Link></Button>
 
                   <Tooltip label="Only show students you have entered grades for">
-                    <Button>View My Students</Button>
+                  <Button mr={10}><Link href={`/students/${user.id}`}>View My Students</Link></Button>
 
                   </Tooltip>
                 </HStack>

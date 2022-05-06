@@ -5,7 +5,7 @@ import { FiEdit2, FiLogIn, FiSend } from "react-icons/fi"
 import { IoArrowDown, IoArrowUp } from "react-icons/io5"
 import { Link } from "react-router-dom"
 import { useRecoilState } from "recoil"
-import { searchTerm as searchTermAtom, students as studentAtom, loggedInUser } from '../atom'
+import { searchTerm as searchTermAtom, students as studentAtom, loggedInUser, impersonateUser as impersonateUserAtom } from '../atom'
 import {
 
   useForgotPasswordMutation,
@@ -22,6 +22,7 @@ function TeacherTable({studentProp, columns}) {
 
   const [, fetchPasswordReset] = useForgotPasswordMutation()
   const [, toggleAdmin] = useToggleAdminMutation()
+  const [impersonatedUser, setImpersonatedUser] = useRecoilState(impersonateUserAtom)
 
   async function handleRequestPasswordReset(email){
     const result = await fetchPasswordReset({email})
@@ -95,8 +96,12 @@ function TeacherTable({studentProp, columns}) {
   }
 
 
-  function impersonate(member) {
+  async function impersonate(member) {
+    await setImpersonatedUser(member)
     setUser(member)
+    
+    console.log('user', user)
+    console.log('impersonated', impersonatedUser)
   }
 
 

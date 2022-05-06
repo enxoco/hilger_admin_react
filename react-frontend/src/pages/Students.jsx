@@ -11,6 +11,7 @@ import { Sidebar } from "../components/Sidebar"
 import { useDeleteStudentMutation, useGetAllStudentsQuery } from "../generated/graphql"
 import useDocumentTitle from "../utils/useDocumentTitle"
 import {exportCSVFile} from '../utils/csvExport'
+import {ImpersonateUserBanner} from '../components/ImpersonatedUserBanner'
 const Students = () => {
   useDocumentTitle("Hilger Portal - Students")
   const { id } = useParams()
@@ -98,7 +99,10 @@ const Students = () => {
   return (
     <Flex as="section" direction={{ base: "column", lg: "row" }} height="100vh" bg="bg-canvas" overflowY="auto">
       {isDesktop ? <Sidebar /> : <Navbar />}
+
       <Box bg="bg-surface" pt={{ base: "0", lg: "3" }} flex="1">
+      <ImpersonateUserBanner />
+
         <Box bg="bg-canvas" borderTopLeftRadius={{ base: "none", lg: "2rem" }} height="full">
           <Container py="8">
             <Stack spacing={{ base: "8", lg: "6" }}>

@@ -44,3 +44,8 @@ export const pageOffset = atom({
   key: "pageOffset",
   default: 0
 })
+
+export const impersonateUser = atom({
+  key: "impersonate",
+  default: null
+})

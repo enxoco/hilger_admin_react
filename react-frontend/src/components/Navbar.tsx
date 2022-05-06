@@ -9,6 +9,7 @@ import {
     Image
   } from '@chakra-ui/react'
   import * as React from 'react'
+import { ImpersonateUserBanner } from './ImpersonatedUserBanner'
   import { Logo } from './Logo'
   import { Sidebar } from './Sidebar'
   import { ToggleButton } from './ToggleButton'
@@ -24,7 +25,7 @@ import {
         boxShadow={useColorModeValue('sm', 'sm-dark')}
       >
         <Flex justify="space-between">
-          <Image src="https://hhlearning.com/wp-content/uploads/2017/04/cropped-HH-Logo.png" />
+          <Image src="https://hhlearning.com/wp-content/uploads/2017/04/cropped-HH-Logo.png" height="150" />
           {/* <Logo /> */}
           <ToggleButton isOpen={isOpen} aria-label="Open Menu" onClick={onToggle} />
           <Drawer
@@ -41,6 +42,7 @@ import {
               <Sidebar />
             </DrawerContent>
           </Drawer>
+          <ImpersonateUserBanner />
         </Flex>
       </Box>
     )

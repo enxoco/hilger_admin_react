@@ -25,10 +25,12 @@ function ResetPassword() {
     e.preventDefault()
     if (email && email.data?.user?.email) {
       const newPassword = await updatePassword({ email: email && email.data?.user?.email, token, password })
-      console.log("new password", newPassword)
       if (newPassword.data && newPassword.data.redeemUserPasswordResetToken) {
         if (newPassword.data.redeemUserPasswordResetToken.code === "TOKEN_REDEEMED") {
           setStatus("Please try to login")
+        }
+        if (newPassword.data.redeemUserPasswordResetToken.code === "FAILURE") {
+          setStatus("The link you have followed is expired.  Please try requesting another password reset.")
         }
       } else {
         navigate("/login")
@@ -47,7 +49,7 @@ function ResetPassword() {
             </HStack>
 
             {status ? (
-              <Alert status="success">
+              <Alert status={(status && status.includes('login')) ? "success" : "error"}>
                 <AlertIcon />
                 <AlertTitle>{status}</AlertTitle>
               </Alert>
