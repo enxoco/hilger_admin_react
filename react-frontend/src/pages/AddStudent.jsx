@@ -1,13 +1,11 @@
 import { Box, Button, Container, Divider, Flex, FormControl, FormLabel, HStack, Input, Stack, Text, Textarea, useBreakpointValue, useColorModeValue, Alert, AlertIcon, AlertTitle } from "@chakra-ui/react"
-import { useEffect, useState, useRef } from "react"
+import { useState } from "react"
 import { FiDownloadCloud } from "react-icons/fi"
-import { useNavigate } from "react-router-dom"
 import { ImpersonateUserBanner } from "../components/ImpersonatedUserBanner"
 import { Navbar } from "../components/Navbar"
 import { Sidebar } from "../components/Sidebar"
 import { useBulkAddStudentsMutation, useCreateStudentMutation } from "../generated/graphql"
 function AddStudent() {
-  const navigate = useNavigate()
   const isDesktop = useBreakpointValue({ base: false, lg: true })
   const isMobile = useBreakpointValue({ base: true, md: false })
 
@@ -34,7 +32,6 @@ function AddStudent() {
     }
     setFirstName("")
     setLastName("")
-    // navigate(0)
   }
 
   const handleBulkNameUpdate = (e) => {

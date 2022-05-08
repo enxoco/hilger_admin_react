@@ -1,11 +1,12 @@
 import { Box, Button, Container, Flex, FormControl, FormLabel, HStack, Input, Stack, Text, Tooltip, useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 import { FiDownloadCloud } from "react-icons/fi"
-import { useParams } from "react-router-dom"
+import { useParams, Link } from "react-router-dom"
 import { useRecoilState } from 'recoil'
 import { courses as coursesAtom, loggedInUser } from '../atom'
 import EditStudentCard from "../components/EditCourseCard"
 import { ImpersonateUserBanner } from "../components/ImpersonatedUserBanner"
+import {impersonateUser} from '../atom'
 import { Navbar } from "../components/Navbar"
 import { Sidebar } from "../components/Sidebar"
 import { useCheckLoginQuery, useGetCoursesByStudentAndTeacherQuery, useGetStudentQuery } from "../generated/graphql"
@@ -21,8 +22,6 @@ const EditStudent = () => {
   const [me, executeMeQuery] = useCheckLoginQuery({pause: user})
 
   // If we are reloading page then we have no state
-
-
   const [{ data: coursesData, error, fetching }, getCourses] = useGetCoursesByStudentAndTeacherQuery({
     pause: !teacher,
     requestPolicy: 'cache-and-network',
@@ -40,6 +39,8 @@ const EditStudent = () => {
   const [newCourseName, setNewCourseName] = useState("")
   const [newCourseGrade, setNewCourseGrade] = useState("")
   const [courses, setCourses] = useRecoilState(coursesAtom)
+
+  const [impersonatedUser] = useRecoilState(impersonateUser)
   const showNewCourseCard = () => {
     setNewCourse(true)
   }
@@ -82,6 +83,14 @@ const EditStudent = () => {
                   <Button variant="primary" onClick={showNewCourseCard}>
                     Add Course
                   </Button>
+
+{(user?.isAdmin || impersonatedUser) ? (
+                    <Tooltip label={`View full report card for ${studentData.data?.firstName || 'student'}`}>
+                      <Link to={'report'}>
+                      <Button variant="outline">View report card</Button>
+                      </Link>
+                  </Tooltip>
+) : null}
                 </HStack>
               </Stack>
               {(!teacher || !studentData.data) ? (

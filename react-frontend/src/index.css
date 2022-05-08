@@ -15,6 +15,11 @@ code {
   .print-only {
     display: block;
   }
+  body
+{
+  margin: 25mm 25mm 25mm 25mm;
+}
+
 }
 
 @media screen {

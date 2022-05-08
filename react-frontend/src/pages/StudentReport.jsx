@@ -11,7 +11,7 @@ import { useCheckLoginQuery, useCoursesByStudentQuery, useGetStudentQuery } from
 import useDocumentTitle from "../utils/useDocumentTitle"
 
 const StudentReport = () => {
-  useDocumentTitle('Hilger Portal - Student Report')
+  useDocumentTitle("Hilger Portal - Student Report")
   const componentRef = useRef()
   const isDesktop = useBreakpointValue({ base: false, lg: true })
   const isMobile = useBreakpointValue({ base: true, md: false })
@@ -46,7 +46,7 @@ const StudentReport = () => {
       page-break-before: always;
     }
   }
-`;
+`
 
   const [studentData, getStudent] = useGetStudentQuery({ variables: { id } })
 
@@ -57,6 +57,10 @@ const StudentReport = () => {
   const showNewCourseCard = () => {
     setNewCourse(true)
   }
+
+  const getPageMargins = () => {
+    return `@page { margin: 17mm 10mm !important;}`;
+  };
 
   const hideNewCourseCard = () => {
     setNewCourseName("")
@@ -77,16 +81,18 @@ const StudentReport = () => {
     }
   }, [me.fetching])
 
-
   useEffect(() => {
     if (coursesData && coursesData.courses) {
       // Map over our courses and add the feedback length for each one.  When we hit 200 characters
       // we will tell out template to add a line break of some sore.
       let courseLimit = 0
+      for (const course of coursesData.courses) {
+        let feedback = course.feedback
+      }
       for (const course of coursesData.courses.slice(1)) {
         courseLimit += +course.feedbackLength
         if (+courseLimit >= 2000) {
-          course.feedbackLength = 'break'
+          course.feedbackLength = "break"
           courseLimit = 0
         }
       }
@@ -112,7 +118,6 @@ const StudentReport = () => {
                     Add Course
                   </Button>
                   <ReactToPrint trigger={() => <Button>Print</Button>} content={() => componentRef.current} />
-
                 </HStack>
               </Stack>
               {!teacher || !studentData.data ? (
@@ -128,10 +133,11 @@ const StudentReport = () => {
                   </Box>
                   {!fetching && loggedInUser && !studentData.fetching && coursesParsed ? (
                     <Box as="form" bg="bg-surface" boxShadow={useColorModeValue("sm", "sm-dark")} borderRadius="lg">
-
                       <VStack ref={componentRef} pageStyle={pageStyle} spacing="5" px={{ base: "4", md: "6" }} py={{ base: "5", md: "6" }}>
+                      <style>{getPageMargins()}</style>
+
                         <HStack justifyContent={"space-between"}>
-                          <Image src="https://hhlearning.com/wp-content/uploads/2017/04/cropped-HH-Logo.png" alt="Hilger Higher Learning Logo" height="175" width="175"/>
+                          <Image src="https://hhlearning.com/wp-content/uploads/2017/04/cropped-HH-Logo.png" alt="Hilger Higher Learning Logo" height="175" width="175" />
                           <Heading size="xs" textAlign="center">
                             Hilger Higher Learning Report Card Spring Semester 2022
                           </Heading>
@@ -151,28 +157,27 @@ const StudentReport = () => {
                           {studentData.data.student.firstName} {studentData.data.student.lastName} has received the following percentage grade(s) for one semester of class(es) administered by Hilger Higher Learning, Inc. All instructors contracted by
                           Hilger Higher Learning meet proper Certification and/or requirement standards as directed by Tennessee, Georgia, and Alabama state law. Each semester of class is worth 1/2 credit.
                         </Text>
+                        {/* {+coursesData?.courses[0].feedbackLength >= 2000 ? <div className="print-only" style={{ height: 475 }}></div> : null} */}
 
                         <VStack textAlign="left" alignItems="flexStart" mb="50" marginBottom={50} className="page-break">
-                            <Text fontWeight="bold">Course: {coursesData.courses[0].name || null}</Text>
-                            <Text fontWeight="bold">Grade: {coursesData.courses[0].grade || ""}</Text>
-                            <Text fontWeight="bold">Instructor: {coursesData.courses[0].teacher.name}</Text>
-                            <Text>{coursesData.courses[0].feedback}</Text>
-                          </VStack>
-                          <div className="print-only" style={{height: 275}}></div>
-                          
-                        {coursesData.courses.slice(1).map((course, index) =>                           
-                        (
-                            <>
+                          <Text fontWeight="bold">Course: {coursesData.courses[0].name || null}</Text>
+                          <Text fontWeight="bold">Grade: {coursesData.courses[0].grade || ""}</Text>
+                          <Text fontWeight="bold">Instructor: {coursesData.courses[0].teacher.name}</Text>
+                          <Text>{coursesData.courses[0].feedback}</Text>
+                        </VStack>
+                        {/* <div className="print-only" style={{ height: 275 }}></div> */}
+
+                        {coursesData.courses.slice(1).map((course, index) => (
+                          <>
                             <VStack textAlign="left" alignItems="flexStart" mb="50" marginBottom={50} className="page-break">
                               <Text fontWeight="bold">Course: {course.name || null}</Text>
                               <Text fontWeight="bold">Grade: {course.grade || ""}</Text>
                               <Text fontWeight="bold">Instructor: {course.teacher.name}</Text>
                               <Text>{course.feedback}</Text>
                             </VStack>
-                            {(course.feedbackLength == "break") ? (<div className="print-only" style={{height: 275}}></div>) : null}
-                            </>
-  
-                          ))}
+                            {/* {course.feedbackLength == "break" ? <div className="print-only" style={{ height: 275 }}></div> : null} */}
+                          </>
+                        ))}
                       </VStack>
                     </Box>
                   ) : null}

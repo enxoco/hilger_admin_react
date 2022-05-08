@@ -34,12 +34,7 @@ function Login() {
       window.location.href = '/dashboard'
     }
   }
-
-  function goHome(){
-    window.location.href = '/dashboard'
-
-  }
-
+  
   return (
     <Container maxW="lg" py={{ base: "12", md: "24" }} px={{ base: "0", sm: "8" }}>
       <Stack spacing="8">

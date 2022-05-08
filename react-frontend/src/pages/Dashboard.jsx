@@ -24,8 +24,7 @@ import { Sidebar } from '../components/Sidebar'
 import { Stat } from '../components/Stat'
 import { useStudentsCountQuery, useGetMyCoursesCountByTeacherQuery, useTotalCourseCountQuery } from '../generated/graphql'
 import useDocumentTitle from '../utils/useDocumentTitle'
-
-// import {ImpersonateUserBanner} from '../components/ImpersonatedUserBanner'
+import {ImpersonateUserBanner} from '../components/ImpersonatedUserBanner'
 const Dashboard = () => {
   useDocumentTitle('Hilger Portal - Dashboard')
   const isDesktop = useBreakpointValue({ base: false, lg: true })
@@ -62,7 +61,7 @@ const Dashboard = () => {
       <Box bg="bg-surface" pt={{ base: '0', lg: '3' }} flex="1">
         <Box bg="bg-canvas" borderTopLeftRadius={{ base: 'none', lg: '2rem' }} height="full">
           <Container py="8">
-          {/* <ImpersonateUserBanner /> */}
+          <ImpersonateUserBanner />
 
             <Stack spacing={{ base: '8', lg: '6' }}>
               <Stack
@@ -77,12 +76,6 @@ const Dashboard = () => {
                   </Heading>
                   <Text color="muted">All important metrics at a glance</Text>
                 </Stack>
-                {/* <HStack spacing="3">
-                  <Button variant="secondary" leftIcon={<FiDownloadCloud fontSize="1.25rem" />}>
-                    Download
-                  </Button>
-                  <Button variant="primary">Create</Button>
-                </HStack> */}
               </Stack>
               <Stack spacing={{ base: '5', lg: '6' }}>
                 <SimpleGrid columns={{ base: 1, md: 3 }} gap="6">
@@ -98,7 +91,6 @@ const Dashboard = () => {
                 <HStack>
 
                 <Button mr={10}><Link href='/students'>View All Students</Link></Button>
-
                   <Tooltip label="Only show students you have entered grades for">
                   <Button mr={10}><Link href={`/students/${(user) ? user.id : null}`}>View My Students</Link></Button>
 

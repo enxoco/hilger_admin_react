@@ -238,6 +238,8 @@ export type Mutation = {
   createCourse?: Maybe<Course>;
   createCourses?: Maybe<Array<Maybe<Course>>>;
   createInitialUser: UserAuthenticationWithPasswordSuccess;
+  createParent?: Maybe<Parent>;
+  createParents?: Maybe<Array<Maybe<Parent>>>;
   createReportCardSetting?: Maybe<ReportCardSetting>;
   createReportCardSettings?: Maybe<Array<Maybe<ReportCardSetting>>>;
   createSemester?: Maybe<Semester>;
@@ -248,6 +250,8 @@ export type Mutation = {
   createUsers?: Maybe<Array<Maybe<User>>>;
   deleteCourse?: Maybe<Course>;
   deleteCourses?: Maybe<Array<Maybe<Course>>>;
+  deleteParent?: Maybe<Parent>;
+  deleteParents?: Maybe<Array<Maybe<Parent>>>;
   deleteReportCardSetting?: Maybe<ReportCardSetting>;
   deleteReportCardSettings?: Maybe<Array<Maybe<ReportCardSetting>>>;
   deleteSemester?: Maybe<Semester>;
@@ -263,6 +267,8 @@ export type Mutation = {
   sendUserPasswordResetLink: Scalars['Boolean'];
   updateCourse?: Maybe<Course>;
   updateCourses?: Maybe<Array<Maybe<Course>>>;
+  updateParent?: Maybe<Parent>;
+  updateParents?: Maybe<Array<Maybe<Parent>>>;
   updateReportCardSetting?: Maybe<ReportCardSetting>;
   updateReportCardSettings?: Maybe<Array<Maybe<ReportCardSetting>>>;
   updateSemester?: Maybe<Semester>;
@@ -292,6 +298,16 @@ export type MutationCreateCoursesArgs = {
 
 export type MutationCreateInitialUserArgs = {
   data: CreateInitialUserInput;
+};
+
+
+export type MutationCreateParentArgs = {
+  data: ParentCreateInput;
+};
+
+
+export type MutationCreateParentsArgs = {
+  data: Array<ParentCreateInput>;
 };
 
 
@@ -342,6 +358,16 @@ export type MutationDeleteCourseArgs = {
 
 export type MutationDeleteCoursesArgs = {
   where: Array<CourseWhereUniqueInput>;
+};
+
+
+export type MutationDeleteParentArgs = {
+  where: ParentWhereUniqueInput;
+};
+
+
+export type MutationDeleteParentsArgs = {
+  where: Array<ParentWhereUniqueInput>;
 };
 
 
@@ -416,6 +442,17 @@ export type MutationUpdateCourseArgs = {
 
 export type MutationUpdateCoursesArgs = {
   data: Array<CourseUpdateArgs>;
+};
+
+
+export type MutationUpdateParentArgs = {
+  data: ParentUpdateInput;
+  where: ParentWhereUniqueInput;
+};
+
+
+export type MutationUpdateParentsArgs = {
+  data: Array<ParentUpdateArgs>;
 };
 
 
@@ -495,6 +532,96 @@ export enum OrderDirection {
   Desc = 'desc'
 }
 
+export type Parent = {
+  __typename?: 'Parent';
+  children?: Maybe<Array<Student>>;
+  childrenCount?: Maybe<Scalars['Int']>;
+  created?: Maybe<Scalars['DateTime']>;
+  email?: Maybe<Scalars['String']>;
+  firstName?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  isPaid?: Maybe<Scalars['Boolean']>;
+  lastName?: Maybe<Scalars['String']>;
+  totalOwed?: Maybe<Scalars['String']>;
+};
+
+
+export type ParentChildrenArgs = {
+  orderBy?: Array<StudentOrderByInput>;
+  skip?: Scalars['Int'];
+  take?: InputMaybe<Scalars['Int']>;
+  where?: StudentWhereInput;
+};
+
+
+export type ParentChildrenCountArgs = {
+  where?: StudentWhereInput;
+};
+
+export type ParentCreateInput = {
+  children?: InputMaybe<StudentRelateToManyForCreateInput>;
+  created?: InputMaybe<Scalars['DateTime']>;
+  email?: InputMaybe<Scalars['String']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  isPaid?: InputMaybe<Scalars['Boolean']>;
+  lastName?: InputMaybe<Scalars['String']>;
+  totalOwed?: InputMaybe<Scalars['String']>;
+};
+
+export type ParentOrderByInput = {
+  created?: InputMaybe<OrderDirection>;
+  email?: InputMaybe<OrderDirection>;
+  firstName?: InputMaybe<OrderDirection>;
+  id?: InputMaybe<OrderDirection>;
+  isPaid?: InputMaybe<OrderDirection>;
+  lastName?: InputMaybe<OrderDirection>;
+  totalOwed?: InputMaybe<OrderDirection>;
+};
+
+export type ParentRelateToOneForCreateInput = {
+  connect?: InputMaybe<ParentWhereUniqueInput>;
+  create?: InputMaybe<ParentCreateInput>;
+};
+
+export type ParentRelateToOneForUpdateInput = {
+  connect?: InputMaybe<ParentWhereUniqueInput>;
+  create?: InputMaybe<ParentCreateInput>;
+  disconnect?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ParentUpdateArgs = {
+  data: ParentUpdateInput;
+  where: ParentWhereUniqueInput;
+};
+
+export type ParentUpdateInput = {
+  children?: InputMaybe<StudentRelateToManyForUpdateInput>;
+  created?: InputMaybe<Scalars['DateTime']>;
+  email?: InputMaybe<Scalars['String']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  isPaid?: InputMaybe<Scalars['Boolean']>;
+  lastName?: InputMaybe<Scalars['String']>;
+  totalOwed?: InputMaybe<Scalars['String']>;
+};
+
+export type ParentWhereInput = {
+  AND?: InputMaybe<Array<ParentWhereInput>>;
+  NOT?: InputMaybe<Array<ParentWhereInput>>;
+  OR?: InputMaybe<Array<ParentWhereInput>>;
+  children?: InputMaybe<StudentManyRelationFilter>;
+  created?: InputMaybe<DateTimeNullableFilter>;
+  email?: InputMaybe<StringFilter>;
+  firstName?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  isPaid?: InputMaybe<BooleanFilter>;
+  lastName?: InputMaybe<StringFilter>;
+  totalOwed?: InputMaybe<StringFilter>;
+};
+
+export type ParentWhereUniqueInput = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
 export type PasswordFilter = {
   isSet: Scalars['Boolean'];
 };
@@ -517,6 +644,9 @@ export type Query = {
   courses?: Maybe<Array<Course>>;
   coursesCount?: Maybe<Scalars['Int']>;
   keystone: KeystoneMeta;
+  parent?: Maybe<Parent>;
+  parents?: Maybe<Array<Parent>>;
+  parentsCount?: Maybe<Scalars['Int']>;
   reportCardSetting?: Maybe<ReportCardSetting>;
   reportCardSettings?: Maybe<Array<ReportCardSetting>>;
   reportCardSettingsCount?: Maybe<Scalars['Int']>;
@@ -548,6 +678,24 @@ export type QueryCoursesArgs = {
 
 export type QueryCoursesCountArgs = {
   where?: CourseWhereInput;
+};
+
+
+export type QueryParentArgs = {
+  where: ParentWhereUniqueInput;
+};
+
+
+export type QueryParentsArgs = {
+  orderBy?: Array<ParentOrderByInput>;
+  skip?: Scalars['Int'];
+  take?: InputMaybe<Scalars['Int']>;
+  where?: ParentWhereInput;
+};
+
+
+export type QueryParentsCountArgs = {
+  where?: ParentWhereInput;
 };
 
 
@@ -784,6 +932,7 @@ export type Student = {
   lastName?: Maybe<Scalars['String']>;
   myCourses?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  parents?: Maybe<Parent>;
 };
 
 
@@ -803,12 +952,31 @@ export type StudentCreateInput = {
   courses?: InputMaybe<CourseRelateToManyForCreateInput>;
   firstName?: InputMaybe<Scalars['String']>;
   lastName?: InputMaybe<Scalars['String']>;
+  parents?: InputMaybe<ParentRelateToOneForCreateInput>;
+};
+
+export type StudentManyRelationFilter = {
+  every?: InputMaybe<StudentWhereInput>;
+  none?: InputMaybe<StudentWhereInput>;
+  some?: InputMaybe<StudentWhereInput>;
 };
 
 export type StudentOrderByInput = {
   firstName?: InputMaybe<OrderDirection>;
   id?: InputMaybe<OrderDirection>;
   lastName?: InputMaybe<OrderDirection>;
+};
+
+export type StudentRelateToManyForCreateInput = {
+  connect?: InputMaybe<Array<StudentWhereUniqueInput>>;
+  create?: InputMaybe<Array<StudentCreateInput>>;
+};
+
+export type StudentRelateToManyForUpdateInput = {
+  connect?: InputMaybe<Array<StudentWhereUniqueInput>>;
+  create?: InputMaybe<Array<StudentCreateInput>>;
+  disconnect?: InputMaybe<Array<StudentWhereUniqueInput>>;
+  set?: InputMaybe<Array<StudentWhereUniqueInput>>;
 };
 
 export type StudentRelateToOneForCreateInput = {
@@ -831,6 +999,7 @@ export type StudentUpdateInput = {
   courses?: InputMaybe<CourseRelateToManyForUpdateInput>;
   firstName?: InputMaybe<Scalars['String']>;
   lastName?: InputMaybe<Scalars['String']>;
+  parents?: InputMaybe<ParentRelateToOneForUpdateInput>;
 };
 
 export type StudentWhereInput = {
@@ -841,6 +1010,7 @@ export type StudentWhereInput = {
   firstName?: InputMaybe<StringFilter>;
   id?: InputMaybe<IdFilter>;
   lastName?: InputMaybe<StringFilter>;
+  parents?: InputMaybe<ParentWhereInput>;
 };
 
 export type StudentWhereUniqueInput = {
@@ -974,6 +1144,15 @@ export type ValidateUserPasswordResetTokenResult = {
   message: Scalars['String'];
 };
 
+export type CreateParentMutationVariables = Exact<{
+  firstName?: InputMaybe<Scalars['String']>;
+  lastName?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type CreateParentMutation = { __typename?: 'Mutation', createParent?: { __typename: 'Parent' } | null };
+
 export type CreateStudentMutationVariables = Exact<{
   firstName: Scalars['String'];
   lastName: Scalars['String'];
@@ -991,6 +1170,13 @@ export type CreateTeacherMutationVariables = Exact<{
 
 
 export type CreateTeacherMutation = { __typename?: 'Mutation', createUser?: { __typename: 'User', id: string } | null };
+
+export type BulkAddParentsMutationVariables = Exact<{
+  data: Array<ParentCreateInput> | ParentCreateInput;
+}>;
+
+
+export type BulkAddParentsMutation = { __typename?: 'Mutation', createParents?: Array<{ __typename: 'Parent', id: string } | null> | null };
 
 export type BulkAddStudentsMutationVariables = Exact<{
   data: Array<StudentCreateInput> | StudentCreateInput;
@@ -1175,9 +1361,20 @@ export type SearchStudentsByNameCountQuery = { __typename?: 'Query', studentsCou
 export type StudentsCountQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type StudentsCountQuery = { __typename: 'Query', studentsCount?: number | null };
+export type StudentsCountQuery = { __typename?: 'Query', studentsCount?: number | null };
 
 
+export const CreateParentDocument = gql`
+    mutation CreateParent($firstName: String, $lastName: String, $email: String) {
+  createParent(data: {firstName: $firstName, lastName: $lastName, email: $email}) {
+    __typename
+  }
+}
+    `;
+
+export function useCreateParentMutation() {
+  return Urql.useMutation<CreateParentMutation, CreateParentMutationVariables>(CreateParentDocument);
+};
 export const CreateStudentDocument = gql`
     mutation CreateStudent($firstName: String!, $lastName: String!) {
   createStudent(data: {firstName: $firstName, lastName: $lastName}) {
@@ -1203,6 +1400,18 @@ export const CreateTeacherDocument = gql`
 
 export function useCreateTeacherMutation() {
   return Urql.useMutation<CreateTeacherMutation, CreateTeacherMutationVariables>(CreateTeacherDocument);
+};
+export const BulkAddParentsDocument = gql`
+    mutation BulkAddParents($data: [ParentCreateInput!]!) {
+  createParents(data: $data) {
+    id
+    __typename
+  }
+}
+    `;
+
+export function useBulkAddParentsMutation() {
+  return Urql.useMutation<BulkAddParentsMutation, BulkAddParentsMutationVariables>(BulkAddParentsDocument);
 };
 export const BulkAddStudentsDocument = gql`
     mutation BulkAddStudents($data: [StudentCreateInput!]!) {
@@ -1533,7 +1742,6 @@ export function useSearchStudentsByNameCountQuery(options: Omit<Urql.UseQueryArg
 export const StudentsCountDocument = gql`
     query StudentsCount {
   studentsCount
-  __typename
 }
     `;
 

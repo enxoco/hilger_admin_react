@@ -92,7 +92,7 @@ ReactDOM.render(
                     <EditStudent />
                   </RequireAuth>
                 } />
-                                <Route path="/student/:id/print" element={
+                                <Route path="/student/:id/report" element={
                   <RequireAuth>
                     <StudentReport />
                   </RequireAuth>
