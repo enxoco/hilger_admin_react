@@ -4,7 +4,7 @@ import {
   FormLabel,
   Heading, Input,
   Stack, useBreakpointValue,
-  useColorModeValue
+  useColorModeValue, Image
 } from "@chakra-ui/react"
 import { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -12,6 +12,7 @@ import { PasswordField } from '../components/PasswordField'
 import { useLoginMutation, useRegisterMutation } from '../generated/graphql'
 import { UserContext } from "../UserContext"
 import useDocumentTitle from "../utils/useDocumentTitle"
+import Logo from '../logo.jpg'
 function Register() {
   useDocumentTitle('Hilger Portal - Registration')
   const { state, setState } = useContext(UserContext)
@@ -56,11 +57,12 @@ function Register() {
     <Container maxW="lg" py={{ base: '12', md: '24' }} px={{ base: '0', sm: '8' }}>
     <Stack spacing="8">
       <Stack spacing="6">
-        <Stack spacing={{ base: '2', md: '3' }} textAlign="center">
-          <Heading size={useBreakpointValue({ base: 'xs', md: 'sm' })}>
+        <Stack spacing={{ base: '2', md: '3' }} textAlign="center" alignItems={"center"}>
+
+        <Image src="https://hhlearning.com/wp-content/uploads/2017/04/cropped-HH-Logo.png" width={300} />
+        <Heading size={useBreakpointValue({ base: 'xs', md: 'sm' })}>
             Create Account
           </Heading>
-
         </Stack>
       </Stack>
       <Box

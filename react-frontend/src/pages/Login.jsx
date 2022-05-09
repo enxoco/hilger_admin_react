@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, AlertTitle, Box, Button, Checkbox, Container, FormControl, FormLabel, Heading, HStack, Input, Stack, Text, useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
+import { Alert, AlertIcon, AlertTitle, Box, Button, Checkbox, Container, FormControl, FormLabel, Heading, HStack, Input, Stack, Text, useBreakpointValue, useColorModeValue, Image } from "@chakra-ui/react"
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { PasswordField } from "../components/PasswordField"
@@ -39,13 +39,14 @@ function Login() {
     <Container maxW="lg" py={{ base: "12", md: "24" }} px={{ base: "0", sm: "8" }}>
       <Stack spacing="8">
         <Stack spacing="6">
-          <Stack spacing={{ base: "2", md: "3" }} textAlign="center">
+          <Stack spacing={{ base: "2", md: "3" }} textAlign="center" alignItems={"center"}>
             {login && login.data && login.data?.authenticateUserWithPassword?.message === "Authentication failed." ? (
               <Alert status="error">
                 <AlertIcon />
                 <AlertTitle>{login.data?.authenticateUserWithPassword?.message === "Authentication failed." ? "Login failed.  Please check your password" : "Error logging in"}</AlertTitle>
               </Alert>
             ) : null}
+            <Image src="https://hhlearning.com/wp-content/uploads/2017/04/cropped-HH-Logo.png" width={300} />
             <Heading size={useBreakpointValue({ base: "xs", md: "sm" })}>Log in to your account</Heading>
             <HStack spacing="1" justify="center">
               <Text color="muted">Don't have an account?</Text>
