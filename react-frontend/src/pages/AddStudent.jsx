@@ -5,7 +5,10 @@ import { ImpersonateUserBanner } from "../components/ImpersonatedUserBanner"
 import { Navbar } from "../components/Navbar"
 import { Sidebar } from "../components/Sidebar"
 import { useBulkAddStudentsMutation, useCreateStudentMutation } from "../generated/graphql"
+import useDocumentTitle from '../utils/useDocumentTitle'
 function AddStudent() {
+  useDocumentTitle('Hilger Portal - Add Student')
+
   const isDesktop = useBreakpointValue({ base: false, lg: true })
   const isMobile = useBreakpointValue({ base: true, md: false })
 

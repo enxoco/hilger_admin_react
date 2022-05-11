@@ -26,7 +26,7 @@ import ResetPassword from "./pages/auth/ResetPassword"
 import { loggedInUser } from "./atom"
 import { useCheckLoginQuery } from "./generated/graphql"
 import StudentReport from "./pages/StudentReport"
-
+import useDocumentTitle from './utils/useDocumentTitle'
 const client = createClient({
   url: "/api/graphql",
 })
@@ -40,6 +40,8 @@ const myTheme = extendTheme(
 
 
 function RequireAuth({ children }: { children: JSX.Element }) {
+  useDocumentTitle('Hilger Portal')
+
   const [user, setUser] = useRecoilState(loggedInUser)
   const [me, executeMeQuery] = useCheckLoginQuery({pause: user})
   let location = useLocation()
