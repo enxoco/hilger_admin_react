@@ -83,7 +83,7 @@ const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard,
         </Stack>
         <Divider />
         <Flex direction="row-reverse" py="4" px={{ base: "4", md: "6" }}>
-          <Button variant="primary" onClick={(id) ? handleFormSubmission : handleCreateNewCourse}>Save</Button>
+          <Button variant="primary" onClick={(id) ? handleFormSubmission : handleCreateNewCourse} isLoading={updatedCourse.fetching || createdCourse.fetching}>Save</Button>
           <IconButton icon={<DeleteIcon />} variant="ghost" mr={'auto'} aria-label='Delete Course' colorScheme="red" onClick={handleDeleteCourse}>Delete</IconButton>
 
         </Flex>

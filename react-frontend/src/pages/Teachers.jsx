@@ -23,7 +23,7 @@ const Teachers = () => {
   const [students, setStudents] = useRecoilState(studentAtom)
   const [searchTerm, setSearchTerm] = useRecoilState(searchTermAtom)
 
-  const [studentData, getStudents] = useGetAllTeachersQuery({variables: {limit: pageSize, offset: pageOffset}, requestPolicy: 'network-only'})
+  const [studentData, getStudents] = useGetAllTeachersQuery({variables: {limit: pageSize, offset: pageOffset}})
 
 
 

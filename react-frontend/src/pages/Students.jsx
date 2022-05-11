@@ -22,7 +22,7 @@ const Students = () => {
 
   const [students, setStudents] = useRecoilState(studentAtom)
 
-  const [studentData, getStudents] = useGetAllStudentsQuery({ variables: { limit: 1000, offset: 0 }, requestPolicy: "network-only" })
+  const [studentData, getStudents] = useGetAllStudentsQuery({ variables: { limit: 1000, offset: 0 }})
 
   useEffect(() => {
     if (studentData && studentData.data) {
