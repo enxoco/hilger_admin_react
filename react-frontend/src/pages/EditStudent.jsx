@@ -119,12 +119,13 @@ const EditStudent = () => {
                       </Stack>
                     </Box>
                   ) : null}
+                                    {!newCourse && studentData.data.student ? null : <EditStudentCard name={newCourseName} grade={newCourseGrade} feedback={null} id={null} student={id} teacher={user.id} hideNewCourseCard={hideNewCourseCard} />}
+
                   {!fetching && !studentData.fetching && coursesData.courses && coursesData.courses.length != 0
                     ? coursesData.courses.map((course) => (
                         <EditStudentCard key={course.id} name={course.name} grade={course.grade} id={course.id} student={id} teacher={user.id} teacherName={user.name} feedback={course.feedback} hideNewCourseCard={hideNewCourseCard} />
                       ))
                     : (<EditStudentCard name={newCourseName} grade={newCourseGrade} id={null} feedback={null} student={id} teacher={user.id} teacherName={user.name} hideNewCourseCard={hideNewCourseCard} />)}
-                  {!newCourse && studentData.data.student ? null : <EditStudentCard name={newCourseName} grade={newCourseGrade} feedback={feedback} id={null} student={id} teacher={user.id} hideNewCourseCard={hideNewCourseCard} />}
                 </Stack>
                 )
               }

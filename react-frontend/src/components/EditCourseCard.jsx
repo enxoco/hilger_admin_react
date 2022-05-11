@@ -78,7 +78,7 @@ const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard,
           </Stack>
           <FormControl id="feedback">
               <FormLabel>Feedback</FormLabel>
-              <Textarea value={courseFeedback} onChange={handleFeedbackUpdate} />
+              <Textarea value={courseFeedback || null} onChange={handleFeedbackUpdate} />
             </FormControl>
         </Stack>
         <Divider />
