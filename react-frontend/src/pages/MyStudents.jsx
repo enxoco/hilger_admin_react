@@ -24,7 +24,7 @@ const MyStudents = () => {
   const [students, setStudents] = useRecoilState(studentAtom)
   const [searchTerm, setSearchTerm] = useRecoilState(searchTermAtom)
 
-  const [studentData, getStudents] = useGetMyStudentsQuery({ variables: { id }, requestPolicy: "network-only" })
+  const [studentData, getStudents] = useGetMyStudentsQuery({ variables: { id }})
 
   const [studentsCount] = useStudentsCountQuery()
 
