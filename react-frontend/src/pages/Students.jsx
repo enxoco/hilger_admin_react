@@ -25,9 +25,8 @@ const Students = () => {
   const [studentData, getStudents] = useGetAllStudentsQuery({ variables: { limit: 1000, offset: 0 }})
 
   useEffect(() => {
-    if (studentData && studentData.data) {
+    if (!students && studentData && studentData.data) {
       setStudents(studentData.data.students)
-      console.log("studentdata", studentData.data.students)
     }
   }, [studentData.fetching])
 

@@ -11,6 +11,7 @@ import {
   useForgotPasswordMutation,
   useToggleAdminMutation
 } from "../generated/graphql"
+import checkRole from "../utils/checkRole"
 
 function TeacherTable({studentProp, columns}) {
   const orderDirection = "asc"

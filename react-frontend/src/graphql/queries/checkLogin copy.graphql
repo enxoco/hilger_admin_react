@@ -2,5 +2,11 @@ query GetUserEmailById($id: ID) {
   user(where: {id: $id}) {
     __typename
     email
+    name
+    firstName
+    lastName
+    isAdmin
+    isParent
+    hasPaidTuition
   }
 }

@@ -40,9 +40,11 @@ export const Sidebar = () => {
               <Link to="/dashboard">
                 <NavButton label="Dashboard" icon={FiHome} aria-current={location.pathname.includes("dashboard") ? "page" : null} />
               </Link>
-              <Link to="/students">
-                <NavButton label="All Students" icon={FiUsers} aria-current={location.pathname === "/students" ? "page" : null} />
-              </Link>
+              {user?.isParent ? null : (
+                <Link to="/students">
+                  <NavButton label="All Students" icon={FiUsers} aria-current={location.pathname === "/students" ? "page" : null} />
+                </Link>
+              )}
               {user ? (
                 <Link to={`/students/${user.id}`}>
                   <NavButton label="My Students" icon={FiUsers} aria-current={location.pathname === "/students/" + user.id ? "page" : null} />

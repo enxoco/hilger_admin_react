@@ -1,5 +1,0 @@
-mutation CreateParent($firstName: String, $lastName: String, $email: String) {
-  createParent(data: {firstName: $firstName, lastName: $lastName, email: $email}) {
-    __typename
-  }
-}

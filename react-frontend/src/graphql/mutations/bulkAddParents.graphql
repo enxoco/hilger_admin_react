@@ -1,6 +1,0 @@
-mutation BulkAddParents($data: [ParentCreateInput!]!){
-  createParents(data: $data){
-    id
-    __typename
-  }
-}

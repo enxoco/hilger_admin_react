@@ -1,17 +1,18 @@
-import { Box, Button, ButtonGroup, Container, Flex, HStack, Icon, Input, InputGroup, InputLeftElement, Stack, Text, useBreakpointValue, Tooltip, IconButton, Divider } from "@chakra-ui/react"
+import { Box, Button, ButtonGroup, Container, Flex, HStack, Icon, Input, InputGroup, InputLeftElement, Stack, Text, useBreakpointValue, Tooltip, IconButton, Divider, UnorderedList, ListItem, Heading, SimpleGrid } from "@chakra-ui/react"
 import { useEffect, useMemo } from "react"
 import { FiDownloadCloud, FiSearch, FiEdit2 } from "react-icons/fi"
 import { Link, useParams } from "react-router-dom"
 import { useRecoilState } from "recoil"
-import { pageOffset as pageOffsetAtom, pageSize as pageSizeAtom, searchTerm as searchTermAtom, students as studentAtom } from "../atom"
+import { pageOffset as pageOffsetAtom, pageSize as pageSizeAtom, searchTerm as searchTermAtom, students as studentAtom, loggedInUser as loggedInUserAtom } from "../atom"
 import StudentTable from "../components/MemberTable"
 import { Navbar } from "../components/Navbar"
 import { Sidebar } from "../components/Sidebar"
-import { useDeleteStudentMutation, useGetMyStudentsQuery, useStudentsCountQuery } from "../generated/graphql"
+import { useDeleteStudentMutation, useGetMyStudentsQuery, useStudentsCountQuery, useGetStudentsByParentQuery } from "../generated/graphql"
 import dynamicSort from "../utils/dynamicSort"
-import {exportCSVFile} from '../utils/csvExport'
-import {ImpersonateUserBanner} from '../components/ImpersonatedUserBanner'
+import { exportCSVFile } from "../utils/csvExport"
+import { ImpersonateUserBanner } from "../components/ImpersonatedUserBanner"
 import { Card } from "../components/Card"
+import SimpleTable from "../components/SimpleTable"
 
 const MyStudents = () => {
   const { id } = useParams()
@@ -24,8 +25,10 @@ const MyStudents = () => {
   const [students, setStudents] = useRecoilState(studentAtom)
   const [searchTerm, setSearchTerm] = useRecoilState(searchTermAtom)
 
-  const [studentData, getStudents] = useGetMyStudentsQuery({ variables: { id }, requestPolicy: "network-only" })
+  const [loggedInUser] = useRecoilState(loggedInUserAtom)
+  const [studentData, getStudents] = useGetMyStudentsQuery({ variables: { id }, pause: loggedInUser && loggedInUser?.isParent })
 
+  const [childrenData, getChildren] = useGetStudentsByParentQuery({ variables: { email: loggedInUser?.email }, pause: loggedInUser && loggedInUser?.isTeacher })
   const [studentsCount] = useStudentsCountQuery()
 
   useEffect(() => {
@@ -87,25 +90,24 @@ const MyStudents = () => {
   }
 
   const handleExport = () => {
-
     var headers = {
-      id: 'Id', // remove commas to avoid errors
+      id: "Id", // remove commas to avoid errors
       firstName: "First Name",
       lastName: "Last Name",
-    };
-    var itemsFormatted = [];
+    }
+    var itemsFormatted = []
 
     // format the data
     students.forEach((item) => {
-        itemsFormatted.push({
-            id: item.id, // remove commas to avoid errors,
-            firstName: item.firstName,
-            lastName: item.lastName,
-        });
-    });
-    
-    var fileTitle = 'students-' + +new Date; // or 'my-unique-title'
-    exportCSVFile(headers, itemsFormatted, fileTitle); // call the exportCSVFile() function to process the JSON and trigger the download
+      itemsFormatted.push({
+        id: item.id, // remove commas to avoid errors,
+        firstName: item.firstName,
+        lastName: item.lastName,
+      })
+    })
+
+    var fileTitle = "students-" + +new Date() // or 'my-unique-title'
+    exportCSVFile(headers, itemsFormatted, fileTitle) // call the exportCSVFile() function to process the JSON and trigger the download
   }
   return (
     <Flex as="section" direction={{ base: "column", lg: "row" }} height="100vh" bg="bg-canvas" overflowY="auto">
@@ -120,7 +122,6 @@ const MyStudents = () => {
                   <Button variant="secondary" leftIcon={<FiDownloadCloud fontSize="1.25rem" />} onClick={handleExport}>
                     Export
                   </Button>
-
                 </HStack>
               </Stack>
 
@@ -138,25 +139,31 @@ const MyStudents = () => {
                     </InputGroup>
                   </Stack>
                 </Box>
-                <Box overflowX="auto">
-                  {(!students?.length) ? (
-                      <Card display={"flex"} justifyContent="center" alignItems={"center"} flexDir="column"><Text size="lg">
-                        You don't appear to have any grades entered yet.
-                        </Text>
-                        <Divider w="50%" my={10}/>
-                        <Text>To start entering grades, click<Button variant={"link"}><Link to="/students" variant="link"> here</Link> </Button></Text>
-                        </Card>
-                  ) : (
-                    <StudentTable
-                    columns={columns}
-                    data={
-                      students || []
-                    }
-                  />
-                  )}
 
+                <Box overflowX="auto">
+                  {!students?.length && !childrenData?.data?.students ? (
+                    <Card display={"flex"} justifyContent="center" alignItems={"center"} flexDir="column">
+                      <Text size="lg">You don't appear to have any grades entered yet.</Text>
+                      <Divider w="50%" my={10} />
+                      <Text>
+                        To start entering grades, click
+                        <Button variant={"link"}>
+                          <Link to="/students" variant="link">
+                            {" "}
+                            here
+                          </Link>{" "}
+                        </Button>
+                      </Text>
+                    </Card>
+                  ) : (
+                  (childrenData?.data?.students && loggedInUser?.isParent) ? <SimpleTable studentProp={childrenData?.data?.students} /> : (
+                      <StudentTable columns={columns} data={students || childrenData?.data?.students} />
+                    )
+                    
+                  )}
                 </Box>
-                <Box px={{ base: "4", md: "6" }} pb="5"></Box>
+
+
               </Stack>
             </Stack>
           </Container>

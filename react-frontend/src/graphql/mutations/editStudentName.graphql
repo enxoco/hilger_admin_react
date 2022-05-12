@@ -1,0 +1,6 @@
+mutation UpdateStudentInfo($id: ID!, $firstName: String!, $lastName: String!) {
+  updateStudent(where: {id: $id}, data: {firstName: $firstName, lastName: $lastName}){
+    __typename
+    id
+  }
+}

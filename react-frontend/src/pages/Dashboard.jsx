@@ -86,7 +86,9 @@ const Dashboard = () => {
                 </SimpleGrid>
               </Stack>
               <Card minH="sm" display="flex" justifyContent="center" alignItems="center" flexDir="column">
-              This section can be used for news and announcements
+                {(user?.isParent && !user?.hasPaidTution) ? (
+                  <>Looks like you owe money</>
+                ) : null}
                 <Divider w="50%" my={10}/>
                 <HStack>
 

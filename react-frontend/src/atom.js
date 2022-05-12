@@ -2,7 +2,7 @@ import { atom } from "recoil"
 
 export const teachers = atom({
   key: "teachers",
-  default: [],
+  default: null,
 })
 
 export const students = atom({

@@ -22,6 +22,7 @@ function ResetPassword() {
   }
 
   async function handleRequest(e) {
+    console.log('e', email.data)
     e.preventDefault()
     if (email && email.data?.user?.email) {
       const newPassword = await updatePassword({ email: email && email.data?.user?.email, token, password })

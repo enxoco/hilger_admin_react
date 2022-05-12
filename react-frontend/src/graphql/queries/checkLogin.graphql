@@ -5,7 +5,11 @@ query CheckLogin {
       id
       email
       name
+      firstName
+      lastName
       isAdmin
+      isParent
+      hasPaidTuition
     }
   }
 }

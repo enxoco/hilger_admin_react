@@ -1,0 +1,13 @@
+query GetStudentsByParent($email: String!){
+  students(where: {parent: {some: {email: {equals: $email}}}}) {
+    name
+    firstName
+    lastName
+    id
+    courses {
+      name
+      grade
+      feedback
+    }
+  }
+}

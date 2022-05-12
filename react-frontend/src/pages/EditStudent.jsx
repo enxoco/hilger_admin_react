@@ -9,7 +9,7 @@ import { ImpersonateUserBanner } from "../components/ImpersonatedUserBanner"
 import { impersonateUser } from "../atom"
 import { Navbar } from "../components/Navbar"
 import { Sidebar } from "../components/Sidebar"
-import { useCheckLoginQuery, useGetCoursesByStudentAndTeacherQuery, useGetStudentQuery } from "../generated/graphql"
+import { useCheckLoginQuery, useGetCoursesByStudentAndTeacherQuery, useGetStudentQuery, useUpdateStudentInfoMutation } from "../generated/graphql"
 
 const EditStudent = () => {
   const isDesktop = useBreakpointValue({ base: false, lg: true })
@@ -36,6 +36,9 @@ const EditStudent = () => {
   const [newCourseGrade, setNewCourseGrade] = useState("")
   const [courses, setCourses] = useRecoilState(coursesAtom)
 
+  const [firstName, setFirstName] = useState(studentData?.data?.student?.firstName || null)
+  const [lastName, setLastName] = useState(studentData?.data?.student?.lastName || null)
+  const [updatedStudentInfo, updateStudentInfo] = useUpdateStudentInfoMutation({ variables: { id, firstName, lastName } })
   const [impersonatedUser] = useRecoilState(impersonateUser)
   const showNewCourseCard = () => {
     setNewCourse(true)
@@ -45,6 +48,22 @@ const EditStudent = () => {
     setNewCourseName("")
     setNewCourseGrade("")
     setNewCourse(false)
+  }
+
+  const handleFirstNameUpdate = (e) => {
+    setFirstName(e.target.value)
+  }
+  const handleLastNameUpdate = (e) => {
+    setLastName(e.target.value)
+  }
+
+  const handleStudentNameUpdate = (e) => {
+    e.preventDefault()
+    updateStudentInfo({
+      id: +id,
+      firstName: firstName || studentData?.data?.student.firstName,
+      lastName: lastName || studentData?.data?.student.lastName,
+    })
   }
 
   useEffect(() => {
@@ -59,6 +78,13 @@ const EditStudent = () => {
       setTeacher(me.data?.authenticatedItem.id)
     }
   }, [me.fetching])
+
+  useEffect(() => {
+    if (studentData.data && !firstName) {
+      setFirstName(studentData.data?.student.firstName)
+      setLastName(studentData.data?.student.lastName)
+    }
+  }, [studentData.fetching])
   return (
     <Flex as="section" direction={{ base: "column", lg: "row" }} height="100vh" bg="bg-canvas" overflowY="auto">
       {isDesktop ? <Sidebar /> : <Navbar />}
@@ -104,13 +130,20 @@ const EditStudent = () => {
                         <Stack spacing="6" direction={{ base: "column", md: "row" }}>
                           <FormControl id="firstName">
                             <FormLabel>First Name</FormLabel>
-                            <Input disabled defaultValue={studentData.data.student.firstName || ""} />
+                            <Input disabled={!user?.isAdmin} onChange={handleFirstNameUpdate} value={firstName} />
                           </FormControl>
                           <FormControl id="lastName">
                             <FormLabel>Last Name</FormLabel>
-                            <Input disabled defaultValue={studentData.data.student.lastName || ""} />
+                            <Input disabled={!user?.isAdmin} onChange={handleLastNameUpdate} value={lastName} />
                           </FormControl>
                         </Stack>
+                        {!user?.isAdmin ? null : (
+                          <FormControl>
+                            <Button variant={"primary"} onClick={handleStudentNameUpdate}>
+                              Update
+                            </Button>
+                          </FormControl>
+                        )}
                       </Stack>
                     </Box>
                   ) : null}
