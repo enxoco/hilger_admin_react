@@ -31,7 +31,7 @@ const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard,
             name: courseName,
             grade: courseGrade,
             feedback: courseFeedback,
-            id: id
+            id: +id
         })
     }
 
@@ -40,11 +40,10 @@ const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard,
             name: courseName,
             grade: courseGrade,
             feedback: courseFeedback,
-            student,
-            teacher
+            student: +student,
+            teacher: +teacher
         })
 
-        navigate(0)
         hideNewCourseCard()
 
 

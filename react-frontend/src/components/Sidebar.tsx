@@ -1,33 +1,22 @@
-import { Icon } from "@chakra-ui/icons"
-import { Box, Button, Divider, Flex, HStack, Image, Input, InputGroup, InputLeftElement, Progress, Stack, Text, useColorModeValue } from "@chakra-ui/react"
-import { useEffect } from "react"
-import { FiHelpCircle, FiHome, FiLogOut, FiSearch, FiSettings, FiUsers } from "react-icons/fi"
+import { Divider, Flex, Image, Stack, useColorModeValue } from "@chakra-ui/react"
+import { FiHome, FiLogOut, FiUsers } from "react-icons/fi"
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { useRecoilState } from "recoil"
-import { loggedInUser } from "../atom"
 import { useCheckLoginQuery, useLogoutMutation } from "../generated/graphql"
+import logo from "../logo.jpg"
 import { NavButton } from "./NavButton"
 import { UserProfile } from "./UserProfile"
-import logo from '../logo.jpg'
 export const Sidebar = () => {
   const location = useLocation()
   const navigate = useNavigate()
-  const [user, setUser] = useRecoilState(loggedInUser)
   const [, logOut] = useLogoutMutation()
 
-  const [me, executeMeQuery] = useCheckLoginQuery()
-  useEffect(() => {
-      if (user === null && !me.fetching && me.data.authenticatedItem){
-          setUser(me.data.authenticatedItem)
-      } 
+  const [me] = useCheckLoginQuery()
 
-  }, [me.fetching])
   async function handleLogout(e) {
     e.preventDefault()
     const _ = await logOut()
     navigate("/login")
   }
-
 
   return (
     <Flex as="section" minH="100vh" bg="bg-canvas" w={300}>
@@ -40,27 +29,26 @@ export const Sidebar = () => {
               <Link to="/dashboard">
                 <NavButton label="Dashboard" icon={FiHome} aria-current={location.pathname.includes("dashboard") ? "page" : null} />
               </Link>
-              {user?.isParent ? null : (
+              {me?.data?.authenticatedItem?.isParent ? null : (
                 <Link to="/students">
                   <NavButton label="All Students" icon={FiUsers} aria-current={location.pathname === "/students" ? "page" : null} />
                 </Link>
               )}
-              {user ? (
-                <Link to={`/students/${user.id}`}>
-                  <NavButton label="My Students" icon={FiUsers} aria-current={location.pathname === "/students/" + user.id ? "page" : null} />
+              {me?.data?.authenticatedItem ? (
+                <Link to={`/students/${me?.data?.authenticatedItem?.id}`}>
+                  <NavButton label="My Students" icon={FiUsers} aria-current={location.pathname === "/students/" + me?.data?.authenticatedItem?.id ? "page" : null} />
                 </Link>
               ) : null}
-              {!user || !user.isAdmin ? null : (
+              {!me?.data?.authenticatedItem || !me?.data?.authenticatedItem?.isAdmin ? null : (
                 <>
-                                <Link to="/teachers">
-                  <NavButton label="Teachers" icon={FiUsers} aria-current={location.pathname === "/teachers" ? "page" : null} />
-                </Link>
+                  <Link to="/teachers">
+                    <NavButton label="Teachers" icon={FiUsers} aria-current={location.pathname === "/teachers" ? "page" : null} />
+                  </Link>
 
-              <Link to="/parents">
+                  {/* <Link to="/parents">
               <NavButton label="Parents" icon={FiUsers} aria-current={location.pathname === "/parents" ? "page" : null} />
-              </Link>
+              </Link> */}
                 </>
-
               )}
             </Stack>
           </Stack>
@@ -72,7 +60,7 @@ export const Sidebar = () => {
             </Stack>
 
             <Divider />
-            {user ? <UserProfile name={user.name} image="https://tinyurl.com/yhkm2ek8" email={user.email} /> : null}
+            {me?.data?.authenticatedItem ? <UserProfile name={me?.data?.authenticatedItem?.name} image="https://tinyurl.com/yhkm2ek8" email={me?.data?.authenticatedItem?.email} /> : null}
           </Stack>
         </Stack>
       </Flex>

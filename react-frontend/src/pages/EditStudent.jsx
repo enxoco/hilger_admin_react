@@ -10,14 +10,17 @@ import { useCheckLoginQuery, useGetCoursesByStudentAndTeacherQuery, useGetStuden
 
 const EditStudent = () => {
   let { id } = useParams()
+  const [teacher, setTeacher] = useState(null)
   const [user, setUser] = useRecoilState(loggedInUser)
+  const [me, executeMeQuery] = useCheckLoginQuery({ pause: user })
 
   // If we are reloading page then we have no state
   const [{ data: coursesData, error, fetching }, getCourses] = useGetCoursesByStudentAndTeacherQuery({
-    pause: !user?.id,
+    pause: !teacher,
+    requestPolicy: "cache-and-network",
     variables: {
       studentId: id,
-      teacherId: user?.id,
+      teacherId: teacher,
     },
   })
 
@@ -57,7 +60,18 @@ const EditStudent = () => {
     })
   }
 
+  useEffect(() => {
+    if (!teacher && user && user.id) {
+      setTeacher(user.id)
+    }
+  }, [user])
 
+  useEffect(() => {
+    if (!user && me.data) {
+      setUser(me.data.authenticatedItem)
+      setTeacher(me.data?.authenticatedItem.id)
+    }
+  }, [me.fetching])
 
   useEffect(() => {
     if (studentData.data && !firstName) {
@@ -87,7 +101,7 @@ const EditStudent = () => {
           ) : null}
         </HStack>
       </Stack>
-      {!user || !studentData.data ? (
+      {!teacher || !studentData.data ? (
         <>loading</>
       ) : (
         <Stack spacing="5">

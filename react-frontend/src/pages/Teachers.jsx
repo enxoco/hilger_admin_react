@@ -1,6 +1,5 @@
 import { Box, Button, ButtonGroup, HStack, Icon, Input, InputGroup, InputLeftElement, Stack, Text, useBreakpointValue } from "@chakra-ui/react"
-import * as React from "react"
-import { useEffect } from "react"
+
 import { FiDownloadCloud, FiSearch } from "react-icons/fi"
 import { Link } from "react-router-dom"
 import { useRecoilState } from "recoil"
@@ -20,7 +19,6 @@ const Teachers = () => {
 
   const [studentData, getStudents] = useGetAllTeachersQuery({ variables: { limit: pageSize, offset: pageOffset } })
 
-  const [teachers, setTeachers] = useRecoilState(teachersAtom)
 
   function performPaginationForward() {
     setPageOffset(pageSize + pageOffset)
@@ -33,12 +31,7 @@ const Teachers = () => {
 
     getStudents({ limit: pageSize, offset: pageOffset })
   }
-  useEffect(() => {
-    if (!teachers && studentData && studentData.data) {
-      const teachers = studentData?.data?.users?.filter((user) => !user.isParent)
-      setTeachers(studentData.data.users)
-    }
-  }, [studentData.fetching])
+
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value)
@@ -71,16 +64,16 @@ const Teachers = () => {
           </Stack>
         </Box>
         <Box overflowX="auto">
-          <TeacherTable studentProp={teachers} columns={["Name", "Email"]} />
+          <TeacherTable studentProp={studentData?.data?.users} columns={["Name", "Email"]} />
         </Box>
         <Box px={{ base: "4", md: "6" }} pb="5">
           <HStack spacing="3" justify="space-between">
-            {!isMobile && teachers && (
+            {!isMobile && studentData?.data?.users && (
               <Text color="muted" fontSize="sm">
-                Showing {pageOffset + 1} to {pageOffset + pageSize} of {teachers.length || null} results
+                Showing {pageOffset + 1} to {pageOffset + pageSize} of {studentData?.data?.users.length || null} results
               </Text>
             )}
-            {teachers && teachers.length <= 10 ? null : (
+            {studentData?.data?.users && studentData?.data?.users.length <= 10 ? null : (
               <ButtonGroup spacing="3" justifyContent="space-between" width={{ base: "full", md: "auto" }} variant="secondary">
                 {pageOffset > 1 ? (
                   <Button value="previous" onClick={async () => await performPaginationPrevious()}>

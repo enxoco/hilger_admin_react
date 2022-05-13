@@ -6,7 +6,7 @@ import Layout from "../components/Layout"
 import { Stat } from "../components/Stat"
 import { useGetMyCoursesCountByTeacherQuery, useStudentsCountQuery, useTotalCourseCountQuery } from "../generated/graphql"
 const Dashboard = () => {
-  const [{ data, error, fetching }, getStudentCount] = useStudentsCountQuery()
+  const [studentCountQuery, getStudentCount] = useStudentsCountQuery()
   const [students, setStudents] = useRecoilState(studentCount)
   const [user, setUser] = useRecoilState(loggedInUser)
   const [id, setId] = useState(null)
@@ -19,8 +19,8 @@ const Dashboard = () => {
     <Layout pageTitle="Dashboard" description="Hilger Online grading portal">
       <Stack spacing={{ base: "5", lg: "6" }}>
         <SimpleGrid columns={{ base: 1, md: 3 }} gap="6">
-          <Stat key="students" label="Students enrolled" value={students?.toString()} />
-          <Stat key="myGrades" label="My Grades entered" value={courseCount?.data?.coursesCount || "0"} />
+          <Stat key="students" label="Students enrolled" value={studentCountQuery?.data?.studentsCount?.toString() || 0} />
+          <Stat key="myGrades" label="My Grades entered" value={courseCount?.data?.coursesCount || 0} />
 
           <Stat key="grades" label="Total grades entered" value={totalCourses?.data?.coursesCount || 0} />
         </SimpleGrid>
