@@ -13,7 +13,7 @@ const Layout = ({ children, customTitle, description }) => {
 
   const isDesktop = useBreakpointValue({ base: false, lg: true })
   const page = location.pathname.split("/")[1]
-  const title = page.split("")[0].toUpperCase() + page.split("").slice(1).join("")
+  const title = location.pathname === "/" ? "Dashboard" : page.split("")[0].toUpperCase() + page.split("").slice(1).join("")
   useDocumentTitle(`Hilger Portal - ${customTitle || title}`)
   const [user, setLoggedInUser] = useRecoilState(loggedInUser)
   const [me] = useCheckLoginQuery()
