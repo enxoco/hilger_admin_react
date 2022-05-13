@@ -24,7 +24,7 @@ const MyStudents = () => {
   const [searchTerm, setSearchTerm] = useRecoilState(searchTermAtom)
 
   const [loggedInUser] = useRecoilState(loggedInUserAtom)
-  const [studentData, getStudents] = useGetMyStudentsQuery({ variables: { id }, pause: loggedInUser && loggedInUser?.isParent })
+  const [studentData, getStudents] = useGetMyStudentsQuery({ variables: { id: loggedInUser?.id }, pause: loggedInUser && loggedInUser?.isParent, requestPolicy: 'cache-and-network'})
 
   const [childrenData, getChildren] = useGetStudentsByParentQuery({ variables: { email: loggedInUser?.email }, pause: loggedInUser && loggedInUser?.isTeacher })
   const [studentsCount] = useStudentsCountQuery()
@@ -118,16 +118,6 @@ const MyStudents = () => {
       </Stack>
 
       <Stack spacing="5">
-        <Box px={{ base: "4", md: "6" }} pt="5">
-          <Stack direction={{ base: "column", md: "row" }} justify="space-between">
-            <InputGroup maxW="xs">
-              <InputLeftElement pointerEvents="none">
-                <Icon as={FiSearch} color="muted" boxSize="5" />
-              </InputLeftElement>
-              <Input placeholder="Search" onChange={handleSearch} />
-            </InputGroup>
-          </Stack>
-        </Box>
 
         <Box overflowX="auto">
           {!students?.length && !childrenData?.data?.students ? (
