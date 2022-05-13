@@ -1367,7 +1367,7 @@ export type GetAllParentsQueryVariables = Exact<{
 }>;
 
 
-export type GetAllParentsQuery = { __typename?: 'Query', users?: Array<{ __typename: 'User', id: string, name?: string | null, email?: string | null, isAdmin?: boolean | null, isParent?: boolean | null }> | null };
+export type GetAllParentsQuery = { __typename?: 'Query', users?: Array<{ __typename: 'User', id: string, name?: string | null, email?: string | null, isAdmin?: boolean | null, isParent?: boolean | null, firstName?: string | null, lastName?: string | null }> | null };
 
 export type GetMyCoursesCountByTeacherQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -1752,6 +1752,8 @@ export const GetAllParentsDocument = gql`
     email
     isAdmin
     isParent
+    firstName
+    lastName
   }
 }
     `;

@@ -51,9 +51,16 @@ export const Sidebar = () => {
                 </Link>
               ) : null}
               {!user || !user.isAdmin ? null : (
-                <Link to="/teachers">
-                  <NavButton label="Teachers" icon={FiUsers} />
+                <>
+                                <Link to="/teachers">
+                  <NavButton label="Teachers" icon={FiUsers} aria-current={location.pathname === "/teachers" ? "page" : null} />
                 </Link>
+
+              <Link to="/parents">
+              <NavButton label="Parents" icon={FiUsers} aria-current={location.pathname === "/parents" ? "page" : null} />
+              </Link>
+                </>
+
               )}
             </Stack>
           </Stack>

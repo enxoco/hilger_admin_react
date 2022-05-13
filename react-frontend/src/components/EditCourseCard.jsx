@@ -1,25 +1,19 @@
 import { DeleteIcon } from '@chakra-ui/icons'
-import { Box, Button, Divider, Flex, FormControl, FormLabel, IconButton, Input, Stack, useColorModeValue, Textarea, Badge } from '@chakra-ui/react'
-import * as React from 'react'
-import { useState, useContext } from 'react'
-import { useUpdateCourseMutation, useCreateCourseMutation, useDeleteCourseMutation } from '../generated/graphql'
-import { UserContext } from '../UserContext'
-import {useNavigate} from 'react-router-dom'
-import {useRecoilState} from 'recoil'
-import {fetchCourses as fetchCoursesAtom, impersonateUser} from '../atom'
+import { Badge, Box, Button, Divider, Flex, FormControl, FormLabel, IconButton, Input, Stack, Textarea, useColorModeValue } from '@chakra-ui/react'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useCreateCourseMutation, useDeleteCourseMutation, useUpdateCourseMutation } from '../generated/graphql'
 const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard, teacher, teacherName}) => {
 
     const navigate = useNavigate()
     const  [courseName, setCourseName] = useState(name)
     const [courseGrade, setCourseGrade] = useState(grade)
     const [courseFeedback, setFeedback] = useState(feedback)
-    const {state, setState} = useContext(UserContext)
 
     const [updatedCourse, setUpdateCourse] = useUpdateCourseMutation()
     const [createdCourse, createCourse] = useCreateCourseMutation()
     const [_, deleteCourse] = useDeleteCourseMutation()
-    const [fetchCourses, setFetchCourses] = useRecoilState(fetchCoursesAtom)
-    const {impersonatedUser} = useRecoilState(impersonateUser)
+
     const handleCourseNameUpdate = (e) => {
         setCourseName(e.target.value)
     }

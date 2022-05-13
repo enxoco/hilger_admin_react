@@ -154,14 +154,14 @@ function TeacherTable({studentProp, columns}) {
                   <HStack spacing="3">
                     <Checkbox />
                     <Box>
-                      <Text fontWeight="medium">{member.firstName || member.name}</Text>
+                      <Text fontWeight="medium">{member.firstName || member.name} {member.lastName || null }</Text>
                     </Box>
                   </HStack>
                 </Td>
                 <Td>
                   <HStack spacing="3">
                     <Box>
-                      <Text fontWeight="medium">{member.lastName || member.email}</Text>
+                      <Text fontWeight="medium">{member.email}</Text>
                     </Box>
                   </HStack>
                 </Td>

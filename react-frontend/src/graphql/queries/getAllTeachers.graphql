@@ -27,5 +27,7 @@ query GetAllParents($limit: Int!, $offset: Int!) {
         email
         isAdmin
         isParent
+        firstName
+        lastName
     }
 }

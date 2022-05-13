@@ -5,6 +5,12 @@ export const teachers = atom({
   default: null,
 })
 
+export const parents = atom({
+  key: "parents",
+  default: null,
+})
+
+
 export const students = atom({
   key: "students",
   default: null,

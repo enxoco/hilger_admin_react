@@ -1,20 +1,18 @@
-import { Box, Button, Container, Flex, Heading, HStack, Image, Stack, Text, useBreakpointValue, useColorModeValue, VStack } from "@chakra-ui/react"
+import { Box, Button, Heading, HStack, Image, Stack, Text, useColorModeValue, VStack } from "@chakra-ui/react"
 import { useEffect, useRef, useState } from "react"
 import { FiDownloadCloud } from "react-icons/fi"
 import { useParams } from "react-router-dom"
 import ReactToPrint from "react-to-print"
 import { useRecoilState } from "recoil"
 import { courses as coursesAtom, loggedInUser } from "../atom"
-import { Navbar } from "../components/Navbar"
-import { Sidebar } from "../components/Sidebar"
+import Layout from "../components/Layout"
 import { useCheckLoginQuery, useCoursesByStudentQuery, useGetStudentQuery } from "../generated/graphql"
 import useDocumentTitle from "../utils/useDocumentTitle"
 
 const StudentReport = () => {
   useDocumentTitle("Hilger Portal - Student Report")
   const componentRef = useRef()
-  const isDesktop = useBreakpointValue({ base: false, lg: true })
-  const isMobile = useBreakpointValue({ base: true, md: false })
+
   let { id } = useParams()
   const [teacher, setTeacher] = useState(null)
   const [user, setUser] = useRecoilState(loggedInUser)
@@ -59,13 +57,7 @@ const StudentReport = () => {
   }
 
   const getPageMargins = () => {
-    return `@page { margin: 17mm 10mm !important;}`;
-  };
-
-  const hideNewCourseCard = () => {
-    setNewCourseName("")
-    setNewCourseGrade("")
-    setNewCourse(false)
+    return `@page { margin: 17mm 10mm !important;}`
   }
 
   useEffect(() => {
@@ -103,91 +95,82 @@ const StudentReport = () => {
   }, [coursesData])
 
   return (
-    <Flex as="section" direction={{ base: "column", lg: "row" }} height="100vh" bg="bg-canvas" overflowY="auto">
-      {isDesktop ? <Sidebar /> : <Navbar />}
-      <Box bg="bg-surface" pt={{ base: "0", lg: "3" }} flex="1">
-        <Box bg="bg-canvas" borderTopLeftRadius={{ base: "none", lg: "2rem" }} height="full">
-          <Container py="8">
-            <Stack spacing={{ base: "8", lg: "6" }}>
-              <Stack spacing="4" direction={{ base: "column", lg: "row" }} justify="space-between" align={{ base: "start", lg: "center" }}>
-                <HStack spacing="3">
-                  <Button variant="secondary" leftIcon={<FiDownloadCloud fontSize="1.25rem" />}>
-                    Export
-                  </Button>
-                  <Button variant="primary" onClick={showNewCourseCard}>
-                    Add Course
-                  </Button>
-                  <ReactToPrint trigger={() => <Button>Print</Button>} content={() => componentRef.current} />
-                </HStack>
-              </Stack>
-              {!teacher || !studentData.data ? (
-                <>loading</>
-              ) : (
-                <Stack spacing="5">
-                  <Box px={{ base: "4", md: "6" }} pt="5">
-                    <Stack direction={{ base: "column", md: "row" }} justify="space-between">
-                      <Text fontSize="lg" fontWeight="medium">
-                        Edit Student
-                      </Text>
-                    </Stack>
-                  </Box>
-                  {!fetching && loggedInUser && !studentData.fetching && coursesParsed ? (
-                    <Box as="form" bg="bg-surface" boxShadow={useColorModeValue("sm", "sm-dark")} borderRadius="lg">
-                      <VStack ref={componentRef} pageStyle={pageStyle} spacing="5" px={{ base: "4", md: "6" }} py={{ base: "5", md: "6" }}>
-                      <style>{getPageMargins()}</style>
-
-                        <HStack justifyContent={"space-between"}>
-                          <Image src="https://hhlearning.com/wp-content/uploads/2017/04/cropped-HH-Logo.png" alt="Hilger Higher Learning Logo" height="175" width="175" />
-                          <Heading size="xs" textAlign="center">
-                            Hilger Higher Learning Report Card Spring Semester 2022
-                          </Heading>
-                        </HStack>
-
-                        <Text textAlign="center">
-                          Hilger Higher Learning, Inc.
-                          <br />
-                          412 East and West Road
-                          <br />
-                          Lookout Mountain, TN 37350
-                          <br />
-                          www.hhlearning.com
-                          <br />
-                        </Text>
-                        <Text>
-                          {studentData.data.student.firstName} {studentData.data.student.lastName} has received the following percentage grade(s) for one semester of class(es) administered by Hilger Higher Learning, Inc. All instructors contracted by
-                          Hilger Higher Learning meet proper Certification and/or requirement standards as directed by Tennessee, Georgia, and Alabama state law. Each semester of class is worth 1/2 credit.
-                        </Text>
-                        {/* {+coursesData?.courses[0].feedbackLength >= 2000 ? <div className="print-only" style={{ height: 475 }}></div> : null} */}
-
-                        <VStack textAlign="left" alignItems="flexStart" mb="50" marginBottom={50} className="page-break">
-                          <Text fontWeight="bold">Course: {coursesData.courses[0].name || null}</Text>
-                          <Text fontWeight="bold">Grade: {coursesData.courses[0].grade || ""}</Text>
-                          <Text fontWeight="bold">Instructor: {coursesData.courses[0].teacher.name}</Text>
-                          <Text>{coursesData.courses[0].feedback}</Text>
-                        </VStack>
-                        {/* <div className="print-only" style={{ height: 275 }}></div> */}
-
-                        {coursesData.courses.slice(1).map((course, index) => (
-                          <>
-                            <VStack textAlign="left" alignItems="flexStart" mb="50" marginBottom={50} className="page-break">
-                              <Text fontWeight="bold">Course: {course.name || null}</Text>
-                              <Text fontWeight="bold">Grade: {course.grade || ""}</Text>
-                              <Text fontWeight="bold">Instructor: {course.teacher.name}</Text>
-                              <Text>{course.feedback}</Text>
-                            </VStack>
-                            {/* {course.feedbackLength == "break" ? <div className="print-only" style={{ height: 275 }}></div> : null} */}
-                          </>
-                        ))}
-                      </VStack>
-                    </Box>
-                  ) : null}
-                </Stack>
-              )}
+    <Layout>
+      <Stack spacing="4" direction={{ base: "column", lg: "row" }} justify="space-between" align={{ base: "start", lg: "center" }}>
+        <HStack spacing="3">
+          <Button variant="secondary" leftIcon={<FiDownloadCloud fontSize="1.25rem" />}>
+            Export
+          </Button>
+          <Button variant="primary" onClick={showNewCourseCard}>
+            Add Course
+          </Button>
+          <ReactToPrint trigger={() => <Button>Print</Button>} content={() => componentRef.current} />
+        </HStack>
+      </Stack>
+      {!teacher || !studentData.data ? (
+        <>loading</>
+      ) : (
+        <Stack spacing="5">
+          <Box px={{ base: "4", md: "6" }} pt="5">
+            <Stack direction={{ base: "column", md: "row" }} justify="space-between">
+              <Text fontSize="lg" fontWeight="medium">
+                Edit Student
+              </Text>
             </Stack>
-          </Container>
-        </Box>
-      </Box>
-    </Flex>
+          </Box>
+          {!fetching && loggedInUser && !studentData.fetching && coursesParsed ? (
+            <Box as="form" bg="bg-surface" boxShadow={useColorModeValue("sm", "sm-dark")} borderRadius="lg">
+              <VStack ref={componentRef} pageStyle={pageStyle} spacing="5" px={{ base: "4", md: "6" }} py={{ base: "5", md: "6" }}>
+                <style>{getPageMargins()}</style>
+
+                <HStack justifyContent={"space-between"}>
+                  <Image src="https://hhlearning.com/wp-content/uploads/2017/04/cropped-HH-Logo.png" alt="Hilger Higher Learning Logo" height="175" width="175" />
+                  <Heading size="xs" textAlign="center">
+                    Hilger Higher Learning Report Card Spring Semester 2022
+                  </Heading>
+                </HStack>
+
+                <Text textAlign="center">
+                  Hilger Higher Learning, Inc.
+                  <br />
+                  412 East and West Road
+                  <br />
+                  Lookout Mountain, TN 37350
+                  <br />
+                  www.hhlearning.com
+                  <br />
+                </Text>
+                <Text>
+                  {studentData.data.student.firstName} {studentData.data.student.lastName} has received the following percentage grade(s) for one semester of class(es) administered by Hilger Higher Learning, Inc. All instructors contracted by Hilger
+                  Higher Learning meet proper Certification and/or requirement standards as directed by Tennessee, Georgia, and Alabama state law. Each semester of class is worth 1/2 credit.
+                </Text>
+                {/* {+coursesData?.courses[0].feedbackLength >= 2000 ? <div className="print-only" style={{ height: 475 }}></div> : null} */}
+
+                <VStack textAlign="left" alignItems="flexStart" mb="50" marginBottom={50} className="page-break">
+                  <Text fontWeight="bold">Course: {coursesData.courses[0].name || null}</Text>
+                  <Text fontWeight="bold">Grade: {coursesData.courses[0].grade || ""}</Text>
+                  <Text fontWeight="bold">Instructor: {coursesData.courses[0].teacher.name}</Text>
+                  <Text>{coursesData.courses[0].feedback}</Text>
+                </VStack>
+                {/* <div className="print-only" style={{ height: 275 }}></div> */}
+
+                {coursesData.courses.slice(1).map((course, index) => (
+                  <>
+                    <VStack textAlign="left" alignItems="flexStart" mb="50" marginBottom={50} className="page-break">
+                      <Text fontWeight="bold">Course: {course.name || null}</Text>
+                      <Text fontWeight="bold">Grade: {course.grade || ""}</Text>
+                      <Text fontWeight="bold">Instructor: {course.teacher.name}</Text>
+                      <Text>{course.feedback}</Text>
+                    </VStack>
+                    {/* {course.feedbackLength == "break" ? <div className="print-only" style={{ height: 275 }}></div> : null} */}
+                  </>
+                ))}
+              </VStack>
+            </Box>
+          ) : null}
+        </Stack>
+      )}
+    </Layout>
   )
 }
 
