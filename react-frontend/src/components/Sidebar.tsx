@@ -5,12 +5,14 @@ import { useCheckLoginQuery, useLogoutMutation } from "../generated/graphql"
 import logo from "../logo.jpg"
 import { NavButton } from "./NavButton"
 import { UserProfile } from "./UserProfile"
+import {loggedInUser as loggedInUserAtom} from '../atom'
+import { useRecoilState } from "recoil"
 export const Sidebar = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const [, logOut] = useLogoutMutation()
 
-  const [me] = useCheckLoginQuery()
+  const [loggedInUser] = useRecoilState(loggedInUserAtom)
 
   async function handleLogout(e) {
     e.preventDefault()
@@ -29,17 +31,17 @@ export const Sidebar = () => {
               <Link to="/dashboard">
                 <NavButton label="Dashboard" icon={FiHome} aria-current={location.pathname.includes("dashboard") ? "page" : null} />
               </Link>
-              {me?.data?.authenticatedItem?.isParent ? null : (
+              {loggedInUser?.isParent ? null : (
                 <Link to="/students">
                   <NavButton label="All Students" icon={FiUsers} aria-current={location.pathname === "/students" ? "page" : null} />
                 </Link>
               )}
-              {me?.data?.authenticatedItem ? (
-                <Link to={`/students/${me?.data?.authenticatedItem?.id}`}>
-                  <NavButton label="My Students" icon={FiUsers} aria-current={location.pathname === "/students/" + me?.data?.authenticatedItem?.id ? "page" : null} />
+              {loggedInUser?.id ? (
+                <Link to={`/students/${loggedInUser?.id}`}>
+                  <NavButton label="My Students" icon={FiUsers} aria-current={location.pathname === "/students/" + loggedInUser?.id ? "page" : null} />
                 </Link>
               ) : null}
-              {!me?.data?.authenticatedItem || !me?.data?.authenticatedItem?.isAdmin ? null : (
+              {!loggedInUser?.id || !loggedInUser?.isAdmin ? null : (
                 <>
                   <Link to="/teachers">
                     <NavButton label="Teachers" icon={FiUsers} aria-current={location.pathname === "/teachers" ? "page" : null} />
@@ -60,7 +62,7 @@ export const Sidebar = () => {
             </Stack>
 
             <Divider />
-            {me?.data?.authenticatedItem ? <UserProfile name={me?.data?.authenticatedItem?.name} image="https://tinyurl.com/yhkm2ek8" email={me?.data?.authenticatedItem?.email} /> : null}
+            {loggedInUser?.name ? <UserProfile name={loggedInUser?.name} image="https://tinyurl.com/yhkm2ek8" email={loggedInUser?.email} /> : null}
           </Stack>
         </Stack>
       </Flex>

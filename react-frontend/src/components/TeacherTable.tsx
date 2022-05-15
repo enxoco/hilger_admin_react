@@ -11,6 +11,7 @@ import {
   useForgotPasswordMutation,
   useToggleAdminMutation
 } from "../generated/graphql"
+import { useLocalStorage } from "../hooks/useLocalStorage"
 import checkRole from "../utils/checkRole"
 
 function TeacherTable({studentProp, columns}) {
@@ -23,11 +24,13 @@ function TeacherTable({studentProp, columns}) {
 
   const [, fetchPasswordReset] = useForgotPasswordMutation()
   const [, toggleAdmin] = useToggleAdminMutation()
-  const [impersonatedUser, setImpersonatedUser] = useRecoilState(impersonateUserAtom)
+  const [impersonatingUser, setImpersonatingUser] = useLocalStorage("impersonating", "")
+  const [isImpersonating, setIsImpersonating] = useRecoilState(impersonateUserAtom)
+  const [localUser, setLocalUser] = useLocalStorage("user", "")
+
 
   async function handleRequestPasswordReset(email){
     const result = await fetchPasswordReset({email})
-    console.log('result', result)
   }
 
 
@@ -98,12 +101,21 @@ function TeacherTable({studentProp, columns}) {
 
 
   async function impersonate(member) {
-    await setImpersonatedUser(member)
-    setUser(member)
+    // const impersonation = {
+    //   ...localUser,
+    //   impersonating: member
+    // }
+    localUser.impersonating = member
+
+    setLocalUser({...localUser}) 
+    setUser(localUser)
     
-    console.log('user', user)
-    console.log('impersonated', impersonatedUser)
+    setIsImpersonating(true)
+    console.log('localUser', localUser)
+
   }
+
+  
 
 
   return (

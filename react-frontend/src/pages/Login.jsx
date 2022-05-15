@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { PasswordField } from "../components/PasswordField"
 import { useLoginMutation } from "../generated/graphql"
 import useDocumentTitle from "../utils/useDocumentTitle"
-
+import { useLocalStorage } from '../hooks/useLocalStorage'
 
 function Login() {
   useDocumentTitle('Hilger Portal - Login')
@@ -26,11 +26,14 @@ function Login() {
     setPassword(e.target.value)
   }
 
+  const [user, setUser] = useLocalStorage("user", "")
+
   async function handleLogin(e) {
     e.preventDefault()
     const results = await doLogin({ email, password })
 
     if (results.data?.authenticateUserWithPassword?.item) {
+      setUser(results.data?.authenticateUserWithPassword?.item)
       window.location.href = '/dashboard'
     }
   }

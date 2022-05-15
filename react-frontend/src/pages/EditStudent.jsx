@@ -83,16 +83,20 @@ const EditStudent = () => {
     <Layout>
       <Stack spacing="4" direction={{ base: "column", lg: "row" }} justify="space-between" align={{ base: "start", lg: "center" }}>
         <HStack spacing="3">
-          <Tooltip label="Download a CSV file">
-            <Button variant="secondary" leftIcon={<FiDownloadCloud fontSize="1.25rem" />}>
-              Export
-            </Button>
-          </Tooltip>
-          <Button variant="primary" onClick={showNewCourseCard}>
-            Add Course
-          </Button>
+          {me?.data?.authenticatedItem?.isParent ? null : (
+            <>
+              <Tooltip label="Download a CSV file">
+                <Button variant="secondary" leftIcon={<FiDownloadCloud fontSize="1.25rem" />}>
+                  Export
+                </Button>
+              </Tooltip>
+              <Button variant="primary" onClick={showNewCourseCard}>
+                Add Course
+              </Button>
+            </>
+          )}
 
-          {user?.isAdmin || impersonatedUser ? (
+          {user?.isAdmin || impersonatedUser || me?.data?.authenticatedItem?.isParent ? (
             <Tooltip label={`View full report card for ${studentData.data?.firstName || "student"}`}>
               <Link to={"report"}>
                 <Button variant="outline">View report card</Button>

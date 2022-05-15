@@ -8,9 +8,10 @@ import { Card } from "../components/Card"
 import Layout from "../components/Layout"
 import StudentTable from "../components/StudentTable"
 import SimpleTable from "../components/SimpleTable"
-import { useDeleteStudentMutation, useGetMyStudentsQuery, useGetStudentsByParentQuery, useStudentsCountQuery } from "../generated/graphql"
+import { useCheckLoginQuery, useDeleteStudentMutation, useGetMyStudentsQuery, useGetStudentsByParentQuery, useStudentsCountQuery } from "../generated/graphql"
 import { exportCSVFile } from "../utils/csvExport"
 import dynamicSort from "../utils/dynamicSort"
+import { useLocalStorage } from "../hooks/useLocalStorage"
 
 const MyStudents = () => {
   const { id } = useParams()
@@ -23,14 +24,20 @@ const MyStudents = () => {
   const [students, setStudents] = useRecoilState(studentAtom)
   const [searchTerm, setSearchTerm] = useRecoilState(searchTermAtom)
 
-  const [loggedInUser] = useRecoilState(loggedInUserAtom)
-  const [studentData, getStudents] = useGetMyStudentsQuery({ variables: { id: loggedInUser?.id }, pause: loggedInUser && loggedInUser?.isParent, requestPolicy: 'cache-and-network'})
+  const [loggedInUser] = useLocalStorage("user")
+  // const [loggedInUser] = useRecoilState(loggedInUserAtom)
+  console.log('loggedInUser', loggedInUser)
+  const [studentData, getStudents] = useGetMyStudentsQuery({ variables: { id: loggedInUser?.isImpersonating?.id || loggedInUser?.id }, pause: loggedInUser?.id && loggedInUser?.isParent, requestPolicy: 'network-only'})
 
-  const [childrenData, getChildren] = useGetStudentsByParentQuery({ variables: { email: loggedInUser?.email }, pause: loggedInUser && loggedInUser?.isTeacher })
+  const [childrenData, getChildren] = useGetStudentsByParentQuery({ variables: { email: loggedInUser?.email }, pause: !loggedInUser?.email && loggedInUser?.isTeacher, requestPolicy: 'network-only' })
   const [studentsCount] = useStudentsCountQuery()
 
+  console.log('students', students)
+  const isParent = () => {
+    return loggedInUser?.isParent
+  }
   useEffect(() => {
-    if (studentData && studentData.data && studentData.data.user.students) {
+    if (studentData?.data?.user?.students) {
       const studentArr = JSON.parse(studentData.data.user.students)
         .sort(dynamicSort("firstName"))
         .filter((v, i, a) => a.findIndex((v2) => v2.id === v.id) === i)
@@ -109,18 +116,20 @@ const MyStudents = () => {
   }
   return (
     <Layout customTitle="My Students">
-      <Stack spacing="4" direction={{ base: "column", lg: "row" }} justify="space-between" align={{ base: "start", lg: "center" }}>
-        <HStack spacing="3">
-          <Button variant="secondary" leftIcon={<FiDownloadCloud fontSize="1.25rem" />} onClick={handleExport}>
-            Export
-          </Button>
-        </HStack>
-      </Stack>
+
+      {isParent ? null : (
+              <Stack spacing="4" direction={{ base: "column", lg: "row" }} justify="space-between" align={{ base: "start", lg: "center" }}>
+              <HStack spacing="3">
+                <Button variant="secondary" leftIcon={<FiDownloadCloud fontSize="1.25rem" />} onClick={handleExport}>
+                  Export
+                </Button>
+              </HStack>
+            </Stack>
+      )}
 
       <Stack spacing="5">
-
         <Box overflowX="auto">
-          {!students?.length && !childrenData?.data?.students ? (
+          {!studentData?.data?.students?.length && !childrenData?.data?.students ? (
             <Card display={"flex"} justifyContent="center" alignItems={"center"} flexDir="column">
               <Text size="lg">You don't appear to have any grades entered yet.</Text>
               <Divider w="50%" my={10} />
@@ -134,10 +143,10 @@ const MyStudents = () => {
                 </Button>
               </Text>
             </Card>
-          ) : childrenData?.data?.students && loggedInUser?.isParent ? (
+          ) : childrenData?.data?.students && isParent ? (
             <SimpleTable studentProp={childrenData?.data?.students} />
           ) : (
-            <StudentTable columns={columns} data={students || childrenData?.data?.students} />
+            <StudentTable columns={columns} data={students} />
           )}
         </Box>
       </Stack>

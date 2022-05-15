@@ -12,6 +12,13 @@ mutation Login($email: String!, $password: String!) {
       item {
         email
         isAdmin
+        isParent
+        __typename
+        id
+        street
+        city
+        state
+        zipcode
       }
     }
     ... on UserAuthenticationWithPasswordFailure {

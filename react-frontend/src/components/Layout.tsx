@@ -8,15 +8,27 @@ import { Navbar } from "../components/Navbar"
 import { Sidebar } from "../components/Sidebar"
 import { useCheckLoginQuery } from "../generated/graphql"
 import useDocumentTitle from "../utils/useDocumentTitle"
+import {useLocalStorage} from '../hooks/useLocalStorage'
 const Layout = ({ children, customTitle, description }) => {
   let location = useLocation()
 
   const isDesktop = useBreakpointValue({ base: false, lg: true })
-  const page = location.pathname.split("/")[1]
-  const title = location.pathname === "/" ? "Dashboard" : page.split("")[0].toUpperCase() + page.split("").slice(1).join("")
-  useDocumentTitle(`Hilger Portal - ${customTitle || title}`)
+  const splitPath = location.pathname.split('/')
+  let title
+  console.log('splitPath', splitPath[1] == '')
+  if (splitPath[1] && splitPath[1] == ''){//Dealing with homepage
+    title = ''
+  } else {
+    console.log('what is going on', splitPath)
+    title = location.pathname === "/" ? "Dashboard" : splitPath[1].split("")[0].toUpperCase() + splitPath[1].split("").slice(1).join("")
+
+  }
+  // const page = location.pathname.split("/")[1]
+  // const title = location.pathname === "/" ? "Dashboard" : page.split("")[0].toUpperCase() + page.split("").slice(1).join("")
+  useDocumentTitle(`Hilger Portal ${customTitle || title}`)
   const [user, setLoggedInUser] = useRecoilState(loggedInUser)
-  const [me] = useCheckLoginQuery()
+  const [localUser, setLocalUser] = useLocalStorage("user", "")
+  const [me, checkLogin] = useCheckLoginQuery()
 
   function RequireAuth({ children }: { children: JSX.Element }) {
     if (!user && !me.fetching && !me?.data?.authenticatedItem) {
@@ -32,6 +44,38 @@ const Layout = ({ children, customTitle, description }) => {
     return (!user && !me.data?.authenticatedItem) ? (<></>) : children
   }
 
+
+
+  /**
+   * 
+   * The goal is to make sure that we always
+   * have user information stored in localstorage
+   * so if a user has logged in but does not have
+   * anything stored, we need to set it.
+   * 
+   * This will also ensure that loggedInUser
+   * always has a value.  
+   * 
+   * We will need to come back and clean this up
+   * to deal with impersonated users.
+   */
+  useEffect(() => {
+    async function checkLocalStorage() {
+
+      if (!localUser.id && me?.data?.authenticatedItem){
+        setLocalUser(me?.data?.authenticatedItem)
+        setLoggedInUser(me?.data?.authenticatedItem)
+
+      }
+
+      setLoggedInUser(me?.data?.authenticatedItem)
+    }
+    checkLocalStorage()
+
+  },[me.fetching])
+
+  // useEffect()
+
   return (
     <RequireAuth>
       <Flex as="section" direction={{ base: "column", lg: "row" }} height="100vh" bg="bg-canvas" overflowY="auto">
@@ -46,8 +90,10 @@ const Layout = ({ children, customTitle, description }) => {
                   <Stack spacing="1">
                     <Heading size={useBreakpointValue({ base: "xs", lg: "sm" })} fontWeight="medium">
                       {customTitle || title}
+                      {JSON.stringify(localUser)}
+
                     </Heading>
-                    <Text color="muted">{description}</Text>
+                    <Text color="muted">{description} </Text>
                   </Stack>
                 </Stack>
                 {children}
