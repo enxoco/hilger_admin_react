@@ -997,6 +997,7 @@ export type StudentWhereUniqueInput = {
 
 export type User = {
   __typename?: 'User';
+  city?: Maybe<Scalars['String']>;
   courses?: Maybe<Array<Course>>;
   coursesCount?: Maybe<Scalars['Int']>;
   email?: Maybe<Scalars['String']>;
@@ -1014,11 +1015,17 @@ export type User = {
   passwordResetIssuedAt?: Maybe<Scalars['DateTime']>;
   passwordResetRedeemedAt?: Maybe<Scalars['DateTime']>;
   passwordResetToken?: Maybe<PasswordState>;
+  phone?: Maybe<Scalars['String']>;
+  phoneFather?: Maybe<Scalars['String']>;
+  phoneMother?: Maybe<Scalars['String']>;
   role?: Maybe<Array<Role>>;
   roleCount?: Maybe<Scalars['Int']>;
+  state?: Maybe<Scalars['String']>;
+  street?: Maybe<Scalars['String']>;
   student?: Maybe<Array<Student>>;
   studentCount?: Maybe<Scalars['Int']>;
   students?: Maybe<Scalars['String']>;
+  zipcode?: Maybe<Scalars['String']>;
 };
 
 
@@ -1074,6 +1081,7 @@ export type UserAuthenticationWithPasswordSuccess = {
 };
 
 export type UserCreateInput = {
+  city?: InputMaybe<Scalars['String']>;
   courses?: InputMaybe<CourseRelateToManyForCreateInput>;
   email?: InputMaybe<Scalars['String']>;
   firstName?: InputMaybe<Scalars['String']>;
@@ -1089,8 +1097,14 @@ export type UserCreateInput = {
   passwordResetIssuedAt?: InputMaybe<Scalars['DateTime']>;
   passwordResetRedeemedAt?: InputMaybe<Scalars['DateTime']>;
   passwordResetToken?: InputMaybe<Scalars['String']>;
+  phone?: InputMaybe<Scalars['String']>;
+  phoneFather?: InputMaybe<Scalars['String']>;
+  phoneMother?: InputMaybe<Scalars['String']>;
   role?: InputMaybe<RoleRelateToManyForCreateInput>;
+  state?: InputMaybe<Scalars['String']>;
+  street?: InputMaybe<Scalars['String']>;
   student?: InputMaybe<StudentRelateToManyForCreateInput>;
+  zipcode?: InputMaybe<Scalars['String']>;
 };
 
 export type UserManyRelationFilter = {
@@ -1100,6 +1114,7 @@ export type UserManyRelationFilter = {
 };
 
 export type UserOrderByInput = {
+  city?: InputMaybe<OrderDirection>;
   email?: InputMaybe<OrderDirection>;
   firstName?: InputMaybe<OrderDirection>;
   hasPaidTuition?: InputMaybe<OrderDirection>;
@@ -1112,6 +1127,12 @@ export type UserOrderByInput = {
   name?: InputMaybe<OrderDirection>;
   passwordResetIssuedAt?: InputMaybe<OrderDirection>;
   passwordResetRedeemedAt?: InputMaybe<OrderDirection>;
+  phone?: InputMaybe<OrderDirection>;
+  phoneFather?: InputMaybe<OrderDirection>;
+  phoneMother?: InputMaybe<OrderDirection>;
+  state?: InputMaybe<OrderDirection>;
+  street?: InputMaybe<OrderDirection>;
+  zipcode?: InputMaybe<OrderDirection>;
 };
 
 export type UserRelateToManyForCreateInput = {
@@ -1143,6 +1164,7 @@ export type UserUpdateArgs = {
 };
 
 export type UserUpdateInput = {
+  city?: InputMaybe<Scalars['String']>;
   courses?: InputMaybe<CourseRelateToManyForUpdateInput>;
   email?: InputMaybe<Scalars['String']>;
   firstName?: InputMaybe<Scalars['String']>;
@@ -1158,14 +1180,21 @@ export type UserUpdateInput = {
   passwordResetIssuedAt?: InputMaybe<Scalars['DateTime']>;
   passwordResetRedeemedAt?: InputMaybe<Scalars['DateTime']>;
   passwordResetToken?: InputMaybe<Scalars['String']>;
+  phone?: InputMaybe<Scalars['String']>;
+  phoneFather?: InputMaybe<Scalars['String']>;
+  phoneMother?: InputMaybe<Scalars['String']>;
   role?: InputMaybe<RoleRelateToManyForUpdateInput>;
+  state?: InputMaybe<Scalars['String']>;
+  street?: InputMaybe<Scalars['String']>;
   student?: InputMaybe<StudentRelateToManyForUpdateInput>;
+  zipcode?: InputMaybe<Scalars['String']>;
 };
 
 export type UserWhereInput = {
   AND?: InputMaybe<Array<UserWhereInput>>;
   NOT?: InputMaybe<Array<UserWhereInput>>;
   OR?: InputMaybe<Array<UserWhereInput>>;
+  city?: InputMaybe<StringFilter>;
   courses?: InputMaybe<CourseManyRelationFilter>;
   email?: InputMaybe<StringFilter>;
   firstName?: InputMaybe<StringFilter>;
@@ -1181,8 +1210,14 @@ export type UserWhereInput = {
   passwordResetIssuedAt?: InputMaybe<DateTimeNullableFilter>;
   passwordResetRedeemedAt?: InputMaybe<DateTimeNullableFilter>;
   passwordResetToken?: InputMaybe<PasswordFilter>;
+  phone?: InputMaybe<StringFilter>;
+  phoneFather?: InputMaybe<StringFilter>;
+  phoneMother?: InputMaybe<StringFilter>;
   role?: InputMaybe<RoleManyRelationFilter>;
+  state?: InputMaybe<StringFilter>;
+  street?: InputMaybe<StringFilter>;
   student?: InputMaybe<StudentManyRelationFilter>;
+  zipcode?: InputMaybe<StringFilter>;
 };
 
 export type UserWhereUniqueInput = {

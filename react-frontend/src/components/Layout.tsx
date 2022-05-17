@@ -32,6 +32,13 @@ const Layout = ({ children, customTitle, description }) => {
     return (!user && !me.data?.authenticatedItem) ? (<></>) : children
   }
 
+
+  // Ensure that we always have a logged in user in state
+  useEffect(() => {
+    if (!user && me?.data?.authenticatedItem) {
+      setLoggedInUser(me?.data?.authenticatedItem)
+    }
+  },[me.fetching])
   return (
     <RequireAuth>
       <Flex as="section" direction={{ base: "column", lg: "row" }} height="100vh" bg="bg-canvas" overflowY="auto">

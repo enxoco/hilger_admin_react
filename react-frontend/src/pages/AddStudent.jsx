@@ -1,33 +1,37 @@
-import { Alert, AlertIcon, AlertTitle, Box, Button, Divider, Flex, FormControl, FormLabel, HStack, Input, Stack, Text, Textarea } from "@chakra-ui/react"
+import { Alert, AlertIcon, AlertTitle, Box, Button, Divider, Flex, FormControl, FormLabel, HStack, Input, Stack, Text, Textarea, useColorModeValue } from "@chakra-ui/react"
 import { useState } from "react"
 import { FiDownloadCloud } from "react-icons/fi"
+import AddStudentCard from "../components/AddStudentCard"
 import Layout from "../components/Layout"
 import { useBulkAddStudentsMutation, useCreateStudentMutation } from "../generated/graphql"
 
-function AddStudent() {
+const AddStudent = () => {
 
-  const [firstName, setFirstName] = useState("")
-  const [lastName, setLastName] = useState("")
+  const [firstName, setFirstName] = useState("b")
+  const [lastName, setLastName] = useState("b")
 
   const [bulkNames, setBulkNames] = useState([])
   const [bulkStudents, addBulkStudents] = useBulkAddStudentsMutation()
   const [{ data, error, fetching }, addStudent] = useCreateStudentMutation()
   const handleFirstNameUpdate = (e) => {
+    e.preventDefault()
+    console.log('e.', e.target.value)
     setFirstName(e.target.value)
+    // setFirstName(e.target.value)
   }
 
   const handleLastNameUpdate = (e) => {
     setLastName(e.target.value)
   }
 
-  const handleFormSubmit = async () => {
-    await addStudent({ firstName, lastName })
-    if (error) {
-      console.error("error", error)
-      return
-    }
-    setFirstName("")
-    setLastName("")
+  const handleFormSubmit = () => {
+    // addStudent({ firstName, lastName })
+    // if (error) {
+    //   console.error("error", error)
+    //   return
+    // }
+    // setFirstName("")
+    // setLastName("")
   }
 
   const handleBulkNameUpdate = (e) => {
@@ -64,32 +68,7 @@ function AddStudent() {
             </Text>
           </Stack>
         </Box>
-        <Box as="form" bg="bg-surface" boxShadow={useColorModeValue("sm", "sm-dark")} borderRadius="lg">
-          {data?.createStudent ? (
-            <Alert status="success">
-              <AlertIcon />
-              <AlertTitle>Student added successfully</AlertTitle>
-            </Alert>
-          ) : null}
-          <Stack spacing="5" px={{ base: "4", md: "6" }} py={{ base: "5", md: "6" }}>
-            <Stack spacing="6" direction={{ base: "column", md: "row" }}>
-              <FormControl id="firstName">
-                <FormLabel>First Name</FormLabel>
-                <Input value={firstName} placeholder="" onChange={handleFirstNameUpdate} />
-              </FormControl>
-              <FormControl id="lastName" placeholder="" onChange={handleLastNameUpdate}>
-                <FormLabel>Last Name</FormLabel>
-                <Input value={lastName} />
-              </FormControl>
-            </Stack>
-          </Stack>
-          <Divider />
-          <Flex direction="row-reverse" py="4" px={{ base: "4", md: "6" }}>
-            <Button variant="primary" onClick={handleFormSubmit}>
-              Save
-            </Button>
-          </Flex>
-        </Box>
+    <AddStudentCard />
       </Stack>
 
       <Stack spacing="5">

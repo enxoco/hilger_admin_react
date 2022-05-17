@@ -6,7 +6,7 @@ import { useCreateCourseMutation, useDeleteCourseMutation, useUpdateCourseMutati
 const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard, teacher, teacherName}) => {
 
     const navigate = useNavigate()
-    const  [courseName, setCourseName] = useState(name)
+    const [courseName, setCourseName] = useState(name)
     const [courseGrade, setCourseGrade] = useState(grade)
     const [courseFeedback, setFeedback] = useState(feedback)
 
@@ -31,7 +31,7 @@ const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard,
             name: courseName,
             grade: courseGrade,
             feedback: courseFeedback,
-            id: +id
+            id: +teacher
         })
     }
 
@@ -45,9 +45,6 @@ const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard,
         })
 
         hideNewCourseCard()
-
-
-
     }
 
     const handleDeleteCourse = () => {
