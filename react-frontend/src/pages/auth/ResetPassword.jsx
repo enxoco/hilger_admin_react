@@ -70,7 +70,7 @@ function ResetPassword() {
               </Stack>
               <Stack spacing="6">
                 <Button variant="primary" onClick={handleRequest} isLoading={updatedPassword.fetching}>
-                  Request password reset
+                  Update
                 </Button>
               </Stack>
             </Stack>
