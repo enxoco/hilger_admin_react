@@ -60,7 +60,7 @@ export const Sidebar = () => {
             </Stack>
 
             <Divider />
-            {me?.data?.authenticatedItem ? <UserProfile name={me?.data?.authenticatedItem?.name} image="https://tinyurl.com/yhkm2ek8" email={me?.data?.authenticatedItem?.email} /> : null}
+            {me?.data?.authenticatedItem ? <UserProfile name={me.data?.authenticatedItem.name || me.data?.authenticatedItem.firstName} image="https://tinyurl.com/yhkm2ek8" email={me?.data?.authenticatedItem?.email} /> : null}
           </Stack>
         </Stack>
       </Flex>

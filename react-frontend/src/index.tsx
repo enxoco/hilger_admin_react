@@ -15,6 +15,7 @@ import Dashboard from "./pages/Dashboard"
 import EditStudent from "./pages/EditStudent"
 import Login from "./pages/Login"
 import MyStudents from "./pages/MyStudents"
+import Parents from "./pages/Parents"
 import Register from "./pages/Register"
 import StudentReport from "./pages/StudentReport"
 import Students from "./pages/Students"
@@ -33,6 +34,7 @@ const myTheme = extendTheme(
   theme
 )
 
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider value={client}>
@@ -46,20 +48,21 @@ ReactDOM.render(
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/students" element={<Students />} />
                 <Route path="/students/:id" element={<MyStudents />} />
-
                 <Route path="/student/:id" element={<EditStudent />} />
                 <Route path="/student/:id/report" element={<StudentReport />} />
-                <Route path="/teachers" element={<Teachers />} />
-                {/* <Route path="/parents" element={
-                    <Parents />
-                } /> */}
-                <Route path="/add-teacher" element={<AddTeacher />} />
-
-                <Route path="/add-student" element={<AddStudent />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password/:id/:token" element={<ResetPassword />} />
-                {/* <Route path="/add" element={<AddLocation />} />
-              <Route path="/location/:id" element={<Location />} /> */}
+
+                {/**
+                 * 
+                 * Only users with admin access should be able to access
+                 * these routes
+                 */}
+                <Route path="/add-student" element={<AddStudent />} />
+                <Route path="/teachers" element={<Teachers />} />
+                <Route path="/parents" element={<Parents />} />
+                <Route path="/add-teacher" element={<AddTeacher />} />
+
               </Routes>
             </BrowserRouter>
           </RecoilRoot>

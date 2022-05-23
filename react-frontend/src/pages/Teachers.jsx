@@ -13,12 +13,11 @@ const Teachers = () => {
 
   const isMobile = useBreakpointValue({ base: true, md: false })
 
-  const [pageSize, setPageSize] = useRecoilState(pageSizeAtom)
+  const [pageSize] = useRecoilState(pageSizeAtom)
   const [pageOffset, setPageOffset] = useRecoilState(pageOffsetAtom)
   const [searchTerm, setSearchTerm] = useRecoilState(searchTermAtom)
 
   const [studentData, getStudents] = useGetAllTeachersQuery({ variables: { limit: pageSize, offset: pageOffset } })
-
 
   function performPaginationForward() {
     setPageOffset(pageSize + pageOffset)
@@ -32,12 +31,11 @@ const Teachers = () => {
     getStudents({ limit: pageSize, offset: pageOffset })
   }
 
-
   const handleSearch = (e) => {
     setSearchTerm(e.target.value)
   }
   return (
-    <Layout>
+    <Layout adminOnly={true}>
       <Stack spacing="4" direction={{ base: "column", lg: "row" }} justify="space-between" align={{ base: "start", lg: "center" }}>
         <HStack spacing="3">
           <Button variant="secondary" leftIcon={<FiDownloadCloud fontSize="1.25rem" />}>

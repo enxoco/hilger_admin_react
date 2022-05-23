@@ -100,9 +100,6 @@ function TeacherTable({studentProp, columns}) {
   async function impersonate(member) {
     await setImpersonatedUser(member)
     setUser(member)
-    
-    console.log('user', user)
-    console.log('impersonated', impersonatedUser)
   }
 
 

@@ -896,8 +896,7 @@ export type Student = {
   lastName?: Maybe<Scalars['String']>;
   myCourses?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
-  parent?: Maybe<Array<User>>;
-  parentCount?: Maybe<Scalars['Int']>;
+  parent?: Maybe<User>;
 };
 
 
@@ -913,24 +912,11 @@ export type StudentCoursesCountArgs = {
   where?: CourseWhereInput;
 };
 
-
-export type StudentParentArgs = {
-  orderBy?: Array<UserOrderByInput>;
-  skip?: Scalars['Int'];
-  take?: InputMaybe<Scalars['Int']>;
-  where?: UserWhereInput;
-};
-
-
-export type StudentParentCountArgs = {
-  where?: UserWhereInput;
-};
-
 export type StudentCreateInput = {
   courses?: InputMaybe<CourseRelateToManyForCreateInput>;
   firstName?: InputMaybe<Scalars['String']>;
   lastName?: InputMaybe<Scalars['String']>;
-  parent?: InputMaybe<UserRelateToManyForCreateInput>;
+  parent?: InputMaybe<UserRelateToOneForCreateInput>;
 };
 
 export type StudentManyRelationFilter = {
@@ -977,7 +963,7 @@ export type StudentUpdateInput = {
   courses?: InputMaybe<CourseRelateToManyForUpdateInput>;
   firstName?: InputMaybe<Scalars['String']>;
   lastName?: InputMaybe<Scalars['String']>;
-  parent?: InputMaybe<UserRelateToManyForUpdateInput>;
+  parent?: InputMaybe<UserRelateToOneForUpdateInput>;
 };
 
 export type StudentWhereInput = {
@@ -988,7 +974,7 @@ export type StudentWhereInput = {
   firstName?: InputMaybe<StringFilter>;
   id?: InputMaybe<IdFilter>;
   lastName?: InputMaybe<StringFilter>;
-  parent?: InputMaybe<UserManyRelationFilter>;
+  parent?: InputMaybe<UserWhereInput>;
 };
 
 export type StudentWhereUniqueInput = {
@@ -1107,12 +1093,6 @@ export type UserCreateInput = {
   zipcode?: InputMaybe<Scalars['String']>;
 };
 
-export type UserManyRelationFilter = {
-  every?: InputMaybe<UserWhereInput>;
-  none?: InputMaybe<UserWhereInput>;
-  some?: InputMaybe<UserWhereInput>;
-};
-
 export type UserOrderByInput = {
   city?: InputMaybe<OrderDirection>;
   email?: InputMaybe<OrderDirection>;
@@ -1133,18 +1113,6 @@ export type UserOrderByInput = {
   state?: InputMaybe<OrderDirection>;
   street?: InputMaybe<OrderDirection>;
   zipcode?: InputMaybe<OrderDirection>;
-};
-
-export type UserRelateToManyForCreateInput = {
-  connect?: InputMaybe<Array<UserWhereUniqueInput>>;
-  create?: InputMaybe<Array<UserCreateInput>>;
-};
-
-export type UserRelateToManyForUpdateInput = {
-  connect?: InputMaybe<Array<UserWhereUniqueInput>>;
-  create?: InputMaybe<Array<UserCreateInput>>;
-  disconnect?: InputMaybe<Array<UserWhereUniqueInput>>;
-  set?: InputMaybe<Array<UserWhereUniqueInput>>;
 };
 
 export type UserRelateToOneForCreateInput = {
@@ -1210,9 +1178,9 @@ export type UserWhereInput = {
   passwordResetIssuedAt?: InputMaybe<DateTimeNullableFilter>;
   passwordResetRedeemedAt?: InputMaybe<DateTimeNullableFilter>;
   passwordResetToken?: InputMaybe<PasswordFilter>;
-  phone?: InputMaybe<StringFilter>;
-  phoneFather?: InputMaybe<StringFilter>;
-  phoneMother?: InputMaybe<StringFilter>;
+  phone?: InputMaybe<StringNullableFilter>;
+  phoneFather?: InputMaybe<StringNullableFilter>;
+  phoneMother?: InputMaybe<StringNullableFilter>;
   role?: InputMaybe<RoleManyRelationFilter>;
   state?: InputMaybe<StringFilter>;
   street?: InputMaybe<StringFilter>;
@@ -1343,6 +1311,14 @@ export type ToggleAdminMutationVariables = Exact<{
 
 export type ToggleAdminMutation = { __typename?: 'Mutation', updateUser?: { __typename: 'User', id: string } | null };
 
+export type TogglePaidTuitionMutationVariables = Exact<{
+  id: Scalars['ID'];
+  hasPaid: Scalars['Boolean'];
+}>;
+
+
+export type TogglePaidTuitionMutation = { __typename?: 'Mutation', updateUser?: { __typename: 'User', id: string } | null };
+
 export type UpdateCourseMutationVariables = Exact<{
   name: Scalars['String'];
   grade: Scalars['String'];
@@ -1380,6 +1356,11 @@ export type GetCoursesByStudentAndTeacherQueryVariables = Exact<{
 
 export type GetCoursesByStudentAndTeacherQuery = { __typename?: 'Query', courses?: Array<{ __typename: 'Course', name?: string | null, grade?: string | null, feedback?: string | null, id: string }> | null };
 
+export type GetAllParentsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllParentsQuery = { __typename?: 'Query', users?: Array<{ __typename?: 'User', name?: string | null, firstName?: string | null, lastName?: string | null, email?: string | null, phoneMother?: string | null, phoneFather?: string | null, street?: string | null, city?: string | null, state?: string | null, zipcode?: string | null, hasPaidTuition?: boolean | null, id: string, student?: Array<{ __typename?: 'Student', firstName?: string | null, id: string }> | null }> | null };
+
 export type GetAllStudentsQueryVariables = Exact<{
   limit: Scalars['Int'];
   offset: Scalars['Int'];
@@ -1395,14 +1376,6 @@ export type GetAllTeachersQueryVariables = Exact<{
 
 
 export type GetAllTeachersQuery = { __typename?: 'Query', users?: Array<{ __typename: 'User', id: string, name?: string | null, email?: string | null, isAdmin?: boolean | null, isParent?: boolean | null }> | null };
-
-export type GetAllParentsQueryVariables = Exact<{
-  limit: Scalars['Int'];
-  offset: Scalars['Int'];
-}>;
-
-
-export type GetAllParentsQuery = { __typename?: 'Query', users?: Array<{ __typename: 'User', id: string, name?: string | null, email?: string | null, isAdmin?: boolean | null, isParent?: boolean | null, firstName?: string | null, lastName?: string | null }> | null };
 
 export type GetMyCoursesCountByTeacherQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -1646,6 +1619,18 @@ export const ToggleAdminDocument = gql`
 export function useToggleAdminMutation() {
   return Urql.useMutation<ToggleAdminMutation, ToggleAdminMutationVariables>(ToggleAdminDocument);
 };
+export const TogglePaidTuitionDocument = gql`
+    mutation TogglePaidTuition($id: ID!, $hasPaid: Boolean!) {
+  updateUser(where: {id: $id}, data: {hasPaidTuition: $hasPaid}) {
+    id
+    __typename
+  }
+}
+    `;
+
+export function useTogglePaidTuitionMutation() {
+  return Urql.useMutation<TogglePaidTuitionMutation, TogglePaidTuitionMutationVariables>(TogglePaidTuitionDocument);
+};
 export const UpdateCourseDocument = gql`
     mutation UpdateCourse($name: String!, $grade: String!, $id: ID, $feedback: String!) {
   updateCourse(
@@ -1737,6 +1722,32 @@ export const GetCoursesByStudentAndTeacherDocument = gql`
 export function useGetCoursesByStudentAndTeacherQuery(options: Omit<Urql.UseQueryArgs<GetCoursesByStudentAndTeacherQueryVariables>, 'query'>) {
   return Urql.useQuery<GetCoursesByStudentAndTeacherQuery>({ query: GetCoursesByStudentAndTeacherDocument, ...options });
 };
+export const GetAllParentsDocument = gql`
+    query GetAllParents {
+  users(where: {isParent: {equals: true}}, orderBy: {lastName: asc}) {
+    name
+    firstName
+    lastName
+    email
+    phoneMother
+    phoneFather
+    street
+    city
+    state
+    zipcode
+    hasPaidTuition
+    id
+    student {
+      firstName
+      id
+    }
+  }
+}
+    `;
+
+export function useGetAllParentsQuery(options?: Omit<Urql.UseQueryArgs<GetAllParentsQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetAllParentsQuery>({ query: GetAllParentsDocument, ...options });
+};
 export const GetAllStudentsDocument = gql`
     query GetAllStudents($limit: Int!, $offset: Int!) {
   students(take: $limit, skip: $offset, orderBy: {firstName: asc}) {
@@ -1772,29 +1783,6 @@ export const GetAllTeachersDocument = gql`
 
 export function useGetAllTeachersQuery(options: Omit<Urql.UseQueryArgs<GetAllTeachersQueryVariables>, 'query'>) {
   return Urql.useQuery<GetAllTeachersQuery>({ query: GetAllTeachersDocument, ...options });
-};
-export const GetAllParentsDocument = gql`
-    query GetAllParents($limit: Int!, $offset: Int!) {
-  users(
-    take: $limit
-    skip: $offset
-    orderBy: {name: asc}
-    where: {NOT: {isParent: {equals: false}}}
-  ) {
-    __typename
-    id
-    name
-    email
-    isAdmin
-    isParent
-    firstName
-    lastName
-  }
-}
-    `;
-
-export function useGetAllParentsQuery(options: Omit<Urql.UseQueryArgs<GetAllParentsQueryVariables>, 'query'>) {
-  return Urql.useQuery<GetAllParentsQuery>({ query: GetAllParentsDocument, ...options });
 };
 export const GetMyCoursesCountByTeacherDocument = gql`
     query GetMyCoursesCountByTeacher($id: ID!) {
@@ -1835,7 +1823,7 @@ export function useGetStudentQuery(options: Omit<Urql.UseQueryArgs<GetStudentQue
 };
 export const GetStudentsByParentDocument = gql`
     query GetStudentsByParent($email: String!) {
-  students(where: {parent: {some: {email: {equals: $email}}}}) {
+  students(where: {parent: {email: {equals: $email}}}) {
     name
     firstName
     lastName

@@ -1,0 +1,6 @@
+mutation TogglePaidTuition($id: ID!, $hasPaid: Boolean!){
+  updateUser(where: {id: $id}, data: {hasPaidTuition: $hasPaid}) {
+    id
+    __typename
+  }
+}

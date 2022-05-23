@@ -1,38 +1,15 @@
-import { Alert, AlertIcon, AlertTitle, Box, Button, Divider, Flex, FormControl, FormLabel, HStack, Input, Stack, Text, Textarea, useColorModeValue } from "@chakra-ui/react"
+import { Alert, AlertIcon, AlertTitle, Box, Button, Divider, Flex, FormControl, FormLabel, HStack, Stack, Text, Textarea, useColorModeValue } from "@chakra-ui/react"
 import { useState } from "react"
 import { FiDownloadCloud } from "react-icons/fi"
 import AddStudentCard from "../components/AddStudentCard"
 import Layout from "../components/Layout"
-import { useBulkAddStudentsMutation, useCreateStudentMutation } from "../generated/graphql"
+import { useBulkAddStudentsMutation } from "../generated/graphql"
 
 const AddStudent = () => {
 
-  const [firstName, setFirstName] = useState("b")
-  const [lastName, setLastName] = useState("b")
-
   const [bulkNames, setBulkNames] = useState([])
   const [bulkStudents, addBulkStudents] = useBulkAddStudentsMutation()
-  const [{ data, error, fetching }, addStudent] = useCreateStudentMutation()
-  const handleFirstNameUpdate = (e) => {
-    e.preventDefault()
-    console.log('e.', e.target.value)
-    setFirstName(e.target.value)
-    // setFirstName(e.target.value)
-  }
 
-  const handleLastNameUpdate = (e) => {
-    setLastName(e.target.value)
-  }
-
-  const handleFormSubmit = () => {
-    // addStudent({ firstName, lastName })
-    // if (error) {
-    //   console.error("error", error)
-    //   return
-    // }
-    // setFirstName("")
-    // setLastName("")
-  }
 
   const handleBulkNameUpdate = (e) => {
     setBulkNames(e.target.value)
@@ -50,7 +27,7 @@ const AddStudent = () => {
   }
 
   return (
-    <Layout>
+    <Layout adminOnly={true}>
       <Stack spacing="4" direction={{ base: "column", lg: "row" }} justify="space-between" align={{ base: "start", lg: "center" }}>
         <HStack spacing="3">
           <Button variant="secondary" leftIcon={<FiDownloadCloud fontSize="1.25rem" />}>

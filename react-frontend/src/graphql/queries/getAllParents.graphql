@@ -1,0 +1,20 @@
+query GetAllParents{
+  users(where: {isParent: {equals: true}}, orderBy: {lastName: asc}){
+    name
+    firstName
+    lastName
+    email
+    phoneMother
+    phoneFather
+    street
+    city
+    state
+    zipcode
+    hasPaidTuition
+    id
+    student {
+      firstName
+      id
+    }
+  }
+}

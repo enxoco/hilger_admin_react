@@ -17,13 +17,16 @@ const EditStudent = () => {
 
   // If we are reloading page then we have no state
   const [{ data: coursesData, error, fetching }, getCourses] = useGetCoursesByStudentAndTeacherQuery({
-    pause: !teacher,
+    pause: !loggedInUser?.isParent,
     requestPolicy: "network-only",
     variables: {
       studentId: id,
       teacherId: teacher,
     },
   })
+
+
+  
 
   const [studentData, getStudent] = useGetStudentQuery({ variables: { id } })
 

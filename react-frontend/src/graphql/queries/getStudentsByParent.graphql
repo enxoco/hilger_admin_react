@@ -1,5 +1,5 @@
 query GetStudentsByParent($email: String!){
-  students(where: {parent: {some: {email: {equals: $email}}}}) {
+  students(where: {parent: {email: {equals: $email}}}) {
     name
     firstName
     lastName

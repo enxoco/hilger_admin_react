@@ -8,12 +8,13 @@ import { Navbar } from "../components/Navbar"
 import { Sidebar } from "../components/Sidebar"
 import { useCheckLoginQuery } from "../generated/graphql"
 import useDocumentTitle from "../utils/useDocumentTitle"
-const Layout = ({ children, customTitle, description }) => {
+import { ParentNoticeBanner } from "./ParentNoticeBanner"
+const Layout = ({ children, customTitle, description, adminOnly }) => {
   let location = useLocation()
 
   const isDesktop = useBreakpointValue({ base: false, lg: true })
-  const page = location.pathname.split("/")[1]
-  const title = location.pathname === "/" ? "Dashboard" : page.split("")[0].toUpperCase() + page.split("").slice(1).join("")
+
+  let title = ""
   useDocumentTitle(`Hilger Portal - ${customTitle || title}`)
   const [user, setLoggedInUser] = useRecoilState(loggedInUser)
   const [me] = useCheckLoginQuery()
@@ -29,6 +30,9 @@ const Layout = ({ children, customTitle, description }) => {
      * return an empty element,
      * otherwise return our layout
      */
+    if (adminOnly && !me.data?.authenticatedItem.isAdmin) {
+      return <Navigate to="/dashboard" state={{ from: location }} replace />
+    }
     return (!user && !me.data?.authenticatedItem) ? (<></>) : children
   }
 
@@ -47,7 +51,9 @@ const Layout = ({ children, customTitle, description }) => {
         <Box bg="bg-surface" pt={{ base: "0", lg: "3" }} flex="1">
           <Box bg="bg-canvas" borderTopLeftRadius={{ base: "none", lg: "2rem" }} height="full">
             <Container py="8">
+
               <ImpersonateUserBanner />
+              <ParentNoticeBanner />
               <Stack spacing={{ base: "8", lg: "6" }}>
                 <Stack spacing="4" direction={{ base: "column", lg: "row" }} justify="space-between" align={{ base: "start", lg: "center" }}>
                   <Stack spacing="1">

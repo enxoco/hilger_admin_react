@@ -7,21 +7,3 @@ query GetAllStudents($limit: Int!, $offset: Int!) {
         lastName
     }
 }
-
-# query GetAllStudentsByLastNameDesc {
-#     students(orderBy: {lastName: desc}) {
-#         id
-#         name
-#         firstName
-#         lastName
-#     }
-# }
-
-# query GetAllStudentsByLastNameAsc {
-#     students(orderBy: {lastName: asc}) {
-#         id
-#         name
-#         firstName
-#         lastName
-#     }
-# }

@@ -1,6 +1,5 @@
-import { Box, Button, Heading, HStack, Image, Stack, Text, useColorModeValue, VStack } from "@chakra-ui/react"
+import { Box, Button, Heading, HStack, Image, Skeleton, Stack, Text, useColorModeValue, VStack } from "@chakra-ui/react"
 import { useEffect, useRef, useState } from "react"
-import { FiDownloadCloud } from "react-icons/fi"
 import { useParams } from "react-router-dom"
 import ReactToPrint from "react-to-print"
 import { useRecoilState } from "recoil"
@@ -8,6 +7,7 @@ import { courses as coursesAtom, loggedInUser } from "../atom"
 import Layout from "../components/Layout"
 import { useCheckLoginQuery, useCoursesByStudentQuery, useGetStudentQuery } from "../generated/graphql"
 import useDocumentTitle from "../utils/useDocumentTitle"
+import Dashboard from "./Dashboard"
 
 const StudentReport = () => {
   useDocumentTitle("Hilger Portal - Student Report")
@@ -16,7 +16,7 @@ const StudentReport = () => {
   let { id } = useParams()
   const [teacher, setTeacher] = useState(null)
   const [user, setUser] = useRecoilState(loggedInUser)
-  const [me, executeMeQuery] = useCheckLoginQuery({ pause: user })
+  const [me] = useCheckLoginQuery({ pause: user })
 
   // If we are reloading page then we have no state
 
@@ -46,16 +46,9 @@ const StudentReport = () => {
   }
 `
 
-  const [studentData, getStudent] = useGetStudentQuery({ variables: { id } })
+  const [studentData] = useGetStudentQuery({ variables: { id } })
 
-  const [newCourse, setNewCourse] = useState(null)
-  const [newCourseName, setNewCourseName] = useState("")
-  const [newCourseGrade, setNewCourseGrade] = useState("")
-  const [courses, setCourses] = useRecoilState(coursesAtom)
-  const showNewCourseCard = () => {
-    setNewCourse(true)
-  }
-
+  const [, setNewCourse] = useState(null)
   const getPageMargins = () => {
     return `@page { margin: 17mm 10mm !important;}`
   }
@@ -93,34 +86,21 @@ const StudentReport = () => {
       parseCourses(true)
     }
   }, [coursesData])
-
+  if (me.data?.authenticatedItem.isParent && !me.data?.authenticatedItem.hasPaidTuition) {
+    return <Dashboard />
+  }
   return (
     <Layout>
-      <Stack spacing="4" direction={{ base: "column", lg: "row" }} justify="space-between" align={{ base: "start", lg: "center" }}>
+      <Stack spacing="4" direction={{ base: "column", lg: "row" }} justify="end" align={{ base: "start", lg: "center" }}>
         <HStack spacing="3">
-          <Button variant="secondary" leftIcon={<FiDownloadCloud fontSize="1.25rem" />}>
-            Export
-          </Button>
-          <Button variant="primary" onClick={showNewCourseCard}>
-            Add Course
-          </Button>
-          <ReactToPrint trigger={() => <Button>Print</Button>} content={() => componentRef.current} />
+          <ReactToPrint trigger={() => <Button variant={"primary"}>Print</Button>} content={() => componentRef.current} />
         </HStack>
       </Stack>
-      {!teacher || !studentData.data ? (
-        <>loading</>
-      ) : (
+      <Skeleton isLoaded={studentData?.data}>
         <Stack spacing="5">
-          <Box px={{ base: "4", md: "6" }} pt="5">
-            <Stack direction={{ base: "column", md: "row" }} justify="space-between">
-              <Text fontSize="lg" fontWeight="medium">
-                Edit Student
-              </Text>
-            </Stack>
-          </Box>
           {!fetching && loggedInUser && !studentData.fetching && coursesParsed ? (
             <Box as="form" bg="bg-surface" boxShadow={useColorModeValue("sm", "sm-dark")} borderRadius="lg">
-              <VStack ref={componentRef} pageStyle={pageStyle} spacing="5" px={{ base: "4", md: "6" }} py={{ base: "5", md: "6" }}>
+              <VStack ref={componentRef} pagestyle={pageStyle} spacing="5" px={{ base: "4", md: "6" }} py={{ base: "5", md: "6" }}>
                 <style>{getPageMargins()}</style>
 
                 <HStack justifyContent={"space-between"}>
@@ -169,7 +149,7 @@ const StudentReport = () => {
             </Box>
           ) : null}
         </Stack>
-      )}
+      </Skeleton>
     </Layout>
   )
 }

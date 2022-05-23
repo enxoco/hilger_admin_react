@@ -1,14 +1,3 @@
-# query GetAllTeachers($limit: Int!, $offset: Int!) {
-#     users(take: $limit, skip: $offset, orderBy: {name: asc}) {
-#         __typename
-#         id
-#         name
-#         email
-#         isAdmin
-#         isParent
-#     }
-# }
-
 query GetAllTeachers($limit: Int!, $offset: Int!) {
     users(take: $limit, skip: $offset, orderBy: {name: asc}, where: {NOT: {isParent: {equals: true}}} ) {
         __typename
@@ -17,17 +6,5 @@ query GetAllTeachers($limit: Int!, $offset: Int!) {
         email
         isAdmin
         isParent
-    }
-}
-query GetAllParents($limit: Int!, $offset: Int!) {
-    users(take: $limit, skip: $offset, orderBy: {name: asc}, where: {NOT: {isParent: {equals: false}}} ) {
-        __typename
-        id
-        name
-        email
-        isAdmin
-        isParent
-        firstName
-        lastName
     }
 }

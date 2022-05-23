@@ -31,8 +31,7 @@ const AddStudentCard = ({student}) => {
           console.error("error", error)
           return
         }
-        setFirstName("")
-        setLastName("")
+
     } else {
         updateStudentInfo({
             id: +id,
