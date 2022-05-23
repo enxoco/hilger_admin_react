@@ -1,24 +1,21 @@
-import { Box, Button, Divider, HStack, IconButton, Skeleton, Stack, Text, Tooltip, useBreakpointValue } from "@chakra-ui/react"
+import { Box, Button, Divider, HStack, IconButton, Skeleton, Stack, Text, Tooltip } from "@chakra-ui/react"
 import { useEffect, useMemo } from "react"
 import { FiDownloadCloud, FiEdit2 } from "react-icons/fi"
-import { Link, useParams } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { useRecoilState } from "recoil"
-import { loggedInUser as loggedInUserAtom, pageOffset as pageOffsetAtom, pageSize as pageSizeAtom, searchTerm as searchTermAtom, students as studentAtom } from "../atom"
+import { loggedInUser as loggedInUserAtom, students as studentAtom } from "../atom"
 import { Card } from "../components/Card"
 import Layout from "../components/Layout"
 import SimpleTable from "../components/SimpleTable"
 import StudentTable from "../components/StudentTable"
-import { useDeleteStudentMutation, useGetMyStudentsQuery, useGetStudentsByParentQuery, useStudentsCountQuery } from "../generated/graphql"
+import { useGetMyStudentsQuery, useGetStudentsByParentQuery } from "../generated/graphql"
 import { exportCSVFile } from "../utils/csvExport"
 import dynamicSort from "../utils/dynamicSort"
 
 const MyStudents = () => {
   const [students, setStudents] = useRecoilState(studentAtom)
-  const [, setSearchTerm] = useRecoilState(searchTermAtom)
-
   const [loggedInUser] = useRecoilState(loggedInUserAtom)
-  const [studentData] = useGetMyStudentsQuery({ variables: { id: loggedInUser?.id }, pause: loggedInUser && loggedInUser?.isParent, requestPolicy: "cache-and-network" })
-
+  const [studentData] = useGetMyStudentsQuery({ variables: { id: loggedInUser?.id }, pause: loggedInUser && loggedInUser?.isParent })
   const [childrenData] = useGetStudentsByParentQuery({ variables: { email: loggedInUser?.email }, pause: loggedInUser && loggedInUser?.isTeacher })
 
   useEffect(() => {

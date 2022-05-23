@@ -1,0 +1,18 @@
+mutation RedeemMagicAuthToken($email: String!, $token: String!){
+  redeemUserMagicAuthToken(email: $email, token: $token) {
+    __typename
+    ... on RedeemUserMagicAuthTokenSuccess {
+      item {
+        id
+        isParent
+        isAdmin
+        firstName
+      }
+    }
+    
+    ... on RedeemUserMagicAuthTokenFailure {
+      code
+      message
+    }
+  }
+}

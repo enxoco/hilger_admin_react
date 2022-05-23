@@ -3,7 +3,7 @@ import Hashids from "hashids"
 import { useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { PasswordField } from "../../components/PasswordField"
-import { useForgotPasswordMutation, useGetUserEmailByIdQuery, useLoginMutation, useRedeemPasswordResetTokenMutation } from "../../generated/graphql"
+import { useForgotPasswordMutation, useGetUserEmailByIdQuery, useRedeemPasswordResetTokenMutation } from "../../generated/graphql"
 import useDocumentTitle from "../../utils/useDocumentTitle"
 function ResetPassword() {
   useDocumentTitle('Hilger Portal - Reset password')
@@ -11,18 +11,21 @@ function ResetPassword() {
 
   const { id, token } = useParams()
   const navigate = useNavigate()
+  console.log("id", hashids.decode(id))
   const [_, doPasswordReset] = useForgotPasswordMutation()
   const [password, setPassword] = useState(null)
   const [status, setStatus] = useState(null)
+  const [email, getEmail] = useGetUserEmailByIdQuery({ pause: !id, variables: { id: hashids.decode(id)[0] } })
   const [updatedPassword, updatePassword] = useRedeemPasswordResetTokenMutation()
-  const [loggedIn, doLogin] = useLoginMutation()
   const handlePasswordChange = (e) => {
     setPassword(e.target.value)
   }
 
   async function handleRequest(e) {
+    console.log('e', email.data)
     e.preventDefault()
-      const newPassword = await updatePassword({ email: decodeURIComponent(id), token, password })
+    if (email && email.data?.user?.email) {
+      const newPassword = await updatePassword({ email: email && email.data?.user?.email, token, password })
       if (newPassword.data && newPassword.data.redeemUserPasswordResetToken) {
         if (newPassword.data.redeemUserPasswordResetToken.code === "TOKEN_REDEEMED") {
           setStatus("Please try to login")
@@ -31,17 +34,9 @@ function ResetPassword() {
           setStatus("The link you have followed is expired.  Please try requesting another password reset.")
         }
       } else {
-        // navigate("/login")
-        const loginAttempt = await doLogin({
-          email: id,
-          password: password
-        })
-
-        if (loginAttempt) {
-          navigate("/dashboard")
-
-        }
+        navigate("/login")
       }
+    }
   }
 
   return (

@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, FormLabel, HStack, Input, Stack, Text, Tooltip, useColorModeValue } from "@chakra-ui/react"
+import { Box, Button, HStack, Stack, Text, Tooltip } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 import { FiDownloadCloud } from "react-icons/fi"
 import { Link, useParams } from "react-router-dom"
@@ -7,32 +7,27 @@ import { impersonateUser, loggedInUser } from "../atom"
 import AddStudentCard from "../components/AddStudentCard"
 import EditStudentCard from "../components/EditCourseCard"
 import Layout from "../components/Layout"
-import { useCheckLoginQuery, useGetCoursesByStudentAndTeacherQuery, useGetStudentQuery, useUpdateStudentInfoMutation } from "../generated/graphql"
+import { useCheckLoginQuery, useGetCoursesByStudentAndTeacherQuery, useGetStudentQuery } from "../generated/graphql"
 
 const EditStudent = () => {
   let { id } = useParams()
   const [teacher, setTeacher] = useState(null)
   const [user, setUser] = useRecoilState(loggedInUser)
-  const [me, executeMeQuery] = useCheckLoginQuery({ pause: user })
+  const [me] = useCheckLoginQuery({ pause: user })
 
   // If we are reloading page then we have no state
   const [{ data: coursesData, error, fetching }, getCourses] = useGetCoursesByStudentAndTeacherQuery({
     pause: !loggedInUser?.isParent,
-    requestPolicy: "network-only",
     variables: {
       studentId: id,
       teacherId: teacher,
     },
   })
 
-
-  
-
-  const [studentData, getStudent] = useGetStudentQuery({ variables: { id } })
-
+  const [studentData] = useGetStudentQuery({ variables: { id } })
   const [newCourse, setNewCourse] = useState(null)
-  const [newCourseName, setNewCourseName] = useState("")
-  const [newCourseGrade, setNewCourseGrade] = useState("")
+  const [newCourseName] = useState("")
+  const [newCourseGrade] = useState("")
 
   const [impersonatedUser] = useRecoilState(impersonateUser)
   const showNewCourseCard = () => {
@@ -40,9 +35,6 @@ const EditStudent = () => {
   }
 
   const hideNewCourseCard = () => {
-    // setNewCourseName("")
-    // setNewCourseGrade("")
-    // setNewCourse(false)
     getCourses()
     setNewCourse(false)
   }

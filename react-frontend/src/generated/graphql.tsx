@@ -1278,6 +1278,14 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type LogoutMutation = { __typename: 'Mutation', endSession: boolean };
 
+export type RedeemMagicAuthTokenMutationVariables = Exact<{
+  email: Scalars['String'];
+  token: Scalars['String'];
+}>;
+
+
+export type RedeemMagicAuthTokenMutation = { __typename?: 'Mutation', redeemUserMagicAuthToken: { __typename: 'RedeemUserMagicAuthTokenFailure', code: MagicLinkRedemptionErrorCode, message: string } | { __typename: 'RedeemUserMagicAuthTokenSuccess', item: { __typename?: 'User', id: string, isParent?: boolean | null, isAdmin?: boolean | null, firstName?: string | null } } };
+
 export type RedeemPasswordResetTokenMutationVariables = Exact<{
   email: Scalars['String'];
   token: Scalars['String'];
@@ -1383,6 +1391,13 @@ export type GetMyCoursesCountByTeacherQueryVariables = Exact<{
 
 
 export type GetMyCoursesCountByTeacherQuery = { __typename?: 'Query', coursesCount?: number | null };
+
+export type GetMyProfileQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetMyProfileQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name?: string | null, firstName?: string | null, lastName?: string | null, street?: string | null, city?: string | null, state?: string | null, zipcode?: string | null, phoneMother?: string | null, phoneFather?: string | null } | null };
 
 export type GetMyStudentsQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -1569,6 +1584,29 @@ export const LogoutDocument = gql`
 
 export function useLogoutMutation() {
   return Urql.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument);
+};
+export const RedeemMagicAuthTokenDocument = gql`
+    mutation RedeemMagicAuthToken($email: String!, $token: String!) {
+  redeemUserMagicAuthToken(email: $email, token: $token) {
+    __typename
+    ... on RedeemUserMagicAuthTokenSuccess {
+      item {
+        id
+        isParent
+        isAdmin
+        firstName
+      }
+    }
+    ... on RedeemUserMagicAuthTokenFailure {
+      code
+      message
+    }
+  }
+}
+    `;
+
+export function useRedeemMagicAuthTokenMutation() {
+  return Urql.useMutation<RedeemMagicAuthTokenMutation, RedeemMagicAuthTokenMutationVariables>(RedeemMagicAuthTokenDocument);
 };
 export const RedeemPasswordResetTokenDocument = gql`
     mutation RedeemPasswordResetToken($email: String!, $token: String!, $password: String!) {
@@ -1792,6 +1830,26 @@ export const GetMyCoursesCountByTeacherDocument = gql`
 
 export function useGetMyCoursesCountByTeacherQuery(options: Omit<Urql.UseQueryArgs<GetMyCoursesCountByTeacherQueryVariables>, 'query'>) {
   return Urql.useQuery<GetMyCoursesCountByTeacherQuery>({ query: GetMyCoursesCountByTeacherDocument, ...options });
+};
+export const GetMyProfileDocument = gql`
+    query GetMyProfile($id: ID!) {
+  user(where: {id: $id}) {
+    id
+    name
+    firstName
+    lastName
+    street
+    city
+    state
+    zipcode
+    phoneMother
+    phoneFather
+  }
+}
+    `;
+
+export function useGetMyProfileQuery(options: Omit<Urql.UseQueryArgs<GetMyProfileQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetMyProfileQuery>({ query: GetMyProfileDocument, ...options });
 };
 export const GetMyStudentsDocument = gql`
     query GetMyStudents($id: ID!) {

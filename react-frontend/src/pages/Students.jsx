@@ -1,5 +1,5 @@
 import { Button, HStack, IconButton, Stack, Tooltip } from "@chakra-ui/react"
-import {useMemo} from 'react'
+import { useMemo } from "react"
 import { FiDownloadCloud, FiEdit2 } from "react-icons/fi"
 import { Link } from "react-router-dom"
 
@@ -8,7 +8,7 @@ import StudentTable from "../components/StudentTable"
 import { useGetAllStudentsQuery } from "../generated/graphql"
 import { exportCSVFile } from "../utils/csvExport"
 const Students = () => {
-  const [studentData, getStudents] = useGetAllStudentsQuery({ variables: { limit: 1000, offset: 0 } })
+  const [studentData] = useGetAllStudentsQuery({ variables: { limit: 1000, offset: 0 } })
 
   const columns = useMemo(
     () => [

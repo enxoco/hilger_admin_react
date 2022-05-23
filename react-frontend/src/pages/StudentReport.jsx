@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { useParams } from "react-router-dom"
 import ReactToPrint from "react-to-print"
 import { useRecoilState } from "recoil"
-import { courses as coursesAtom, loggedInUser } from "../atom"
+import { loggedInUser } from "../atom"
 import Layout from "../components/Layout"
 import { useCheckLoginQuery, useCoursesByStudentQuery, useGetStudentQuery } from "../generated/graphql"
 import useDocumentTitle from "../utils/useDocumentTitle"
@@ -20,7 +20,7 @@ const StudentReport = () => {
 
   // If we are reloading page then we have no state
 
-  const [{ data: coursesData, error, fetching }, getCourses] = useCoursesByStudentQuery({
+  const [{ data: coursesData, error, fetching }] = useCoursesByStudentQuery({
     pause: !id,
     variables: {
       studentId: id,
@@ -48,7 +48,6 @@ const StudentReport = () => {
 
   const [studentData] = useGetStudentQuery({ variables: { id } })
 
-  const [, setNewCourse] = useState(null)
   const getPageMargins = () => {
     return `@page { margin: 17mm 10mm !important;}`
   }
@@ -124,7 +123,6 @@ const StudentReport = () => {
                   {studentData.data.student.firstName} {studentData.data.student.lastName} has received the following percentage grade(s) for one semester of class(es) administered by Hilger Higher Learning, Inc. All instructors contracted by Hilger
                   Higher Learning meet proper Certification and/or requirement standards as directed by Tennessee, Georgia, and Alabama state law. Each semester of class is worth 1/2 credit.
                 </Text>
-                {/* {+coursesData?.courses[0].feedbackLength >= 2000 ? <div className="print-only" style={{ height: 475 }}></div> : null} */}
 
                 <VStack textAlign="left" alignItems="flexStart" mb="50" marginBottom={50} className="page-break">
                   <Text fontWeight="bold">Course: {coursesData.courses[0].name || null}</Text>
@@ -132,7 +130,6 @@ const StudentReport = () => {
                   <Text fontWeight="bold">Instructor: {coursesData.courses[0].teacher.name}</Text>
                   <Text>{coursesData.courses[0].feedback}</Text>
                 </VStack>
-                {/* <div className="print-only" style={{ height: 275 }}></div> */}
 
                 {coursesData.courses.slice(1).map((course, index) => (
                   <>
@@ -142,7 +139,6 @@ const StudentReport = () => {
                       <Text fontWeight="bold">Instructor: {course.teacher.name}</Text>
                       <Text>{course.feedback}</Text>
                     </VStack>
-                    {/* {course.feedbackLength == "break" ? <div className="print-only" style={{ height: 275 }}></div> : null} */}
                   </>
                 ))}
               </VStack>
