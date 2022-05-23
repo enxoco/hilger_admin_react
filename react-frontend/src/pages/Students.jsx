@@ -75,7 +75,7 @@ const Students = () => {
     exportCSVFile(headers, itemsFormatted, fileTitle) // call the exportCSVFile() function to process the JSON and trigger the download
   }
   return (
-    <Layout customTitle="All Students" description="">
+    <Layout customTitle="All Students" description="" adminOnly={true}>
       <Stack spacing="4" direction={{ base: "column", lg: "row" }} justify="space-between" align={{ base: "start", lg: "center" }}>
         <HStack spacing="3">
           <Button variant="secondary" leftIcon={<FiDownloadCloud fontSize="1.25rem" />} onClick={handleExport}>
