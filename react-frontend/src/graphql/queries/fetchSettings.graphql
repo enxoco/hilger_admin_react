@@ -1,0 +1,6 @@
+query FetchSettings {
+  settings {
+    name
+    value
+  }
+}

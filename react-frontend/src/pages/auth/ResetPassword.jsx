@@ -3,15 +3,14 @@ import Hashids from "hashids"
 import { useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { PasswordField } from "../../components/PasswordField"
-import { useForgotPasswordMutation, useGetUserEmailByIdQuery, useLoginMutation, useRedeemPasswordResetTokenMutation } from "../../generated/graphql"
+import { useForgotPasswordMutation, useLoginMutation, useRedeemPasswordResetTokenMutation } from "../../generated/graphql"
 import useDocumentTitle from "../../utils/useDocumentTitle"
 function ResetPassword() {
-  useDocumentTitle('Hilger Portal - Reset password')
+  useDocumentTitle("Hilger Portal - Reset password")
   const hashids = new Hashids("this is my salt", 8, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
 
   const { id, token } = useParams()
   const navigate = useNavigate()
-  const [_, doPasswordReset] = useForgotPasswordMutation()
   const [password, setPassword] = useState(null)
   const [status, setStatus] = useState(null)
   const [updatedPassword, updatePassword] = useRedeemPasswordResetTokenMutation()
@@ -22,26 +21,24 @@ function ResetPassword() {
 
   async function handleRequest(e) {
     e.preventDefault()
-      const newPassword = await updatePassword({ email: decodeURIComponent(id), token, password })
-      if (newPassword.data && newPassword.data.redeemUserPasswordResetToken) {
-        if (newPassword.data.redeemUserPasswordResetToken.code === "TOKEN_REDEEMED") {
-          setStatus("Please try to login")
-        }
-        if (newPassword.data.redeemUserPasswordResetToken.code === "FAILURE") {
-          setStatus("The link you have followed is expired.  Please try requesting another password reset.")
-        }
-      } else {
-        // navigate("/login")
-        const loginAttempt = await doLogin({
-          email: id,
-          password: password
-        })
-
-        if (loginAttempt) {
-          navigate("/dashboard")
-
-        }
+    const newPassword = await updatePassword({ email: decodeURIComponent(id), token, password })
+    if (newPassword.data && newPassword.data.redeemUserPasswordResetToken) {
+      if (newPassword.data.redeemUserPasswordResetToken.code === "TOKEN_REDEEMED") {
+        setStatus("Please try to login")
       }
+      if (newPassword.data.redeemUserPasswordResetToken.code === "FAILURE") {
+        setStatus("The link you have followed is expired.  Please try requesting another password reset.")
+      }
+    } else {
+      const loginAttempt = await doLogin({
+        email: id,
+        password: password,
+      })
+
+      if (loginAttempt) {
+        navigate("/dashboard")
+      }
+    }
   }
 
   return (
@@ -55,7 +52,7 @@ function ResetPassword() {
             </HStack>
 
             {status ? (
-              <Alert status={(status && status.includes('login')) ? "success" : "error"}>
+              <Alert status={status && status.includes("login") ? "success" : "error"}>
                 <AlertIcon />
                 <AlertTitle>{status}</AlertTitle>
               </Alert>

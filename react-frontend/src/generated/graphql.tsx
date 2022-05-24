@@ -244,6 +244,8 @@ export type Mutation = {
   createRoles?: Maybe<Array<Maybe<Role>>>;
   createSemester?: Maybe<Semester>;
   createSemesters?: Maybe<Array<Maybe<Semester>>>;
+  createSetting?: Maybe<Setting>;
+  createSettings?: Maybe<Array<Maybe<Setting>>>;
   createStudent?: Maybe<Student>;
   createStudents?: Maybe<Array<Maybe<Student>>>;
   createUser?: Maybe<User>;
@@ -256,6 +258,8 @@ export type Mutation = {
   deleteRoles?: Maybe<Array<Maybe<Role>>>;
   deleteSemester?: Maybe<Semester>;
   deleteSemesters?: Maybe<Array<Maybe<Semester>>>;
+  deleteSetting?: Maybe<Setting>;
+  deleteSettings?: Maybe<Array<Maybe<Setting>>>;
   deleteStudent?: Maybe<Student>;
   deleteStudents?: Maybe<Array<Maybe<Student>>>;
   deleteUser?: Maybe<User>;
@@ -273,6 +277,8 @@ export type Mutation = {
   updateRoles?: Maybe<Array<Maybe<Role>>>;
   updateSemester?: Maybe<Semester>;
   updateSemesters?: Maybe<Array<Maybe<Semester>>>;
+  updateSetting?: Maybe<Setting>;
+  updateSettings?: Maybe<Array<Maybe<Setting>>>;
   updateStudent?: Maybe<Student>;
   updateStudents?: Maybe<Array<Maybe<Student>>>;
   updateUser?: Maybe<User>;
@@ -328,6 +334,16 @@ export type MutationCreateSemesterArgs = {
 
 export type MutationCreateSemestersArgs = {
   data: Array<SemesterCreateInput>;
+};
+
+
+export type MutationCreateSettingArgs = {
+  data: SettingCreateInput;
+};
+
+
+export type MutationCreateSettingsArgs = {
+  data: Array<SettingCreateInput>;
 };
 
 
@@ -388,6 +404,16 @@ export type MutationDeleteSemesterArgs = {
 
 export type MutationDeleteSemestersArgs = {
   where: Array<SemesterWhereUniqueInput>;
+};
+
+
+export type MutationDeleteSettingArgs = {
+  where: SettingWhereUniqueInput;
+};
+
+
+export type MutationDeleteSettingsArgs = {
+  where: Array<SettingWhereUniqueInput>;
 };
 
 
@@ -478,6 +504,17 @@ export type MutationUpdateSemestersArgs = {
 };
 
 
+export type MutationUpdateSettingArgs = {
+  data: SettingUpdateInput;
+  where: SettingWhereUniqueInput;
+};
+
+
+export type MutationUpdateSettingsArgs = {
+  data: Array<SettingUpdateArgs>;
+};
+
+
 export type MutationUpdateStudentArgs = {
   data: StudentUpdateInput;
   where: StudentWhereUniqueInput;
@@ -563,6 +600,9 @@ export type Query = {
   semester?: Maybe<Semester>;
   semesters?: Maybe<Array<Semester>>;
   semestersCount?: Maybe<Scalars['Int']>;
+  setting?: Maybe<Setting>;
+  settings?: Maybe<Array<Setting>>;
+  settingsCount?: Maybe<Scalars['Int']>;
   student?: Maybe<Student>;
   students?: Maybe<Array<Student>>;
   studentsCount?: Maybe<Scalars['Int']>;
@@ -642,6 +682,24 @@ export type QuerySemestersArgs = {
 
 export type QuerySemestersCountArgs = {
   where?: SemesterWhereInput;
+};
+
+
+export type QuerySettingArgs = {
+  where: SettingWhereUniqueInput;
+};
+
+
+export type QuerySettingsArgs = {
+  orderBy?: Array<SettingOrderByInput>;
+  skip?: Scalars['Int'];
+  take?: InputMaybe<Scalars['Int']>;
+  where?: SettingWhereInput;
+};
+
+
+export type QuerySettingsCountArgs = {
+  where?: SettingWhereInput;
 };
 
 
@@ -854,6 +912,47 @@ export type SemesterWhereInput = {
 };
 
 export type SemesterWhereUniqueInput = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type Setting = {
+  __typename?: 'Setting';
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['String']>;
+};
+
+export type SettingCreateInput = {
+  name?: InputMaybe<Scalars['String']>;
+  value?: InputMaybe<Scalars['String']>;
+};
+
+export type SettingOrderByInput = {
+  id?: InputMaybe<OrderDirection>;
+  name?: InputMaybe<OrderDirection>;
+  value?: InputMaybe<OrderDirection>;
+};
+
+export type SettingUpdateArgs = {
+  data: SettingUpdateInput;
+  where: SettingWhereUniqueInput;
+};
+
+export type SettingUpdateInput = {
+  name?: InputMaybe<Scalars['String']>;
+  value?: InputMaybe<Scalars['String']>;
+};
+
+export type SettingWhereInput = {
+  AND?: InputMaybe<Array<SettingWhereInput>>;
+  NOT?: InputMaybe<Array<SettingWhereInput>>;
+  OR?: InputMaybe<Array<SettingWhereInput>>;
+  id?: InputMaybe<IdFilter>;
+  name?: InputMaybe<StringFilter>;
+  value?: InputMaybe<StringFilter>;
+};
+
+export type SettingWhereUniqueInput = {
   id?: InputMaybe<Scalars['ID']>;
 };
 
@@ -1364,6 +1463,11 @@ export type GetCoursesByStudentAndTeacherQueryVariables = Exact<{
 
 export type GetCoursesByStudentAndTeacherQuery = { __typename?: 'Query', courses?: Array<{ __typename: 'Course', name?: string | null, grade?: string | null, feedback?: string | null, id: string }> | null };
 
+export type FetchSettingsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FetchSettingsQuery = { __typename?: 'Query', settings?: Array<{ __typename?: 'Setting', name?: string | null, value?: string | null }> | null };
+
 export type GetAllParentsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1759,6 +1863,18 @@ export const GetCoursesByStudentAndTeacherDocument = gql`
 
 export function useGetCoursesByStudentAndTeacherQuery(options: Omit<Urql.UseQueryArgs<GetCoursesByStudentAndTeacherQueryVariables>, 'query'>) {
   return Urql.useQuery<GetCoursesByStudentAndTeacherQuery>({ query: GetCoursesByStudentAndTeacherDocument, ...options });
+};
+export const FetchSettingsDocument = gql`
+    query FetchSettings {
+  settings {
+    name
+    value
+  }
+}
+    `;
+
+export function useFetchSettingsQuery(options?: Omit<Urql.UseQueryArgs<FetchSettingsQueryVariables>, 'query'>) {
+  return Urql.useQuery<FetchSettingsQuery>({ query: FetchSettingsDocument, ...options });
 };
 export const GetAllParentsDocument = gql`
     query GetAllParents {

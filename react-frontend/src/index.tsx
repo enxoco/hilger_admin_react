@@ -21,6 +21,8 @@ import StudentReport from "./pages/StudentReport"
 import Students from "./pages/Students"
 import Teachers from "./pages/Teachers"
 import reportWebVitals from "./reportWebVitals"
+import {MyProfile} from "./pages/MyProfile"
+import Settings from "./pages/Settings"
 
 // import Parents from "./pages/Parents"
 const client = createClient({
@@ -52,6 +54,7 @@ ReactDOM.render(
                 <Route path="/student/:id/report" element={<StudentReport />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password/:id/:token" element={<ResetPassword />} />
+                <Route path="/profile" element={<MyProfile />} />
 
                 {/**
                  * 
@@ -62,6 +65,7 @@ ReactDOM.render(
                 <Route path="/teachers" element={<Teachers />} />
                 <Route path="/parents" element={<Parents />} />
                 <Route path="/add-teacher" element={<AddTeacher />} />
+                <Route path="/settings" element={<Settings />} />
 
               </Routes>
             </BrowserRouter>
