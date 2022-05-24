@@ -19,7 +19,6 @@ const Settings = () => {
   useEffect(() => {
 
     if (!semester && settings.data?.settings) {
-      console.log('settings', settings.data?.settings.filter(a => a.name == 'Semester')[0].value)
       updateSemester(settings.data?.settings.filter(a => a.name == 'Semester')[0].value)
     }
   }, [settings.data])

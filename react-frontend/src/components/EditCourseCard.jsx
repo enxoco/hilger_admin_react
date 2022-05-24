@@ -44,7 +44,6 @@ const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard,
             teacher: +teacher
         })
 
-        hideNewCourseCard()
     }
 
     const handleDeleteCourse = () => {
