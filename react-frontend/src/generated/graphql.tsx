@@ -1436,6 +1436,14 @@ export type UpdateCourseMutationVariables = Exact<{
 
 export type UpdateCourseMutation = { __typename?: 'Mutation', updateCourse?: { __typename: 'Course', id: string } | null };
 
+export type UpdateSettingsMutationVariables = Exact<{
+  id: Scalars['ID'];
+  value: Scalars['String'];
+}>;
+
+
+export type UpdateSettingsMutation = { __typename?: 'Mutation', updateSetting?: { __typename: 'Setting' } | null };
+
 export type GetUserEmailByIdQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
 }>;
@@ -1466,7 +1474,7 @@ export type GetCoursesByStudentAndTeacherQuery = { __typename?: 'Query', courses
 export type FetchSettingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FetchSettingsQuery = { __typename?: 'Query', settings?: Array<{ __typename?: 'Setting', name?: string | null, value?: string | null }> | null };
+export type FetchSettingsQuery = { __typename?: 'Query', settings?: Array<{ __typename?: 'Setting', id: string, name?: string | null, value?: string | null }> | null };
 
 export type GetAllParentsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1788,6 +1796,17 @@ export const UpdateCourseDocument = gql`
 export function useUpdateCourseMutation() {
   return Urql.useMutation<UpdateCourseMutation, UpdateCourseMutationVariables>(UpdateCourseDocument);
 };
+export const UpdateSettingsDocument = gql`
+    mutation UpdateSettings($id: ID!, $value: String!) {
+  updateSetting(where: {id: $id}, data: {value: $value}) {
+    __typename
+  }
+}
+    `;
+
+export function useUpdateSettingsMutation() {
+  return Urql.useMutation<UpdateSettingsMutation, UpdateSettingsMutationVariables>(UpdateSettingsDocument);
+};
 export const GetUserEmailByIdDocument = gql`
     query GetUserEmailById($id: ID) {
   user(where: {id: $id}) {
@@ -1867,6 +1886,7 @@ export function useGetCoursesByStudentAndTeacherQuery(options: Omit<Urql.UseQuer
 export const FetchSettingsDocument = gql`
     query FetchSettings {
   settings {
+    id
     name
     value
   }

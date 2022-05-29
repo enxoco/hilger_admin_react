@@ -1,5 +1,6 @@
 query FetchSettings {
   settings {
+    id
     name
     value
   }

@@ -4,14 +4,13 @@ import { useState } from "react"
 import { FiEdit2, FiLogIn, FiSend } from "react-icons/fi"
 import { IoArrowDown, IoArrowUp } from "react-icons/io5"
 import { Link } from "react-router-dom"
-import { useRecoilState } from "recoil"
+import { useRecoilState, useRecoilValue } from "recoil"
 import { searchTerm as searchTermAtom, students as studentAtom, loggedInUser, impersonateUser as impersonateUserAtom } from '../atom'
 import {
 
   useForgotPasswordMutation,
   useToggleAdminMutation
 } from "../generated/graphql"
-import checkRole from "../utils/checkRole"
 
 function TeacherTable({studentProp, columns}) {
   const orderDirection = "asc"

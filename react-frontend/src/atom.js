@@ -1,5 +1,44 @@
 import { atom } from "recoil"
 
+/**
+ * 
+ * @returns User
+ * 
+ * Run our login check on our first render so that it is available to all of our routes.
+ * 
+ * Relies on React.Suspense wrapper around all of our routes
+ */
+async function getCheckAuth(){
+  const response = await fetch('/api/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      query: `
+      query CheckLogin {
+        authenticatedItem {
+          __typename
+          ... on User {
+            id
+            email
+            name
+            firstName
+            lastName
+            isAdmin
+            isParent
+            hasPaidTuition
+          }
+        }
+      }
+      `
+    })
+  })
+
+  const {data} = await response.json()
+  return data.authenticatedItem
+}
+
 export const teachers = atom({
   key: "teachers",
   default: null,
@@ -23,7 +62,7 @@ export const searchTerm = atom({
 
 export const loggedInUser = atom({
   key: "loggedInUser",
-  default: null,
+  default: getCheckAuth()
 })
 
 export const studentCount = atom({
@@ -53,5 +92,10 @@ export const pageOffset = atom({
 
 export const impersonateUser = atom({
   key: "impersonate",
+  default: null
+})
+
+export const settings = atom({
+  key: "settings",
   default: null
 })

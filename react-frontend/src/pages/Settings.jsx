@@ -1,44 +1,44 @@
-import { Box, Button, ButtonGroup, FormControl, FormLabel, HStack, Icon, Input, InputGroup, InputLeftElement, Stack, Text, useBreakpointValue } from "@chakra-ui/react"
-
-import { FiDownloadCloud, FiSearch } from "react-icons/fi"
-import {useState, useEffect} from 'react'
-import { Link } from "react-router-dom"
+import { Box, Button, FormControl, FormLabel, HStack, Input, Stack, useBreakpointValue } from "@chakra-ui/react"
+import { useEffect, useState } from 'react'
 import Layout from "../components/Layout"
-import { useFetchSettingsQuery } from "../generated/graphql"
+import { useFetchSettingsQuery, useUpdateSettingsMutation } from "../generated/graphql"
 import useDocumentTitle from "../utils/useDocumentTitle"
-const Settings = () => {
+
+function Settings() {
   useDocumentTitle("Hilger Portal - Settings")
 
   const isMobile = useBreakpointValue({ base: true, md: false })
-  const [settings, fetchSettings] = useFetchSettingsQuery()
-  const [semester, updateSemester] = useState(null)
-  const handleSemesterUpdate = () => {
-    updateSemester(e.target.value)
+  const [retrievedSettings, fetchSettings] = useFetchSettingsQuery()
+  const [updatedSetting, doUpdateSetting] = useUpdateSettingsMutation()
+  const [semester, setSemester] = useState(null)
+
+  const handleSemesterInput = (e) => {
+    setSemester(e.target.value)
   }
 
+  const handleUpdateSemester = () => {
+    doUpdateSetting({id: 1, value: semester})
+  }
   useEffect(() => {
-
-    if (!semester && settings.data?.settings) {
-      updateSemester(settings.data?.settings.filter(a => a.name == 'Semester')[0].value)
-    }
-  }, [settings.data])
+    setSemester(retrievedSettings.data?.settings.filter(a => a.name == 'Semester')[0])
+  }, [retrievedSettings.data])
   
   return (
-    <Layout adminOnly={false}>
+    <Layout customTitle="Settings">
       <Stack spacing="5">
         <Box px={{ base: "4", md: "6" }} pt="5">
-          <Stack direction={{ base: "column", md: "row" }} justify="space-between">
-            <Text fontSize="lg" fontWeight="medium">
-              Settings
-            </Text>
-          </Stack>
+          <Box overflowX="auto">
+            <FormControl>
+              <FormLabel>Semester</FormLabel>
+              <HStack>
+                <Input defaultValue={semester?.value} onChange={handleSemesterInput} />
+                <Button onClick={handleUpdateSemester}>Save</Button>
+              </HStack>
+            </FormControl>
+
+          </Box>
         </Box>
-        <Box overflowX="auto">
-          <FormControl>
-            <FormLabel>Semester</FormLabel>
-            <Input defaultValue={semester} />
-          </FormControl>
-        </Box>
+
       </Stack>
     </Layout>
   )

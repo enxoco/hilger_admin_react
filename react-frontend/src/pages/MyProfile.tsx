@@ -5,7 +5,7 @@ import Layout from '../components/Layout'
 import { ProfileCard } from '../components/ProfileCard'
 
 export const MyProfile = () => (
-    <Layout customTitle="My Profile" description="" adminOnly={false}>
+    <Layout customTitle="My Profile" description="" >
         <PersonalInfoCard maxW={{ lg: '3xl' }} />
 
     </Layout>

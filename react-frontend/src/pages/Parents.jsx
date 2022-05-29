@@ -7,20 +7,23 @@ import Layout from "../components/Layout"
 import ParentTable from "../components/ParentTable"
 import { useGetAllParentsQuery, useTogglePaidTuitionMutation } from "../generated/graphql"
 
-const Parents = () => {
+function Parents () {
   const [studentData] = useGetAllParentsQuery()
   const [, setTuitionStatus] = useTogglePaidTuitionMutation()
   const [, setImpersonatedUser] = useRecoilState(impersonateUserAtom)
   const [, setUser] = useRecoilState(loggedInUser)
 
-  const toggleTuitionStatus = (e, parent) => {
-    e.preventDefault()
+  function toggleTuitionStatus(e, parent) {
+    const switchValue = 'false' ? false : true
     setTuitionStatus({
       id: parent.id,
-      hasPaid: !parent.hasPaidTuition,
+      hasPaid: switchValue,
     })
   }
   async function impersonate(member) {
+    member.isParent = true
+    console.log('member', member)
+
     await setImpersonatedUser(member)
     setUser(member)
   }
@@ -67,7 +70,10 @@ const Parents = () => {
           // We can use the getToggleRowExpandedProps prop-getter
           // to build the expander.
           <>
-            <Switch defaultChecked={row.values.hasPaidTuition} onChange={(e) => toggleTuitionStatus(e, row.values)} />
+            <Switch defaultChecked={row.values.hasPaidTuition} onChange={(e) => {
+              
+              toggleTuitionStatus(e, row.values)
+            }} />
           </>
         ),
       },
@@ -97,7 +103,7 @@ const Parents = () => {
   )
 
   return (
-    <Layout customTitle="All Parents" description="" adminOnly={true}>
+    <Layout customTitle="All Parents" description="">
       <Stack spacing="5">
         <Skeleton isLoaded={studentData?.data}>
           <ParentTable columns={columns} data={studentData?.data?.users || []} />

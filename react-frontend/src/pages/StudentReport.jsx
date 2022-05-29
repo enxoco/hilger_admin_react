@@ -5,7 +5,7 @@ import ReactToPrint from "react-to-print"
 import { useRecoilState } from "recoil"
 import { loggedInUser } from "../atom"
 import Layout from "../components/Layout"
-import { useCheckLoginQuery, useCoursesByStudentQuery, useGetStudentQuery } from "../generated/graphql"
+import { useCoursesByStudentQuery, useGetStudentQuery, useFetchSettingsQuery } from "../generated/graphql"
 import useDocumentTitle from "../utils/useDocumentTitle"
 import Dashboard from "./Dashboard"
 
@@ -14,9 +14,9 @@ const StudentReport = () => {
   const componentRef = useRef()
 
   let { id } = useParams()
-  const [teacher, setTeacher] = useState(null)
-  const [user, setUser] = useRecoilState(loggedInUser)
-  const [me] = useCheckLoginQuery({ pause: user })
+  const [user] = useRecoilState(loggedInUser)
+  const [teacher, setTeacher] = useState(user.id)
+  const [settings, doFetchSettings] = useFetchSettingsQuery()
 
   // If we are reloading page then we have no state
 
@@ -58,12 +58,6 @@ const StudentReport = () => {
     }
   }, [user])
 
-  useEffect(() => {
-    if (!user && me.data) {
-      setUser(me.data.authenticatedItem)
-      setTeacher(me.data?.authenticatedItem.id)
-    }
-  }, [me.fetching])
 
   useEffect(() => {
     if (coursesData && coursesData.courses) {
@@ -85,7 +79,7 @@ const StudentReport = () => {
       parseCourses(true)
     }
   }, [coursesData])
-  if (me.data?.authenticatedItem.isParent && !me.data?.authenticatedItem.hasPaidTuition) {
+  if (user.isParent && !user.hasPaidTuition) {
     return <Dashboard />
   }
   return (
@@ -105,7 +99,7 @@ const StudentReport = () => {
                 <HStack justifyContent={"space-between"}>
                   <Image src="https://hhlearning.com/wp-content/uploads/2017/04/cropped-HH-Logo.png" alt="Hilger Higher Learning Logo" height="175" width="175" />
                   <Heading size="xs" textAlign="center">
-                    Hilger Higher Learning Report Card Spring Semester 2022
+                    Hilger Higher Learning Report Card {settings.data?.settings.filter(a => a.name == 'Semester')[0].value || 'Spring Semester 2022'}
                   </Heading>
                 </HStack>
 

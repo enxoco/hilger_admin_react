@@ -1,0 +1,5 @@
+mutation UpdateSettings($id: ID!, $value: String!) {
+  updateSetting(where: {id: $id}, data: {value: $value}) {
+    __typename
+  }
+}

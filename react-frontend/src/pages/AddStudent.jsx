@@ -27,7 +27,7 @@ const AddStudent = () => {
   }
 
   return (
-    <Layout adminOnly={true}>
+    <Layout>
       <Stack spacing="4" direction={{ base: "column", lg: "row" }} justify="space-between" align={{ base: "start", lg: "center" }}>
         <HStack spacing="3">
           <Button variant="secondary" leftIcon={<FiDownloadCloud fontSize="1.25rem" />}>

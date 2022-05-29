@@ -1,9 +1,10 @@
-import { Box, Button, Divider, Flex, Link, SimpleGrid, Stack, Text, Tooltip, useColorModeValue } from "@chakra-ui/react"
+import { Box, Button, Divider, Flex, SimpleGrid, Stack, Text, Tooltip, useColorModeValue, Link as ChakraLink } from "@chakra-ui/react"
 import { useState } from "react"
 import { useRecoilState } from "recoil"
 import { loggedInUser, studentCount } from "../atom"
 import Layout from "../components/Layout"
 import { Stat } from "../components/Stat"
+import { Link } from "react-router-dom"
 import { useGetMyCoursesCountByTeacherQuery, useStudentsCountQuery, useTotalCourseCountQuery } from "../generated/graphql"
 const Dashboard = () => {
   const [studentCountQuery] = useStudentsCountQuery()
@@ -24,6 +25,7 @@ const Dashboard = () => {
             </Stack>
       ) : null}
       <Box as="section" pt={{ base: "4", md: "8" }} pb={{ base: "12", md: "24" }}>
+
         <Box bg="bg-surface" px={{ base: "4", md: "6" }} py="5" boxShadow={useColorModeValue("sm", "sm-dark")} borderTopWidth="4px" borderColor="accent">
           <Stack spacing="1" textAlign="center">
             <Text fontSize="xl" fontWeight="medium">
@@ -33,12 +35,12 @@ const Dashboard = () => {
             {!user?.isParent ? (
               <Flex pt={10} alignItems="center" justifyContent="center">
                 <Button mr={10} variant="primary">
-                  <Link href="/students">View All Students</Link>
+                  <Link to="/students">View All Students</Link>
                 </Button>
                 {courseCount.data?.coursesCount == 0 ? null : (
                   <Tooltip label="Only show students you have entered grades for">
                     <Button mr={10}>
-                      <Link href={`/students/${user ? user.id : null}`}>View My Students</Link>
+                      <Link to={`/students/${user ? user.id : null}`}>View My Students</Link>
                     </Button>
                   </Tooltip>
                 )}
@@ -47,17 +49,17 @@ const Dashboard = () => {
               <Flex pt={10} alignItems="center" justifyContent="center">
                 <Tooltip label="View the directory of families">
                   <Button mr={10} variant="primary">
-                    <Link href="https://docs.google.com/spreadsheets/d/1pyBrSRwzuafzCzWE0IrwnxoREcq0ZrZNVlGmMUEFe9k/edit?usp=sharing" target={"_blank"}>Directory of Families</Link>
+                    <Link to="https://docs.google.com/spreadsheets/d/1pyBrSRwzuafzCzWE0IrwnxoREcq0ZrZNVlGmMUEFe9k/edit?usp=sharing" target={"_blank"}>Directory of Families</Link>
                   </Button>
                 </Tooltip>
                 <Tooltip label="View the directory of faculty and staff">
                 <Button mr={10} variant="primary">
-                    <Link href="https://docs.google.com/document/d/1IqfidHQFjfLJQB7hqRKDhb95vL2w1AySRoGmG1aJjX4/edit?usp=sharing" target={"_blank"}>Directory of Faculty and Staff</Link>
+                    <Link to="https://docs.google.com/document/d/1IqfidHQFjfLJQB7hqRKDhb95vL2w1AySRoGmG1aJjX4/edit?usp=sharing" target={"_blank"}>Directory of Faculty and Staff</Link>
                   </Button>
                 </Tooltip>
                 <Tooltip label="View my students">
                 <Button mr={10} variant="primary">
-                    <Link href={`/students/${user ? user.id : null}`}>View My Students</Link>
+                    <Link to={`/students/${user ? user.id : null}`}>View My Students</Link>
                   </Button>
                 </Tooltip>
               </Flex>

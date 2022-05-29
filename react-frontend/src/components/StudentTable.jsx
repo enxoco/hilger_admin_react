@@ -130,7 +130,7 @@ function StudentTable({ columns, data }) {
                 {row.cells.map((cell) => {
                   return (
                     <Td {...cell.getCellProps()}>
-                      <Link to={`/student/${cell.row.values.id}`}>{cell.render("Cell", { editable: false })}</Link>
+                      {cell.render("Cell", { editable: false })}
                     </Td>
                   )
                 })}

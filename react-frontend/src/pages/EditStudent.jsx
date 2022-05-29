@@ -1,5 +1,5 @@
-import { Box, Button, HStack, Stack, Text, Tooltip } from "@chakra-ui/react"
-import { useEffect, useState } from "react"
+import { Box, Button, HStack, Stack, Text, Tooltip, useToast } from "@chakra-ui/react"
+import { useEffect, useState, useRef } from "react"
 import { FiDownloadCloud } from "react-icons/fi"
 import { Link, useParams } from "react-router-dom"
 import { useRecoilState } from "recoil"
@@ -7,13 +7,12 @@ import { impersonateUser, loggedInUser } from "../atom"
 import AddStudentCard from "../components/AddStudentCard"
 import EditStudentCard from "../components/EditCourseCard"
 import Layout from "../components/Layout"
-import { useCheckLoginQuery, useGetCoursesByStudentAndTeacherQuery, useGetStudentQuery } from "../generated/graphql"
+import { useGetCoursesByStudentAndTeacherQuery, useGetStudentQuery } from "../generated/graphql"
 
 const EditStudent = () => {
   let { id } = useParams()
-  const [teacher, setTeacher] = useState(null)
-  const [user, setUser] = useRecoilState(loggedInUser)
-  const [me] = useCheckLoginQuery({ pause: user })
+  const [user] = useRecoilState(loggedInUser)
+  const [teacher, setTeacher] = useState(user.id)
 
   // If we are reloading page then we have no state
   const [{ data: coursesData, error, fetching }, getCourses] = useGetCoursesByStudentAndTeacherQuery({
@@ -37,20 +36,8 @@ const EditStudent = () => {
   const hideNewCourseCard = () => {
     getCourses()
     setNewCourse(false)
+    addToast()
   }
-
-  useEffect(() => {
-    if (!teacher && user && user.id) {
-      setTeacher(user.id)
-    }
-  }, [user])
-
-  useEffect(() => {
-    if (!user && me.data) {
-      setUser(me.data.authenticatedItem)
-      setTeacher(me.data?.authenticatedItem.id)
-    }
-  }, [me.fetching])
 
   return (
     <Layout>

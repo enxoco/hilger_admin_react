@@ -1,5 +1,5 @@
 import { Divider, Flex, Image, Stack, useColorModeValue } from "@chakra-ui/react"
-import { FiHome, FiLogOut, FiUsers } from "react-icons/fi"
+import { FiHome, FiLogOut, FiUsers, FiSettings, FiGlobe } from "react-icons/fi"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { useCheckLoginQuery, useLogoutMutation } from "../generated/graphql"
 import logo from "../logo.jpg"
@@ -45,9 +45,13 @@ export const Sidebar = () => {
                     <NavButton label="Teachers" icon={FiUsers} aria-current={location.pathname === "/teachers" ? "page" : null} />
                   </Link>
 
-                  {/* <Link to="/parents">
-              <NavButton label="Parents" icon={FiUsers} aria-current={location.pathname === "/parents" ? "page" : null} />
-              </Link> */}
+                  <Link to="/parents">
+                    <NavButton label="Parents" icon={FiGlobe} aria-current={location.pathname === "/parents" ? "page" : null} />
+                  </Link>
+
+                  <Link to="/settings">
+                    <NavButton label="Settings" icon={FiSettings} aria-current={location.pathname === "/settings" ? "page" : null} />
+                  </Link>
                 </>
               )}
             </Stack>

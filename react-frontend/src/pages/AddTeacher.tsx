@@ -3,9 +3,7 @@ import * as React from "react"
 import Layout from "../components/Layout"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Navbar } from "../components/Navbar"
 import { PasswordField } from "../components/PasswordField"
-import { Sidebar } from "../components/Sidebar"
 import { useCreateTeacherMutation } from "../generated/graphql"
 import useDocumentTitle from "../utils/useDocumentTitle"
 function AddTeacher() {
@@ -51,7 +49,7 @@ function AddTeacher() {
     navigate(0)
   }
   return (
-    <Layout adminOnly={true} customTitle="Add Teacher" description="">
+    <Layout customTitle="Add Teacher" description="">
       <Stack spacing={{ base: "8", lg: "6" }}>
         <Stack spacing="5">
           <Box px={{ base: "4", md: "6" }} pt="5">
