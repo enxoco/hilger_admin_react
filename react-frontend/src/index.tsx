@@ -49,7 +49,7 @@ ReactDOM.render(
             <Router>
               <Routes>
                 
-                <Route path="/" element={<Dashboard />} />
+              <Route path="/" element={<RequireAuth adminOnly={false}><Dashboard /></RequireAuth>} />
                 <Route path="/login" element={<Login />} />
                 {/* <Route path="/register" element={<Register />} /> */}
                 

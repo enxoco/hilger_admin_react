@@ -14,15 +14,13 @@ function Parents () {
   const [, setUser] = useRecoilState(loggedInUser)
 
   function toggleTuitionStatus(e, parent) {
-    const switchValue = 'false' ? false : true
     setTuitionStatus({
       id: parent.id,
-      hasPaid: switchValue,
+      hasPaid: !parent.hasPaidTuition,
     })
   }
   async function impersonate(member) {
     member.isParent = true
-    console.log('member', member)
 
     await setImpersonatedUser(member)
     setUser(member)
