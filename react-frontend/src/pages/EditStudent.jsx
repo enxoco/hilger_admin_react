@@ -3,16 +3,25 @@ import { useEffect, useState, useRef } from "react"
 import { FiDownloadCloud } from "react-icons/fi"
 import { Link, useParams } from "react-router-dom"
 import { useRecoilState } from "recoil"
-import { impersonateUser, loggedInUser } from "../atom"
+import { impersonateUser, loggedInUser, showNewCourseCard as showNewCourseCardAtom } from "../atom"
+
 import AddStudentCard from "../components/AddStudentCard"
 import EditStudentCard from "../components/EditCourseCard"
 import Layout from "../components/Layout"
-import { useGetCoursesByStudentAndTeacherQuery, useGetStudentQuery } from "../generated/graphql"
+import { useCheckLoginQuery, useGetCoursesByStudentAndTeacherQuery, useGetStudentQuery } from "../generated/graphql"
 
 const EditStudent = () => {
   let { id } = useParams()
   const [user] = useRecoilState(loggedInUser)
   const [teacher, setTeacher] = useState(user.id)
+
+  function addToast(courseName) {
+    toastIdRef.current = toast({
+      status: 'success',
+      description: `${courseName || 'Course'} saved successfully`,
+      position: 'top'
+    })
+  }
 
   // If we are reloading page then we have no state
   const [{ data: coursesData, error, fetching }, getCourses] = useGetCoursesByStudentAndTeacherQuery({
@@ -21,12 +30,13 @@ const EditStudent = () => {
       studentId: id,
       teacherId: teacher,
     },
+    requestPolicy: 'network-only'
   })
 
   const [studentData] = useGetStudentQuery({ variables: { id } })
-  const [newCourse, setNewCourse] = useState(null)
-  const [newCourseName] = useState("")
-  const [newCourseGrade] = useState("")
+  const [newCourseName, setNewCourseName] = useState("")
+  const [newCourseGrade, setNewCourseGrade] = useState("")
+  const [newCourse, setNewCourse] = useRecoilState(showNewCourseCardAtom)
 
   const [impersonatedUser] = useRecoilState(impersonateUser)
   const showNewCourseCard = () => {
@@ -36,8 +46,15 @@ const EditStudent = () => {
   const hideNewCourseCard = () => {
     getCourses()
     setNewCourse(false)
+    setNewCourseName("")
+    setNewCourseGrade("")
+    
     addToast()
   }
+
+  useEffect(() => {
+    getCourses()
+  }, [newCourse])
 
   return (
     <Layout>
@@ -48,7 +65,7 @@ const EditStudent = () => {
               Export
             </Button>
           </Tooltip>
-          <Button variant="primary" onClick={showNewCourseCard}>
+          <Button variant="primary" onClick={showNewCourseCard} data-action="add-course">
             Add Course
           </Button>
 
@@ -73,17 +90,15 @@ const EditStudent = () => {
             </Stack>
           </Box>
           {!fetching && loggedInUser && !studentData.fetching ? (
-          <AddStudentCard student={studentData?.data?.student}/>
+          <AddStudentCard student={studentData?.data?.student} hideNewCourseCard={hideNewCourseCard}/>
           ) : null}
-          {!newCourse && studentData.data.student ? null : <EditStudentCard name={newCourseName} grade={newCourseGrade} feedback={null} id={null} student={id} teacher={impersonatedUser?.id || user.id} teacherName={impersonatedUser?.name || user.name} hideNewCourseCard={hideNewCourseCard} />}
+          {!newCourse ? null : <EditStudentCard name={null} grade={null} feedback={null} id={null} student={id} teacher={impersonatedUser?.id || user.id} teacherName={impersonatedUser?.name || user.name} hideNewCourseCard={hideNewCourseCard} />}
 
-          {!fetching && !studentData.fetching && coursesData.courses && coursesData.courses.length != 0 ? (
-            coursesData.courses.map((course) => (
+          {
+            coursesData?.courses.map((course) => (
               <EditStudentCard key={course.id} name={course.name} grade={course.grade} id={course.id} student={id} teacher={impersonatedUser?.id || user.id} teacherName={impersonatedUser?.name || user.name} feedback={course.feedback} hideNewCourseCard={hideNewCourseCard} />
             ))
-          ) : (
-            <EditStudentCard name={newCourseName} grade={newCourseGrade} id={null} feedback={null} student={id} teacher={impersonatedUser?.id || user.id} teacherName={impersonatedUser?.name || user.name} hideNewCourseCard={hideNewCourseCard} />
-          )}
+          }
         </Stack>
       )}
     </Layout>

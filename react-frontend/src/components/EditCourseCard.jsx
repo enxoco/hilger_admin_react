@@ -2,6 +2,8 @@ import { DeleteIcon } from '@chakra-ui/icons'
 import { Badge, Box, Button, Divider, Flex, FormControl, FormLabel, HStack, IconButton, Input, Stack, Textarea, useColorModeValue, useToast } from '@chakra-ui/react'
 import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import {useRecoilState} from 'recoil'
+import {showNewCourseCard} from '../atom'
 import { useCreateCourseMutation, useDeleteCourseMutation, useUpdateCourseMutation } from '../generated/graphql'
 const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard, teacher, teacherName}) => {
 
@@ -12,6 +14,7 @@ const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard,
     const [updatedCourse, setUpdateCourse] = useUpdateCourseMutation()
     const [createdCourse, createCourse] = useCreateCourseMutation()
     const [_, deleteCourse] = useDeleteCourseMutation()
+    const [newCourse, setNewCourse] = useRecoilState(showNewCourseCard)
     const toast = useToast()
     const toastIdRef = useRef()
     const handleCourseNameUpdate = (e) => {
@@ -33,6 +36,7 @@ const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard,
             feedback: courseFeedback,
             id: +teacher
         })
+        setNewCourse(false)
         addToast(courseName)
     }
 
@@ -44,6 +48,7 @@ const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard,
             student: +student,
             teacher: +teacher
         })
+        setNewCourse(false)
         addToast(courseName)
 
     }
@@ -76,7 +81,7 @@ const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard,
       })
     }
     return (
-        <Box as="form" bg="bg-surface" boxShadow={useColorModeValue("sm", "sm-dark")} borderRadius="lg">
+        <Box as="form" bg="bg-surface" boxShadow={useColorModeValue("sm", "sm-dark")} borderRadius="lg" data-label="course-card">
           <HStack justifyContent="space-between">
             <Badge borderRadius={0} p={5}>Teacher: {teacherName}</Badge>
           </HStack>
@@ -84,11 +89,11 @@ const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard,
         <Stack spacing="5" px={{ base: "4", md: "6" }} py={{ base: "5", md: "6" }}>
           
           <Stack spacing="6" direction={{ base: "column", md: "row" }}>
-            <FormControl id="name">
+            <FormControl id="courseName">
               <FormLabel>Course Name</FormLabel>
               <Input defaultValue={courseName} onChange={handleCourseNameUpdate} />
             </FormControl>
-            <FormControl id="grade" onChange={handleCourseGradeUpdate}>
+            <FormControl id="courseGrade" onChange={handleCourseGradeUpdate}>
               <FormLabel>Grade</FormLabel>
               <Input defaultValue={courseGrade} />
             </FormControl>
@@ -96,13 +101,13 @@ const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard,
           </Stack>
           <FormControl id="feedback">
               <FormLabel>Feedback</FormLabel>
-              <Textarea value={courseFeedback || null} onChange={handleFeedbackUpdate} />
+              <Textarea onChange={handleFeedbackUpdate} defaultValue={courseFeedback || null} ></Textarea>
             </FormControl>
         </Stack>
         <Divider />
         <Flex direction="row-reverse" py="4" px={{ base: "4", md: "6" }}>
-          <Button variant="primary" onClick={(id) ? handleFormSubmission : handleCreateNewCourse} isLoading={updatedCourse.fetching || createdCourse.fetching}>Save</Button>
-          <IconButton icon={<DeleteIcon />} variant="ghost" mr={'auto'} aria-label='Delete Course' colorScheme="red" onClick={handleDeleteCourse}>Delete</IconButton>
+          <Button variant="primary" onClick={(id) ? handleFormSubmission : handleCreateNewCourse} isLoading={updatedCourse.fetching || createdCourse.fetching} data-action="save-course">Save</Button>
+          <IconButton icon={<DeleteIcon />} variant="ghost" mr={'auto'} aria-label='Delete Course' colorScheme="red" onClick={handleDeleteCourse} data-action="delete-course">Delete</IconButton>
 
         </Flex>
       </Box>

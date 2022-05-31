@@ -131,7 +131,7 @@ const Students = () => {
       </Stack>
 
       <Stack spacing="5">
-        <StudentTable columns={columns} data={studentData?.data?.students || []} />
+        <StudentTable columns={columns} data={studentData.data?.students || []} />
       </Stack>
     </Layout>
   )

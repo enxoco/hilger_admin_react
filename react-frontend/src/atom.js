@@ -35,8 +35,8 @@ async function getCheckAuth(){
     })
   })
 
-  const {data} = await response.json()
-  return data.authenticatedItem
+  const {data} = await response.json() || null
+  return data.authenticatedItem 
 }
 
 export const teachers = atom({
@@ -98,4 +98,9 @@ export const impersonateUser = atom({
 export const settings = atom({
   key: "settings",
   default: null
+})
+
+export const showNewCourseCard = atom({
+  key: "showNewCourseCard",
+  default: false
 })

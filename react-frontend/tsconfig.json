@@ -22,5 +22,7 @@
   },
   "include": [
     "src"
-  ]
+, "__tests__/ComponentTestWrapper.jsx",
+"./setupTests.ts"  
+]
 }

@@ -9,7 +9,6 @@ import useDocumentTitle from "../utils/useDocumentTitle"
 function Login() {
   useDocumentTitle('Hilger Portal - Login')
   const [login, doLogin] = useLoginMutation()
-  let navigate = useNavigate()
   const [email, setEmail] = useState(null)
   const [password, setPassword] = useState(null)
 

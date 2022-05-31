@@ -1,7 +1,6 @@
-import { Box, Button, CloseButton, Container, Link, Stack, Text } from "@chakra-ui/react"
-import * as React from "react"
+import { Box, Container, Stack, Text } from "@chakra-ui/react"
 import { useRecoilState } from "recoil"
-import {impersonateUser as impersonateUserAtom, loggedInUser as loggedInUserAtom} from '../atom'
+import { loggedInUser as loggedInUserAtom } from '../atom'
 export const ParentNoticeBanner = (props: any) => {
 
   const [loggedInUser] = useRecoilState(loggedInUserAtom)
