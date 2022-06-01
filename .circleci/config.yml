@@ -6,6 +6,8 @@ jobs:
     executor: node/default
     steps:
       - checkout
+      - run:
+          command: cd react_frontend
       - node/install-packages:
           pkg-manager: yarn
       - run:
