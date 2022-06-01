@@ -71,7 +71,7 @@ const EditStudent = () => {
 
           {user?.isAdmin || impersonatedUser ? (
             <Tooltip label={`View full report card for ${studentData.data?.firstName || "student"}`}>
-              <Link to={"report"}>
+              <Link to={"report"} data-action="view-report">
                 <Button variant="outline">View report card</Button>
               </Link>
             </Tooltip>

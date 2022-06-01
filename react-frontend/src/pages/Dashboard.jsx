@@ -59,7 +59,7 @@ const Dashboard = () => {
                 </Tooltip>
                 <Tooltip label="View my students">
                 <Button mr={10} variant="primary">
-                    <Link to={`/students/${user ? user.id : null}`}>View My Students</Link>
+                    <Link to={`/students/${user ? user.id : null}`} data-action="view-my-students">View My Students</Link>
                   </Button>
                 </Tooltip>
               </Flex>

@@ -51,7 +51,7 @@ function SimpleTable({ studentProp, searchTerm }) {
                           <Td>
                             {loggedInUser?.hasPaidTuition ? (
                               <Link to={"/student/" + student.id + "/report"}>
-                                  <Button variant="primary">View Grades</Button>
+                                  <Button variant="primary" data-action="view-grades">View Grades</Button>
                               </Link>
                             ) : (
                               <Tooltip label="It looks like you have an unpaid balance.">

@@ -7,21 +7,8 @@ describe('login functionality', () => {
         cy.get('#password').should('be.visible').type('Romans:33#')
         cy.get('button[type=submit]').click()
     })
-  
-    // it('allows user to login', () => {
-    //   cy.visit('/login')
 
-    //   cy.get('#email').should('be.visible').type('mikeconrad@onmail.com')
-    //   cy.get('#password').should('be.visible').type('Romans:33#')
-    //   cy.get('button[type=submit]').click()
-    // })
-
-    it('redirects to dashboard on login', () => {
-
-        cy.url().should('include', '/dashboard')
-    })
-
-    it('shows admin settings to admin users', () => {
+    it('allows teacher functionality', () => {
         cy.get('a[href="/students/1"]')
         cy.get('a[href="/teachers"]')
         cy.get('a[href="/parents"]')
@@ -65,16 +52,17 @@ describe('login functionality', () => {
             cy.wait(1000)
 
             cy.get('[data-label="course-card"] .chakra-badge').first().should('have.text', 'Teacher: Mike Conrad')
+            cy.get('#courseName').first().should('have.value', 'Course 1')
 
-            // cy.get('[data-label="course-card"] .chakra-badge').first().should('have.text', 'Mike Conrad')
-
-            cy.get('[data-action="delete-course"]').click({multiple: true})
-
-
+            // Go to my students page
+            cy.get('[href="/students/1"]').click()
+            cy.get('td').first().should('have.text', studentName)
+            cy.get('[aria-label="Edit Course"]').click()
+            cy.get('[data-action="view-report"]').click()
             
-
-
-
+            cy.get('[href="/students/1"]').click()
+            cy.get('[aria-label="Edit Course"]').click()
+            cy.get('[data-action="delete-course"]').click({multiple: true})
 
         })
 
@@ -129,7 +117,7 @@ describe('login functionality', () => {
     //   cy.contains('Pay electric bill')
     //     .parent()
     //     .find('input[type=checkbox]')
-    //     .check()
+    //     .check() 
   
     //   // Now that we've checked the button, we can go ahead and make sure
     //   // that the list element is now marked as completed.
