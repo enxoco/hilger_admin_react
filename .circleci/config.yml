@@ -9,10 +9,8 @@ jobs:
       - node/install-packages:
           app-dir: ~/project/hilger_admin_react/react-frontend
           pkg-manager: yarn
-      - run:
-          app-dir: ~/project/hilger_admin_react/react-frontend
-          command: yarn build
-          name: Build app
+      - run: yarn install
+      - run: yarn build
       - persist_to_workspace:
           root: ~/project
           paths: 
