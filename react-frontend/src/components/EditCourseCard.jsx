@@ -34,7 +34,8 @@ const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard,
             name: courseName,
             grade: courseGrade,
             feedback: courseFeedback,
-            id: +teacher
+            teacher: +teacher,
+            id: +id
         })
         setNewCourse(false)
         addToast(courseName)
