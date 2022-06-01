@@ -3,9 +3,11 @@ orbs:
   node: circleci/node@5.0.2
 jobs:
   build:
+    working_directory: ~/hilger_admin_react/react-frontend
     executor: node/default
     steps:
-      - checkout
+      - checkout:
+          path: ~/hilger_admin_react
       - node/install-packages:
           app-dir: ~/project/hilger_admin_react/react-frontend
           pkg-manager: yarn
