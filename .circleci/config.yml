@@ -6,9 +6,8 @@ jobs:
     working_directory: ~/hilger_admin_react/react-frontend
     executor: node/default
     steps:
-      - checkout:
+      - checkout
       - node/install-packages:
-          app-dir: ~/project/hilger_admin_react/react-frontend
           override:
             - cd react-frontend; yarn install
             - cd react-frontend; yarn build
