@@ -7,12 +7,11 @@ jobs:
     executor: node/default
     steps:
       - checkout:
-          path: ~/hilger_admin_react
       - node/install-packages:
           app-dir: ~/project/hilger_admin_react/react-frontend
-          pkg-manager: yarn
-      - run: yarn install
-      - run: yarn build
+          override:
+            - cd react-frontend; yarn install
+            - cd react-frontend; yarn build
       - persist_to_workspace:
           root: ~/project
           paths: 
