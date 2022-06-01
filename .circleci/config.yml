@@ -1,0 +1,41 @@
+version: 2.1
+orbs:
+  node: circleci/node@5.0.2
+jobs:
+  build:
+    working_directory: ~/project/hilger_admin_react
+    executor: node/default
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
+          app-dir: ~/project/hilger_admin_react/react-frontend
+      - run:
+          command: cd react-frontend && yarn build
+          name: Build app
+      - persist_to_workspace:
+          root: ~/project
+          paths: 
+            - .
+  deploy:
+    machine:
+      enabled: true
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: Deploy Over SSH
+          command: |
+            sed -i 's/React App/Hilger Portal/' ~/project/hilger_admin_react/react-frontend/build/index.html &&
+            scp -P25052 -r ~/project/hilger_admin_react/react-frontend/build/* $SSH_USER@$SSH_HOST:/home/murph/portal.hhlearning.com/
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build # only deploy once build job has completed
+          filters:
+            branches:
+              only: master # only deploy on the main branch
