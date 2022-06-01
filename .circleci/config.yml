@@ -7,7 +7,7 @@ jobs:
     steps:
       - checkout
       - run:
-          command: cd react_frontend
+          command: cd react-frontend
       - node/install-packages:
           pkg-manager: yarn
       - run:
