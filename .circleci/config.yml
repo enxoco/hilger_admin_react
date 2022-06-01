@@ -10,7 +10,7 @@ jobs:
       - node/install-packages:
           pkg-manager: yarn
       - run:
-          command: yarn build
+          command: cd react-frontend && yarn build
           name: Build app
       - persist_to_workspace:
           root: ~/project
