@@ -9,6 +9,7 @@ jobs:
       - checkout
       - node/install-packages:
           pkg-manager: yarn
+          app-dir: ~/project/hilger_admin_react/react-frontend
       # - run:
       #     command: cd react-frontend && yarn build
       #     name: Build app
