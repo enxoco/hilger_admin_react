@@ -26,7 +26,7 @@ jobs:
       - run:
           name: Deploy Over SSH
           command: |
-            sed -i 's/React App/Hilger Portal' ~/project/hilger_admin_react/react-frontend/build/index.html &&
+            sed -i 's/React App/Hilger Portal/' ~/project/hilger_admin_react/react-frontend/build/index.html &&
             scp -P25052 -r ~/project/hilger_admin_react/react-frontend/build/* $SSH_USER@$SSH_HOST:/home/murph/portal.hhlearning.com/
 workflows:
   version: 2
