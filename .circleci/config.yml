@@ -3,11 +3,12 @@ orbs:
   node: circleci/node@5.0.2
 jobs:
   build:
-    working_directory: ~/hilger_admin_react/react-frontend
+    working_directory: ~/project/hilger_admin_react/react-frontend
     executor: node/default
     steps:
       - checkout
       - node/install-packages:
+          app-dir: ~/project/hilger_admin_react/react-frontend
           override:
             - cd react-frontend; yarn install
             - cd react-frontend; yarn build
