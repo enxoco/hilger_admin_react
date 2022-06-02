@@ -16,7 +16,7 @@ const MyStudents = () => {
   const [students, setStudents] = useRecoilState(studentAtom)
   const [loggedInUser] = useRecoilState(loggedInUserAtom)
   const [studentData] = useGetMyStudentsQuery({ variables: { id: loggedInUser?.id }, pause: loggedInUser && loggedInUser?.isParent })
-  const [childrenData] = useGetStudentsByParentQuery({ variables: { email: loggedInUser?.email }, pause: loggedInUser && loggedInUser?.isTeacher })
+  const [childrenData] = useGetStudentsByParentQuery({ variables: { email: loggedInUser?.email }, pause: loggedInUser && loggedInUser?.isTeacher, requestPolicy: 'network-only' })
 
   useEffect(() => {
     if (studentData && studentData.data && studentData.data.user.students) {
