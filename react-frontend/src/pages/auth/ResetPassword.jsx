@@ -46,7 +46,7 @@ function ResetPassword() {
       <Stack spacing="8">
         <Stack spacing="6">
           <Stack spacing={{ base: "2", md: "3" }} textAlign="center">
-            <Heading size={useBreakpointValue({ base: "xs", md: "sm" })}>Request new password</Heading>
+            <Heading size={useBreakpointValue({ base: "xs", md: "sm" })}>Set your password</Heading>
             <HStack spacing="1" justify="center">
               <Text color="muted">Please enter your new password</Text>
             </HStack>
