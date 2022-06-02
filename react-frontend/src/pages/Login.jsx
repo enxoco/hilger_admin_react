@@ -43,10 +43,10 @@ function Login() {
             <Image src="https://hhlearning.com/wp-content/uploads/2017/04/cropped-HH-Logo.png" width={300} />
             <Heading size={useBreakpointValue({ base: "xs", md: "sm" })}>Log in to your account</Heading>
             <HStack spacing="1" justify="center">
-              <Text color="muted">Don't have an account?</Text>
-              <Link to="/register">
+              <Text color="muted">Don't have a password yet?</Text>
+              <Link to="/forgot-password">
                 <Button variant="link" colorScheme="blue">
-                  Sign up
+                  Request Password
                 </Button>
               </Link>
             </HStack>

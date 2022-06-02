@@ -51,7 +51,7 @@ ReactDOM.render(
                 
               <Route path="/" element={<RequireAuth adminOnly={false} teacherOnly={false}><Dashboard /></RequireAuth>} />
                 <Route path="/login" element={<Login />} />
-                {/* <Route path="/register" element={<Register />} /> */}
+                <Route path="/register" element={<Login />} />
                 
                   <Route path="/dashboard" element={<RequireAuth adminOnly={false} teacherOnly={false}><Dashboard /></RequireAuth>} />
                   <Route path="/students" element={<RequireAuth adminOnly={false} teacherOnly><Students /></RequireAuth>} />
