@@ -1,19 +1,33 @@
-import { HStack, IconButton, Skeleton, Stack, Switch, Text, Tooltip } from "@chakra-ui/react"
+import { HStack, IconButton, Skeleton, Stack, Switch, Text, Tooltip, useToast } from "@chakra-ui/react"
 import { useMemo, useState } from "react"
-import { FiEdit2, FiLogIn } from "react-icons/fi"
+import { FiEdit2, FiLogIn, FiSend } from "react-icons/fi"
 import { useRecoilState } from "recoil"
 import { impersonateUser as impersonateUserAtom, loggedInUser } from "../atom"
 import Layout from "../components/Layout"
 import ParentTable from "../components/ParentTable"
-import { useGetAllParentsQuery, useTogglePaidTuitionMutation } from "../generated/graphql"
+import { useGetAllParentsQuery, useTogglePaidTuitionMutation, useForgotPasswordMutation } from "../generated/graphql"
 
 function Parents () {
+  // Prevent the table from going back to page 1 after flipping a toggle switch.
   const [pauseQuery, doPauseQuery] = useState(false)
   const [studentData] = useGetAllParentsQuery({pause: pauseQuery})
   const [, setTuitionStatus] = useTogglePaidTuitionMutation()
   const [, setImpersonatedUser] = useRecoilState(impersonateUserAtom)
   const [, setUser] = useRecoilState(loggedInUser)
+  const [, fetchPasswordReset] = useForgotPasswordMutation()
+  const toast = useToast()
 
+  async function handleRequestPasswordReset(email){
+    const result = await fetchPasswordReset({email})
+    toast({
+      title: 'Password reset email sent.',
+      description: "Email sent to " + email,
+      status: 'success',
+      duration: 9000,
+      isClosable: true,
+      position: 'top'
+    })
+  }
   function toggleTuitionStatus(e, parent) {
     e.preventDefault()
     doPauseQuery(true)
@@ -88,12 +102,15 @@ function Parents () {
           // We can use the getToggleRowExpandedProps prop-getter
           // to build the expander.
           <>
-            <HStack spacing="1">
-              <Tooltip label="Manage courses">
+            <HStack>
+              {/* <Tooltip label="Manage courses">
                 <IconButton icon={<FiEdit2 fontSize="1.25rem" />} variant="ghost" aria-label="Edit Course" />
-              </Tooltip>
+              </Tooltip> */}
               <Tooltip label="Impersonate Parent">
                 <IconButton icon={<FiLogIn />} onClick={() => impersonate(row.values)}></IconButton>
+              </Tooltip>
+              <Tooltip label='Send password reset email'>
+                <IconButton icon={<FiSend fontSize="1.25rem" />} variant="ghost" aria-label="Send Password reset" onClick={() => handleRequestPasswordReset(row.values.email)} />
               </Tooltip>
             </HStack>
           </>
