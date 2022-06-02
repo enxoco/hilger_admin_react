@@ -1,5 +1,5 @@
 import { HStack, IconButton, Skeleton, Stack, Switch, Text, Tooltip } from "@chakra-ui/react"
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 import { FiEdit2, FiLogIn } from "react-icons/fi"
 import { useRecoilState } from "recoil"
 import { impersonateUser as impersonateUserAtom, loggedInUser } from "../atom"
@@ -8,12 +8,15 @@ import ParentTable from "../components/ParentTable"
 import { useGetAllParentsQuery, useTogglePaidTuitionMutation } from "../generated/graphql"
 
 function Parents () {
-  const [studentData] = useGetAllParentsQuery()
+  const [pauseQuery, doPauseQuery] = useState(false)
+  const [studentData] = useGetAllParentsQuery({pause: pauseQuery})
   const [, setTuitionStatus] = useTogglePaidTuitionMutation()
   const [, setImpersonatedUser] = useRecoilState(impersonateUserAtom)
   const [, setUser] = useRecoilState(loggedInUser)
 
   function toggleTuitionStatus(e, parent) {
+    e.preventDefault()
+    doPauseQuery(true)
     setTuitionStatus({
       id: parent.id,
       hasPaid: !parent.hasPaidTuition,
