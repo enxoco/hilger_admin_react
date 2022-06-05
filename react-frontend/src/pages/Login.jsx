@@ -22,7 +22,7 @@ function Login() {
 
   async function handleLogin(e) {
     e.preventDefault()
-    const results = await doLogin({ email, password })
+    const results = await doLogin({ email: email.toLowerCase(), password })
 
     if (results.data?.authenticateUserWithPassword?.item) {
       window.location.href = '/dashboard'
