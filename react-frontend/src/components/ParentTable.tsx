@@ -24,6 +24,7 @@ function DefaultColumnFilter({ column: { filterValue, preFilteredRows, setFilter
     <Input
       maxW="300px"
       value={filterValue || ""}
+      data-filter="true"
       onChange={(e) => {
         setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
       }}

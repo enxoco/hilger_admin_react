@@ -50,7 +50,7 @@ function SimpleTable({ studentProp, searchTerm }) {
 
                           <Td>
                             {loggedInUser?.hasPaidTuition ? (
-                              <Link to={"/student/" + student.id + "/report"}>
+                              <Link to={"/print-reports.php?student=" + student.id}>
                                   <Button variant="primary" data-action="view-grades">View Grades</Button>
                               </Link>
                             ) : (

@@ -1848,7 +1848,7 @@ export function useCheckLoginQuery(options?: Omit<Urql.UseQueryArgs<CheckLoginQu
 };
 export const CoursesByStudentDocument = gql`
     query CoursesByStudent($studentId: ID!) {
-  courses(where: {student: {id: {equals: $studentId}}}) {
+  courses(where: {student: {id: {equals: $studentId}}}, orderBy: {name: asc}) {
     __typename
     name
     grade
