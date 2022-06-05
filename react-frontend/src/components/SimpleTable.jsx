@@ -1,5 +1,5 @@
 import { InfoIcon } from "@chakra-ui/icons"
-import { Box, Button, HStack, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tooltip, Tr } from "@chakra-ui/react"
+import { Box, Button, HStack, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tooltip, Tr, Link as ChakraLink } from "@chakra-ui/react"
 import * as React from "react"
 import { Link } from "react-router-dom"
 import { useRecoilState } from "recoil"
@@ -50,9 +50,9 @@ function SimpleTable({ studentProp, searchTerm }) {
 
                           <Td>
                             {loggedInUser?.hasPaidTuition ? (
-                              <Link to={"/print-reports.php?student=" + student.id}>
+                              <ChakraLink href={"/print-reports.php?student=" + student.id} target="_blank">
                                   <Button variant="primary" data-action="view-grades">View Grades</Button>
-                              </Link>
+                              </ChakraLink>
                             ) : (
                               <Tooltip label="It looks like you have an unpaid balance.">
                                 <InfoIcon />

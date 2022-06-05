@@ -26,7 +26,7 @@ function Register() {
     setName(e.target.value)
   }
   const handleRegister = async () => {
-    await registerUser({ email, password, name })
+    await registerUser({ email: email.toLowerCase(), password, name })
 
     if (error && error.message == "[GraphQL] Prisma error: Unique constraint failed on the fields: (`email`)") {
       setEmailTaken(true)

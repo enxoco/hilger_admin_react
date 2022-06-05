@@ -1,4 +1,4 @@
-import { Box, Button, HStack, Stack, Text, Tooltip, useToast } from "@chakra-ui/react"
+import { Box, Button, HStack, Stack, Text, Tooltip, useToast, Link as ChakraLink } from "@chakra-ui/react"
 import { useEffect, useState, useRef } from "react"
 import { FiDownloadCloud } from "react-icons/fi"
 import { Link, useParams } from "react-router-dom"
@@ -71,9 +71,9 @@ const EditStudent = () => {
 
           {user?.isAdmin || impersonatedUser ? (
             <Tooltip label={`View full report card for ${studentData.data?.firstName || "student"}`}>
-              <Link to={"/print-reports.php?student=" + id} data-action="view-report">
+              <ChakraLink href={"/print-reports.php?student=" + id} data-action="view-report" target="_blank">
                 <Button variant="outline">View report card</Button>
-              </Link>
+              </ChakraLink>
             </Tooltip>
           ) : null}
         </HStack>
