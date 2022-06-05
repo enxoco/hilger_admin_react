@@ -13,21 +13,46 @@ function ResetPassword() {
   const navigate = useNavigate()
   const [password, setPassword] = useState(null)
   const [status, setStatus] = useState(null)
+  const [alertStyle, setAlertStyle] = useState("error")
+  const [showReset, doShowReset] = useState(false)
   const [updatedPassword, updatePassword] = useRedeemPasswordResetTokenMutation()
   const [loggedIn, doLogin] = useLoginMutation()
   const handlePasswordChange = (e) => {
     setPassword(e.target.value)
   }
 
+  //
+
+  const [{ data, error, fetching }, doPasswordReset] = useForgotPasswordMutation()
+  const [email, setEmail] = useState(null)
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value)
+  }
+
+  async function requestNewPassword(e) {
+    e.preventDefault()
+    const results = await doPasswordReset({ email: id })
+    setStatus("Please check your email for a password reset link.")
+    setAlertStyle("success")
+    doShowReset(false)
+    if (results.data?.authenticateUserWithPassword?.item) {
+      navigate("/dashboard")
+    }
+  }
+
+  //
   async function handleRequest(e) {
     e.preventDefault()
     const newPassword = await updatePassword({ email: decodeURIComponent(id), token, password })
     if (newPassword.data && newPassword.data.redeemUserPasswordResetToken) {
       if (newPassword.data.redeemUserPasswordResetToken.code === "TOKEN_REDEEMED") {
         setStatus("Please try to login")
+        setAlertStyle("success")
       }
-      if (newPassword.data.redeemUserPasswordResetToken.code === "FAILURE") {
-        setStatus("The link you have followed is expired.  Please try requesting another password reset.")
+      if (newPassword.data.redeemUserPasswordResetToken.code === "FAILURE" || newPassword.data?.redeemUserPasswordResetToken.code === "TOKEN_EXPIRED") {
+        doShowReset(true)
+        setAlertStyle("error")
+
       }
     } else {
       const loginAttempt = await doLogin({
@@ -52,11 +77,24 @@ function ResetPassword() {
             </HStack>
 
             {status ? (
-              <Alert status={status && status.includes("login") ? "success" : "error"}>
+              <Alert status={alertStyle}>
                 <AlertIcon />
                 <AlertTitle>{status}</AlertTitle>
               </Alert>
             ) : null}
+
+              {!showReset ? null : (
+                            <Alert status={alertStyle}>
+                            <AlertIcon />
+                            <AlertTitle>
+                              Sorry it looks like this link has expired.
+                              <br />
+                              <Button variant="outline" onClick={requestNewPassword}>
+                                Please click here to request a new token
+                              </Button>
+                            </AlertTitle>
+                          </Alert>
+              )}
           </Stack>
         </Stack>
         <Box py={{ base: "0", sm: "8" }} px={{ base: "4", sm: "10" }} bg={useBreakpointValue({ base: "transparent", sm: "bg-surface" })} boxShadow={{ base: "none", sm: useColorModeValue("md", "md-dark") }} borderRadius={{ base: "none", sm: "xl" }}>
