@@ -11,7 +11,7 @@ jobs:
           pkg-manager: yarn
           app-dir: ~/project/hilger_admin_react/react-frontend
       - run:
-          command: cd react-frontend && yarn build
+          command: cd react-frontend && REACT_APP_SALT='7CQxaV8ksmBBKNKKytddNRuKUk3C0S' REACT_APP_SALT_LENGTH=5 yarn build
           name: Build app
       - persist_to_workspace:
           root: ~/project

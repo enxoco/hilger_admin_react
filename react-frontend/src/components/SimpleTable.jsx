@@ -6,7 +6,8 @@ import { useRecoilState } from "recoil"
 import { loggedInUser as loggedInUserAtom } from "../atom"
 // Create an editable cell renderer
 import Hashids from 'hashids'
-const hashids = new Hashids('J2KFXT4b8LF0Xnd7SykAifcnq4a5pf')
+console.log('salt length', +process.env.REACT_APP_SALT_LENGTH)
+const hashids = new Hashids(process.env.REACT_APP_SALT, +process.env.REACT_APP_SALT_LENGTH)
 
 function SimpleTable({ studentProp, searchTerm }) {
   const [loggedInUser] = useRecoilState(loggedInUserAtom)
