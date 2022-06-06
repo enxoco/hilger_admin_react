@@ -11,6 +11,8 @@ import StudentTable from "../components/StudentTable"
 import { useGetMyStudentsQuery, useGetStudentsByParentQuery } from "../generated/graphql"
 import { exportCSVFile } from "../utils/csvExport"
 import dynamicSort from "../utils/dynamicSort"
+import Hashids from 'hashids'
+const hashids = new Hashids(process.env.REACT_APP_SALT, +process.env.REACT_APP_SALT_LENGTH)
 
 const MyStudents = () => {
   const [students, setStudents] = useRecoilState(studentAtom)
@@ -59,7 +61,7 @@ const MyStudents = () => {
           // to build the expander.
           <>
             <HStack spacing="1">
-              <Link to={"/student/" + row.values.id}>
+              <Link to={"/student/" + hashids.encode(row.values.id)}>
                 <Tooltip label="Manage courses">
                   <IconButton icon={<FiEdit2 fontSize="1.25rem" />} variant="ghost" aria-label="Edit Course" />
                 </Tooltip>

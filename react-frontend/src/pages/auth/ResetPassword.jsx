@@ -11,7 +11,7 @@ function ResetPassword() {
 
   const { id, token } = useParams()
   const navigate = useNavigate()
-  const [password, setPassword] = useState(null)
+  const [password, setPassword] = useState("")
   const [status, setStatus] = useState(null)
   const [alertStyle, setAlertStyle] = useState("error")
   const [showReset, doShowReset] = useState(false)
@@ -44,10 +44,14 @@ function ResetPassword() {
   async function handleRequest(e) {
     e.preventDefault()
     const newPassword = await updatePassword({ email: decodeURIComponent(id), token, password })
+
     if (newPassword.data && newPassword.data.redeemUserPasswordResetToken) {
-      if (newPassword.data.redeemUserPasswordResetToken.code === "TOKEN_REDEEMED") {
+      if (newPassword.data.redeemUserPasswordResetToken.code === "TOKEN_REDEEMED" && newPassword.data?.redeemUserPasswordResetToken.message != 'Auth tokens are single use and the auth token provided has already been redeemed.') {
         setStatus("Please try to login")
         setAlertStyle("success")
+      } else {
+        doShowReset(true)
+        setAlertStyle("error")
       }
       if (newPassword.data.redeemUserPasswordResetToken.code === "FAILURE" || newPassword.data?.redeemUserPasswordResetToken.code === "TOKEN_EXPIRED") {
         doShowReset(true)
@@ -102,9 +106,11 @@ function ResetPassword() {
             <Stack spacing="6">
               <Stack spacing="5">
                 <PasswordField onChange={handlePasswordChange} />
+                <Text>*Password must be at least 8 characters long</Text>
+
               </Stack>
               <Stack spacing="6">
-                <Button variant="primary" onClick={handleRequest} isLoading={updatedPassword.fetching}>
+                <Button variant="primary" onClick={handleRequest} isLoading={updatedPassword.fetching} isDisabled={password.length < 8}>
                   Update
                 </Button>
               </Stack>

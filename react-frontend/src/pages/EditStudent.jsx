@@ -29,13 +29,13 @@ const EditStudent = () => {
   const [{ data: coursesData, error, fetching }, getCourses] = useGetCoursesByStudentAndTeacherQuery({
     pause: loggedInUser?.isParent,
     variables: {
-      studentId: id,
+      studentId: hashids.decode(id)[0],
       teacherId: teacher,
     },
     requestPolicy: 'network-only'
   })
 
-  const [studentData] = useGetStudentQuery({ variables: { id } })
+  const [studentData] = useGetStudentQuery({ variables: { id: hashids.decode(id)[0] } })
   const [newCourseName, setNewCourseName] = useState("")
   const [newCourseGrade, setNewCourseGrade] = useState("")
   const [newCourse, setNewCourse] = useRecoilState(showNewCourseCardAtom)
@@ -73,7 +73,7 @@ const EditStudent = () => {
 
           {user?.isAdmin || impersonatedUser ? (
             <Tooltip label={`View full report card for ${studentData.data?.firstName || "student"}`}>
-              <ChakraLink href={"/print.php?student=" + hashids.encode(id)} data-action="view-report" target="_blank">
+              <ChakraLink href={"/print.php?student=" + id} data-action="view-report" target="_blank">
                 <Button variant="outline">View report card</Button>
               </ChakraLink>
             </Tooltip>

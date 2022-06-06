@@ -7,6 +7,9 @@ import Layout from "../components/Layout"
 import StudentTable from "../components/StudentTable"
 import { useGetAllStudentsQuery, useDeleteStudentMutation } from "../generated/graphql"
 import { exportCSVFile } from "../utils/csvExport"
+import Hashids from 'hashids'
+const hashids = new Hashids(process.env.REACT_APP_SALT, +process.env.REACT_APP_SALT_LENGTH)
+
 const Students = () => {
   const [studentData] = useGetAllStudentsQuery({ variables: { limit: 1000, offset: 0 } })
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -49,7 +52,7 @@ const Students = () => {
           // to build the expander.
           <>
             <HStack spacing="1">
-              <Link to={"/student/" + row.values.id}>{row.values.name}</Link>
+              <Link to={"/student/" + hashids.encode(row.values.id)}>{row.values.name}</Link>
             </HStack>
           </>
         ),
@@ -65,14 +68,14 @@ const Students = () => {
           // to build the expander.
           <>
             <HStack spacing="1">
-              <Link to={"/student/" + row.values.id}>
+              <Link to={"/student/" + hashids.encode(row.values.id)}>
                 <Tooltip label="Manage courses">
                   <IconButton icon={<FiEdit2 fontSize="1.25rem" />} variant="ghost" aria-label="Edit Course" />
                 </Tooltip>
               </Link>
 
               <Tooltip label="Delete student">
-                <IconButton icon={<FiTrash2 fontSize="1.25rem" />} variant="ghost" aria-label="Delete Student" onClick={() => showDeleteModal(row.values.id, row.values.name)} />
+                <IconButton icon={<FiTrash2 fontSize="1.25rem" />} variant="ghost" aria-label="Delete Student" onClick={() => showDeleteModal(hashids.encode(row.values.id), row.values.name)} />
               </Tooltip>
             </HStack>
           </>

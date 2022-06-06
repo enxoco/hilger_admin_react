@@ -6,6 +6,9 @@ import Layout from "../components/Layout"
 import { Stat } from "../components/Stat"
 import { Link } from "react-router-dom"
 import { useGetMyCoursesCountByTeacherQuery, useStudentsCountQuery, useTotalCourseCountQuery } from "../generated/graphql"
+import Hashids from 'hashids'
+const hashids = new Hashids(process.env.REACT_APP_SALT, +process.env.REACT_APP_SALT_LENGTH)
+
 const Dashboard = () => {
   const [studentCountQuery] = useStudentsCountQuery()
   const [user] = useRecoilState(loggedInUser)
@@ -40,7 +43,7 @@ const Dashboard = () => {
                 {courseCount.data?.coursesCount == 0 ? null : (
                   <Tooltip label="Only show students you have entered grades for">
                     <Button mr={10}>
-                      <Link to={`/students/${user ? user.id : null}`}>View My Students</Link>
+                      <Link to={`/students/${user ? hashids.encode(user.id) : null}`}>View My Students</Link>
                     </Button>
                   </Tooltip>
                 )}
@@ -59,7 +62,7 @@ const Dashboard = () => {
                 </Tooltip>
                 <Tooltip label="View my students">
                 <Button mr={10} variant="primary">
-                    <Link to={`/students/${user ? user.id : null}`} data-action="view-my-students">View My Students</Link>
+                    <Link to={`/students/${user ? hashids.encode(user.id) : null}`} data-action="view-my-students">View My Students</Link>
                   </Button>
                 </Tooltip>
               </Flex>
