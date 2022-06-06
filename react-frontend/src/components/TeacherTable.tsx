@@ -26,7 +26,6 @@ function TeacherTable({studentProp, columns}) {
 
   async function handleRequestPasswordReset(email){
     const result = await fetchPasswordReset({email})
-    console.log('result', result)
   }
 
 
@@ -171,7 +170,7 @@ function TeacherTable({studentProp, columns}) {
                 <Td>
                   <HStack spacing="1">
                     <Tooltip label='Send password reset email'>
-                    <IconButton icon={<FiSend fontSize="1.25rem" />} variant="ghost" aria-label="Send Password reset" onClick={() => handleRequestPasswordReset(member.email)} />
+                      <IconButton icon={<FiSend fontSize="1.25rem" />} variant="ghost" aria-label="Send Password reset" onClick={() => handleRequestPasswordReset(member.email)} />
                     </Tooltip>
                     <Tooltip label='Impersonate Teacher'>
                     <IconButton icon={<FiLogIn fontSize="1.25rem" />} variant="ghost" aria-label="Impersonate Teacher" onClick={() => impersonate(member)} />

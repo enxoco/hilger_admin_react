@@ -35,9 +35,15 @@ export const Sidebar = () => {
                 </Link>
               )}
               {me?.data?.authenticatedItem ? (
-                <Link to={`/students/${me?.data?.authenticatedItem?.id}`}>
+                <>
+                                <Link to={`/students/${me?.data?.authenticatedItem?.id}`}>
                   <NavButton label="My Students" icon={FiUsers} aria-current={location.pathname === "/students/" + me?.data?.authenticatedItem?.id ? "page" : null} />
                 </Link>
+                                  <Link to="/profile">
+                                  <NavButton label="Profile" icon={FiSettings} aria-current={location.pathname === "/profile" ? "page" : null} />
+                                </Link>
+                </>
+
               ) : null}
               {!me?.data?.authenticatedItem || !me?.data?.authenticatedItem?.isAdmin ? null : (
                 <>

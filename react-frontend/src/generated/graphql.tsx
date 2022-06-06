@@ -1436,6 +1436,14 @@ export type UpdateCourseMutationVariables = Exact<{
 
 export type UpdateCourseMutation = { __typename?: 'Mutation', updateCourse?: { __typename: 'Course', id: string } | null };
 
+export type UpdatePasswordMutationVariables = Exact<{
+  email: Scalars['String'];
+  password: Scalars['String'];
+}>;
+
+
+export type UpdatePasswordMutation = { __typename?: 'Mutation', updateUser?: { __typename: 'User' } | null };
+
 export type UpdateSettingsMutationVariables = Exact<{
   id: Scalars['ID'];
   value: Scalars['String'];
@@ -1795,6 +1803,17 @@ export const UpdateCourseDocument = gql`
 
 export function useUpdateCourseMutation() {
   return Urql.useMutation<UpdateCourseMutation, UpdateCourseMutationVariables>(UpdateCourseDocument);
+};
+export const UpdatePasswordDocument = gql`
+    mutation UpdatePassword($email: String!, $password: String!) {
+  updateUser(where: {email: $email}, data: {password: $password}) {
+    __typename
+  }
+}
+    `;
+
+export function useUpdatePasswordMutation() {
+  return Urql.useMutation<UpdatePasswordMutation, UpdatePasswordMutationVariables>(UpdatePasswordDocument);
 };
 export const UpdateSettingsDocument = gql`
     mutation UpdateSettings($id: ID!, $value: String!) {

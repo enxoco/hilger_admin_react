@@ -32,7 +32,7 @@ function ResetPassword() {
   async function requestNewPassword(e) {
     e.preventDefault()
     const results = await doPasswordReset({ email: id })
-    setStatus("Please check your email for a password reset link.")
+    setStatus("Please check your email for a new password reset link.")
     setAlertStyle("success")
     doShowReset(false)
     if (results.data?.authenticateUserWithPassword?.item) {

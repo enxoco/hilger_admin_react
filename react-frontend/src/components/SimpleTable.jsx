@@ -5,6 +5,8 @@ import { Link } from "react-router-dom"
 import { useRecoilState } from "recoil"
 import { loggedInUser as loggedInUserAtom } from "../atom"
 // Create an editable cell renderer
+import Hashids from 'hashids'
+const hashids = new Hashids('J2KFXT4b8LF0Xnd7SykAifcnq4a5pf')
 
 function SimpleTable({ studentProp, searchTerm }) {
   const [loggedInUser] = useRecoilState(loggedInUserAtom)
@@ -50,7 +52,7 @@ function SimpleTable({ studentProp, searchTerm }) {
 
                           <Td>
                             {loggedInUser?.hasPaidTuition ? (
-                              <ChakraLink href={"/print-reports.php?student=" + student.id} target="_blank">
+                              <ChakraLink href={"/print.php?student=" + hashids.encode(student.id)} target="_blank">
                                   <Button variant="primary" data-action="view-grades">View Grades</Button>
                               </ChakraLink>
                             ) : (

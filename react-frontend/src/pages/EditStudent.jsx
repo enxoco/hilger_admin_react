@@ -9,6 +9,8 @@ import AddStudentCard from "../components/AddStudentCard"
 import EditStudentCard from "../components/EditCourseCard"
 import Layout from "../components/Layout"
 import { useCheckLoginQuery, useGetCoursesByStudentAndTeacherQuery, useGetStudentQuery } from "../generated/graphql"
+import Hashids from 'hashids'
+const hashids = new Hashids('J2KFXT4b8LF0Xnd7SykAifcnq4a5pf')
 
 const EditStudent = () => {
   let { id } = useParams()
@@ -71,7 +73,7 @@ const EditStudent = () => {
 
           {user?.isAdmin || impersonatedUser ? (
             <Tooltip label={`View full report card for ${studentData.data?.firstName || "student"}`}>
-              <ChakraLink href={"/print-reports.php?student=" + id} data-action="view-report" target="_blank">
+              <ChakraLink href={"/print.php?student=" + hashids.encode(id)} data-action="view-report" target="_blank">
                 <Button variant="outline">View report card</Button>
               </ChakraLink>
             </Tooltip>
