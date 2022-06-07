@@ -5,6 +5,9 @@ import { useNavigate } from 'react-router-dom'
 import {useRecoilState} from 'recoil'
 import {showNewCourseCard} from '../atom'
 import { useCreateCourseMutation, useDeleteCourseMutation, useUpdateCourseMutation } from '../generated/graphql'
+import Hashids from 'hashids'
+const hashids = new Hashids(process.env.REACT_APP_SALT, +process.env.REACT_APP_SALT_LENGTH)
+
 const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard, teacher, teacherName}) => {
 
     const [courseName, setCourseName] = useState(name)
@@ -46,7 +49,7 @@ const EditStudentCard = ({name, grade, feedback, id, student, hideNewCourseCard,
             name: courseName,
             grade: courseGrade,
             feedback: courseFeedback,
-            student: +student,
+            student: +hashids.decode(student)[0],
             teacher: +teacher
         })
         setNewCourse(false)
