@@ -4,6 +4,9 @@ import { FiDownloadCloud } from "react-icons/fi"
 import Layout from "../components/Layout"
 import { useBulkAddStudentsMutation, useCreateStudentMutation, useUpdateStudentInfoMutation } from "../generated/graphql"
 import {useParams} from 'react-router-dom'
+import Hashids from 'hashids'
+const hashids = new Hashids(process.env.REACT_APP_SALT, +process.env.REACT_APP_SALT_LENGTH)
+
 const AddStudentCard = ({student}) => {
 
   const [firstName, setFirstName] = useState(student?.firstName || null)
@@ -34,7 +37,7 @@ const AddStudentCard = ({student}) => {
 
     } else {
         updateStudentInfo({
-            id: +id,
+            id: +hashIds.decode(id),
             firstName: firstName,
             lastName: lastName,
           })
